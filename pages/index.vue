@@ -45,16 +45,79 @@
         </strong>
         <p class="dropdown-content" v-if="show">Lorum ipsum...</p>
       </div>
+      
+      
+      <div class="container">
+      <div class="flair flair--3b"></div>
+      </div>
 </template>
 
 <script setup lang="ts">
+import { gsap } from "gsap"  
+import { Draggable } from "gsap/Draggable";
 import { ref, onMounted } from "vue"
 import autoAnimate from "@formkit/auto-animate"
+gsap.registerPlugin(Draggable);
 
-const dropdown = ref() // we need a DOM node
+const dropdown = ref()
 const show = ref(false)
 
 onMounted(() => {
-  autoAnimate(dropdown.value) // thats it!
+  autoAnimate(dropdown.value)
+  Draggable.create(".flair--3b", {
+    type: "rotation",
+    inertia: true
+  });
 })
+
+
 </script>
+
+
+<style scoped> 
+html, body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+.container {
+  position: relative;
+  width: 90vw;
+  height: 90vh;
+  max-width: 90vh;
+  max-height: 90vw;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  border-radius: 9px;
+}
+
+h4 {
+/*   color: var(--mid); */
+  position: absolute;
+  width: 100%;
+  left: 0;
+  right: 0;
+  bottom: 1rem;
+  text-align: center;
+  pointer-events: none;
+}
+
+.flair {
+  cursor: pointer;
+  width: 70px;
+  height: 70px;
+  max-height: 15vh;
+  max-width: 15vh;
+}
+
+.flair--3b {
+  background-image:url(https://assets.codepen.io/16327/ui-flair-2.png);
+}
+
+.flair--4b {
+  background-image:url(https://assets.codepen.io/16327/ui-flair-4.png);
+}
+</style>
