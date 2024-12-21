@@ -54,6 +54,22 @@
       <div>
         <button @click="notify">Notify !</button>
       </div>
+      
+      <div ref="containerswapy">
+      
+          <div data-swapy-slot="a">
+            <div data-swapy-item="a">
+              <div><h1>A</h1></div>
+            </div>
+          </div>
+      
+          <div data-swapy-slot="b">
+            <div data-swapy-item="b">
+              <div><h1>B</h1></div>
+            </div>
+          </div>
+      
+        </div>
 </template>
 
 <script setup lang="ts">
@@ -61,8 +77,9 @@ import { toast } from 'vue3-toastify';
 import 'vue3-toastify/dist/index.css';
 import { gsap } from "gsap"  
 import { Draggable } from "gsap/Draggable";
-import { ref, onMounted } from "vue"
+import { ref, onMounted, onUnmounted } from "vue"
 import autoAnimate from "@formkit/auto-animate"
+import { createSwapy } from 'swapy'
 gsap.registerPlugin(Draggable);
 
 const dropdown = ref()
@@ -79,6 +96,23 @@ onMounted(() => {
 const notify = () => {
   toast.error("Something went wrong");
 }
+
+const swapy = ref(null)
+const containerswapy = ref()
+
+onMounted(() => {
+  if (containerswapy.value) {
+    swapy.value = createSwapy(containerswapy.value)
+
+    swapy.value.onSwap(event => {
+      console.log('swap', event)
+    })
+  }
+})
+
+onUnmounted(() => {
+  swapy.value?.destroy()
+})
 
 </script>
 
