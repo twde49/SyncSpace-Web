@@ -50,9 +50,15 @@
       <div class="container">
       <div class="flair flair--3b"></div>
       </div>
+      
+      <div>
+        <button @click="notify">Notify !</button>
+      </div>
 </template>
 
 <script setup lang="ts">
+import { toast } from 'vue3-toastify';
+import 'vue3-toastify/dist/index.css';
 import { gsap } from "gsap"  
 import { Draggable } from "gsap/Draggable";
 import { ref, onMounted } from "vue"
@@ -70,6 +76,9 @@ onMounted(() => {
   });
 })
 
+const notify = () => {
+  toast.error("Something went wrong");
+}
 
 </script>
 
