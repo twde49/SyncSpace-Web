@@ -14,6 +14,7 @@
     "flowbite": "^2.5.2",
     "gsap": "^3.12.5",
     "nuxt": "^3.14.1592",
+    "swapy": "^1.0.3",
     "vue": "latest",
     "vue-router": "latest",
     "vue3-toastify": "^0.2.8"
