@@ -1,3 +1,38 @@
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+  --color-white: #F7F3ED;
+  --color-black: #54494B;
+  --color-primary: #F78764;
+  --color-secondary: #8789C0;
+  --color-tritary: #A06CD5;
+  --color-category-primary: #256EFF;
+  --color-category-secondary: #46237A;
+  --color-category-tritary: #3DDC97;
+  --color-category-quaternary: #FF495C;
+  --color-category-quinary: #FFC100;
+  
+  --text-style-mini: normal 12px 'Josefin Sans', sans-serif;
+  --text-style-mini-italic: italic 12px 'Josefin Sans', sans-serif;
+  
+  --text-style-normal: normal 16px 'Josefin Sans', sans-serif;
+  --text-style-normal-italic: italic 16px 'Josefin Sans', sans-serif;
+  
+  --text-style-large: normal 26px 'Josefin Sans', sans-serif;
+  --text-style-large-italic: italic 26px 'Josefin Sans', sans-serif;
+  
+  --text-style-mega: normal 36px 'Josefin Sans', sans-serif;
+  --text-style-mega-italic: italic 36px 'Josefin Sans', sans-serif;
+  
+  --text-style-omega: normal 64px 'Josefin Sans', sans-serif;
+  
+  --global-radius: 5px;
+  }
+  
+    body {
+        font-family: 'Josefin Sans', sans-serif;
+        background-color: var(--color-black);
+    }
