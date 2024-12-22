@@ -1,10 +1,12 @@
 <template>
   <div class="hero">
     <div ref="heroText" class="hero-tagline">
-      Votre espace unique pour gérer vos <span class="accent-word">{{ displayedText }}</span>
+      Votre espace unique pour gérer vos
+      <span class="accent-word">{{ displayedText }}</span>
     </div>
     <p class="subtitle">
-      Activez uniquement les outils dont vous avez besoin. Profitez d’une expérience sur mesure et d’une interface intuitive.
+      Activez uniquement les outils dont vous avez besoin. Profitez d’une
+      expérience sur mesure et d’une interface intuitive.
     </p>
     <div class="button-part">
       <button class="start-button">
@@ -38,12 +40,15 @@ const animateText = (newWord: string) => {
   });
 
   for (const letter of splitText) {
-    tl.to({}, {
-      duration: 0.1,
-      onComplete: () => {
-        displayedText.value += letter;
+    tl.to(
+      {},
+      {
+        duration: 0.1,
+        onComplete: () => {
+          displayedText.value += letter;
+        },
       },
-    });
+    );
   }
 };
 
