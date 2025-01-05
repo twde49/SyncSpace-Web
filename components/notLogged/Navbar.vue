@@ -1,7 +1,7 @@
 <template>
   <nav class="nav mt-6 flex flex-row justify-around mx-auto">
     <div class="w-max flex items-center">
-      <h1 class="logo">SyncSpace</h1>
+      <h1 class="logo"><a href="/">SyncSpace</a></h1>
     </div>
     <div class="navbar flex justify-around items-center w-60vw">
       <div class="dropdown flex items-center">

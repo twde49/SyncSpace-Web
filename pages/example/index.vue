@@ -125,7 +125,6 @@
 </template>
 
 <script setup lang="ts">
-import { toast } from 'vue3-toastify';
 import 'vue3-toastify/dist/index.css';
 import { gsap } from 'gsap';
 import { Draggable } from 'gsap/Draggable';
@@ -134,6 +133,7 @@ import autoAnimate from '@formkit/auto-animate';
 import { createSwapy } from 'swapy';
 gsap.registerPlugin(Draggable);
 
+const { $toast } = useNuxtApp();
 const dropdown = ref();
 const show = ref(false);
 
@@ -146,7 +146,7 @@ onMounted(() => {
 });
 
 const notify = () => {
-  toast.error('Something went wrong');
+  $toast.error('Something went wrong');
 };
 
 const swapy = ref();

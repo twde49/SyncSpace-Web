@@ -12,7 +12,7 @@ export default defineNuxtConfig({
 
   compatibilityDate: '2024-11-01',
   devtools: { enabled: true },
-  css: ['~/assets/css/main.css'],
+  css: ['vue3-toastify/dist/index.css','~/assets/css/main.css'],
 
   postcss: {
     plugins: {
@@ -21,5 +21,5 @@ export default defineNuxtConfig({
     },
   },
 
-  modules: ['@nuxt/icon'],
+  modules: ['@nuxt/icon', '@vee-validate/nuxt', '@pinia/nuxt', '@nuxt/eslint'],
 });
