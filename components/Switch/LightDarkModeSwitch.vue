@@ -16,16 +16,21 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 
+const { $colorMode } = useNuxtApp();
+
 const isDark = ref(false);
 
 const toggleMode = () => {
   isDark.value = !isDark.value;
-  document.body.classList.toggle('dark-mode', isDark.value); // Optional: Add a global class for styling the body
+  if ($colorMode.preference === 'dark') {
+    $colorMode.preference = 'light';
+  } else {
+    $colorMode.preference = 'dark';
+  }
 };
 </script>
 
 <style scoped>
-/* The switch itself */
 .switch {
   display: flex;
   justify-content: flex-start;
@@ -40,10 +45,9 @@ const toggleMode = () => {
 }
 
 .switch.active {
-  background-color: var(--color-black); /* Dark mode switch background */
+  background-color: var(--color-white);
 }
 
-/* The toggle icon inside the switch */
 .switch-icon {
   width: 30px;
   height: 30px;
@@ -56,16 +60,16 @@ const toggleMode = () => {
   transition:
     transform 0.3s ease,
     background-color 0.3s ease;
-  transform: translateX(5px); /* Light mode position */
+  transform: translateX(5px);
 }
 
 .switch.active .switch-icon {
-  transform: translateX(65px); /* Dark mode position */
-  background-color: var(--color-white); /* Icon color for dark mode */
+  transform: translateX(65px);
+  background-color: var(--color-black);
 }
 
 .icon-moon {
-  color: var(--color-black);
+  color: var(--color-white);
 }
 
 .icon-sun {

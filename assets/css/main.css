@@ -38,6 +38,11 @@
   --toastify-color-success: var(--color-category-tritary);
 }
 
+.light-mode {
+    --color-white: #54494b;
+    --color-black: #f7f3ed ;
+}
+
 body {
   font-family: 'Josefin Sans', sans-serif;
   background-color: var(--color-black);
