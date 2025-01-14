@@ -1,36 +1,50 @@
 <template>
   <div
     id="messageMenuClosed"
-    class="h-max w-max bgColorLight topComponentSize flex justify-center items-center cursor-pointer marged-left"
+    class="h-max w-max bgColorLight topComponentSize flex justify-center items-center marged-left"
     v-if="closed"
-    @click="openClose"
     ref="closedButton"
   >
-    <Icon name="tabler:message-filled" size="3.5em" class="messageIcon" />
+    <Icon name="tabler:message-filled" size="3.5em" class="messageIcon  cursor-pointer" @click="openClose" />
   </div>
   <div
     v-else
-    class="expanded-container bgColorLight flex justify-start items-start cursor-pointer marged-left"
-    @click="openClose"
+    class="expanded-container bgColorLight flex justify-start items-start marged-left"
     ref="expandedContainer"
   >
-  <div class="leftPart flex flex-col">
-    <div
-      class="h-max w-max bgColorLight topComponentSize flex justify-center items-center cursor-pointer"
-    >
-      <Icon
-        name="tabler:message-filled"
-        size="3.5em"
-        class="messageIcon expanded-icon"
-      />
+    <div class="leftPart flex flex-col w-56">
+      <div
+        class="h-max w-max bgColorLight topComponentSize flex justify-center items-center cursor-pointer"
+      >
+        <Icon
+          name="tabler:message-filled"
+          size="3.5em"
+          class="messageIcon expanded-icon cursor-pointer"
+          @click="openClose"
+        />
+      </div>
+
+      <div class="conversationSlider mt-3">
+        <div class="w-full littleConversation" v-for="conversation in conversations" :key="conversation.id">
+          <little-conversation
+            class="mt-8 w-full"
+            :conversation="conversation"
+            :is-active="activeConversation === conversation"
+            @click="activeConversation = conversation"
+          />
+        </div>
+      </div>
+      <button class="createConversation">
+        <Icon name="typcn:plus" size="24px" class="textColorWhite" />
+      </button>
     </div>
 
-    <div class="conversationSlider mt-8 ml-4">
-      <div v-for="conversation in conversations" :key="conversation.id">
-        {{conversation.name ?? 'pas de nom'}}
+      <div v-if="activeConversation" class="rightPart bg-dark flex flex-col justify-between m-4">
+        <ActiveConversation :conversation="activeConversation" />
       </div>
-    </div>
-  </div>
+
+
+
 
 
   </div>
@@ -42,7 +56,10 @@ import { gsap } from 'gsap';
 import { Draggable } from 'gsap/Draggable';
 import useAuthFetch from '~/composables/useAuthFetch';
 import type { Conversation } from '~/types/Conversation';
+import LittleConversation from '~/components/dashboard/messageModule/littleConversation.vue';
+import ActiveConversation from '~/components/dashboard/messageModule/activeConversation.vue';
 gsap.registerPlugin(Draggable);
+// eslint-disable-next-line no-undef
 const { $toast } = useNuxtApp();
 const closed = ref(true);
 const expandedContainer = ref(null);
@@ -67,8 +84,13 @@ const applyDraggable = () => {
   });
 };
 
+const activeConversation = ref<Conversation | null>(null);
+
 const openClose = () => {
   closed.value = !closed.value;
+  if (closed.value === false) {
+    activeConversation.value = null;
+  }
 };
 
 const getConversations = async () => {
@@ -76,10 +98,6 @@ const getConversations = async () => {
     const response = await useAuthFetch('conversations');
 
     conversations.value = response.data.value as Conversation[];
-
-    for (const conversation of response.data.value as Conversation[]) {
-      console.log('conv',conversation);
-    }
 
   } catch (error: any) {
     $toast.error(error.message);
@@ -90,12 +108,10 @@ watch(closed, value => {
   return value ? applyDraggable() : () => {};
 });
 
-
-
-onMounted( async () => {
+onMounted(async () => {
   await nextTick(async () => {
-    await getConversations()
-  })
+    await getConversations();
+  });
   applyDraggable();
 });
 
@@ -122,14 +138,13 @@ onUpdated(() => {
 }
 
 .expanded-container {
-  width: 60vw;
+  width: 70vw;
   height: 80vh;
   transition:
     width 0.5s ease,
     height 0.5s ease;
   position: fixed;
-  top: 2rem;
-  left: 2rem;
+
 }
 
 .messageIcon {
@@ -144,4 +159,47 @@ onUpdated(() => {
     opacity 0.3s ease,
     transform 0.3s ease;
 }
+
+.leftPart {
+  position: relative;
+  height: 100%;
+  display: flex;
+}
+
+.conversationSlider {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.createConversation {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  width: 90%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 5vh;
+  border-radius: 5px;
+  background-color: var(--color-black);
+}
+
+.littleConversation{
+  width: 90%;
+}
+
+.bg-dark {
+  background-color: var(--color-black);
+  color: white;
+  border-radius: 5px;
+}
+
+.rightPart {
+  width: 80%;
+  height: 96.5% !important;
+
+}
+
 </style>

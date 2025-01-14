@@ -42,7 +42,7 @@
 import type { Swapy } from 'swapy';
 import { createSwapy } from 'swapy';
 import { onMounted, onUnmounted, ref } from 'vue';
-import messageModule from '~/components/dashboard/messageModule.vue';
+import messageModule from '~/components/dashboard/messageModule/messageModule.vue';
 import profileModule from '~/components/dashboard/profileModule.vue';
 
 const { $toast } = useNuxtApp();

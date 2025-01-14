@@ -18,7 +18,7 @@ export const useUserStore = defineStore('user', {
       const cookies = new Cookies();
       cookies.set('user', JSON.stringify(data), {
         path: '/',
-        maxAge: 60 * 60 * 24 * 7,
+        maxAge: 60 * 60 * 24 * 31,
         sameSite: 'strict',
         httpOnly: false,
       });

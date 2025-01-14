@@ -1,4 +1,7 @@
 export default defineNuxtConfig({
+  devServer: {
+    port: 4000,
+  },
   app: {
     head: {
       script: [
@@ -18,8 +21,15 @@ export default defineNuxtConfig({
     plugins: {
       tailwindcss: {},
       autoprefixer: {},
+      plugins: ['~/plugins/formatDate'],
     },
   },
 
-  modules: ['@nuxt/icon', '@vee-validate/nuxt', '@pinia/nuxt', '@nuxt/eslint'],
+  modules: [
+    '@nuxt/icon',
+    '@vee-validate/nuxt',
+    '@pinia/nuxt',
+    '@nuxt/eslint',
+    '@nuxtjs/color-mode',
+  ],
 });

@@ -27,7 +27,6 @@ export default {
   },
   methods: {
     handleVolumeChange() {
-      console.log("Volume:", this.volume);
       this.adjustVolume(this.volume / 100);
     },
     adjustVolume(value) {

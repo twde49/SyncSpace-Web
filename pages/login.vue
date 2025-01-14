@@ -17,7 +17,7 @@
           />
         </div>
         <div class="form-group mb-3">
-          <input 
+          <input
             v-model="password" 
             type="password" 
             placeholder="Mot de passe" 
@@ -107,7 +107,6 @@ const loginUser = async () => {
 
     const data = await response.json();
 
-    console.log('API Response:', data);
 
     if (!data || !data.user || !data.token) {
       throw new Error('Réponse invalide du serveur.');
@@ -159,12 +158,16 @@ const loginUser = async () => {
   display: flex;
   flex-direction: column;
 }
-
 .form-input {
+  background-color: var(--color-white);
   padding: 10px;
   font-size: 14px;
   border: 1px solid #ccc;
   border-radius: 4px;
+}
+
+.form-input::placeholder {
+  color: var(--color-black);
 }
 
 .create-account-btn {
