@@ -9,8 +9,8 @@
     </div>
     <div class="details h-full flex flex-col justify-evenly ml-8 mr-8">
       <span class="normalFont">{{
-        musicPlayer.musicName
-      }}</span>
+          musicPlayer.musicName
+        }}</span>
       <span class="normalFont">{{ musicPlayer.artist }}</span>
     </div>
     <div class="commands flex flex-row">
@@ -42,7 +42,7 @@
       <div class="threeDotsMenu ml-6 flex flex-row justify-center items-center">
         <Icon
           name="entypo:dots-three-vertical"
-          style="threedots"
+          class="threedots"
         />
       </div>
     </div>
@@ -50,19 +50,18 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
-import VolumeControl from "~/components/dashboard/music/VolumeControl.vue";
+import { computed } from 'vue';
+import VolumeControl from '~/components/dashboard/music/VolumeControl.vue';
 
 const coverUrl: string =
-  "https://images2.alphacoders.com/135/thumb-1920-1354873.png";
+  'https://images2.alphacoders.com/135/thumb-1920-1354873.png';
 const musicPlayer = {
-  musicName: "Navigating",
-  album: "Clancy",
-  artist: "Twenty One Pilots",
+  musicName: 'Navigating',
+  album: 'Clancy',
+  artist: 'Twenty One Pilots',
 };
 
 const getMaxValueFromCurrentMusic = computed(() => {
-  const percentComplete = 100;
   return (204 / 84) * 100;
 });
 </script>
@@ -77,9 +76,11 @@ const getMaxValueFromCurrentMusic = computed(() => {
   height: 10vh;
   border-radius: 5px 5px 0 0;
 }
+
 .coverImage {
   border-radius: 5px 0 0 0;
 }
+
 .playButton {
   background-color: var(--color-primary);
   border-radius: 100%;
@@ -98,10 +99,10 @@ const getMaxValueFromCurrentMusic = computed(() => {
 }
 
 .musicControls {
-    color: var(--color-secondary)
+  color: var(--color-secondary)
 }
 
-.likeButton{
-    color: var(--color-tritary)
+.likeButton {
+  color: var(--color-tritary)
 }
 </style>
