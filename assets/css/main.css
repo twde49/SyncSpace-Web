@@ -4,7 +4,7 @@
 @tailwind utilities;
 
 :root {
-    overflow-y: hidden;
+  overflow-y: hidden;
   --color-white: #f7f3ed;
   --color-black: #54494b;
   --color-primary: #f78764;
@@ -31,16 +31,23 @@
   --text-style-omega: normal 64px 'Josefin Sans', sans-serif;
 
   --global-radius: 5px;
-  
+
   --toastify-color-light: var(--color-white);
   --toastify-color-dark: var(--color-black);
   --toastify-color-info: var(--color-category-primary);
   --toastify-color-success: var(--color-category-tritary);
+
+  .md-editor {
+    --md-bk-color: var(--color-white);
+  }
+  .md-editor-dark {
+    --md-bk-color: var(--color-black);
+  }
 }
 
 .light-mode {
-    --color-white: #54494b;
-    --color-black: #f7f3ed ;
+  --color-white: #54494b;
+  --color-black: #f7f3ed;
 }
 
 body {

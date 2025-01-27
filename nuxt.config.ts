@@ -31,5 +31,6 @@ export default defineNuxtConfig({
     '@pinia/nuxt',
     '@nuxt/eslint',
     '@nuxtjs/color-mode',
+    '@nuxt/ui',
   ],
 });

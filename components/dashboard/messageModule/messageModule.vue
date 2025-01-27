@@ -43,10 +43,6 @@
         <ActiveConversation :conversation="activeConversation" />
       </div>
 
-
-
-
-
   </div>
 </template>
 
@@ -59,7 +55,6 @@ import type { Conversation } from '~/types/Conversation';
 import LittleConversation from '~/components/dashboard/messageModule/littleConversation.vue';
 import ActiveConversation from '~/components/dashboard/messageModule/activeConversation.vue';
 gsap.registerPlugin(Draggable);
-// eslint-disable-next-line no-undef
 const { $toast } = useNuxtApp();
 const closed = ref(true);
 const expandedContainer = ref(null);
@@ -86,12 +81,39 @@ const applyDraggable = () => {
 
 const activeConversation = ref<Conversation | null>(null);
 
-const openClose = () => {
-  closed.value = !closed.value;
-  if (closed.value === false) {
-    activeConversation.value = null;
+const openClose = async () => {
+  const duration = 0.5;
+  if (closed.value) {
+    gsap.to(expandedContainer.value, {
+      duration,
+      width: '70vw',
+      height: '80vh',
+      ease: 'power2.inOut',
+    });
+    gsap.to(closedButton.value, {
+      duration,
+      opacity: 0,
+      ease: 'power2.inOut',
+    });
+    await nextTick();
+    closed.value = false;
+  } else {
+    gsap.to(expandedContainer.value, {
+      duration,
+      width: '100px',
+      height: '100px',
+      ease: 'power2.inOut',
+    });
+    gsap.to(closedButton.value, {
+      duration,
+      opacity: 1,
+      ease: 'power2.inOut',
+    });
+    await nextTick();
+    closed.value = true;
   }
 };
+
 
 const getConversations = async () => {
   try {
@@ -132,32 +154,28 @@ onUpdated(() => {
 .topComponentSize {
   width: 100px;
   height: 100px;
-  transition:
-    width 0.5s ease,
-    height 0.5s ease;
+  transition: all 0.5s cubic-bezier(0.4, 0.0, 0.2, 1);
 }
 
 .expanded-container {
+z-index: 55;
   width: 70vw;
   height: 80vh;
-  transition:
-    width 0.5s ease,
-    height 0.5s ease;
+  transition: all 0.5s cubic-bezier(0.4, 0.0, 0.2, 1);
   position: fixed;
-
-}
-
-.messageIcon {
-  color: var(--color-black);
 }
 
 .marged-left {
   position: fixed;
   left: 30px;
   top: 31px;
-  transition:
-    opacity 0.3s ease,
-    transform 0.3s ease;
+  transition: opacity 0.3s cubic-bezier(0.4, 0.0, 0.2, 1),
+    transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+}
+
+
+.messageIcon {
+  color: var(--color-black);
 }
 
 .leftPart {

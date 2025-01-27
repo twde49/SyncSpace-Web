@@ -30,82 +30,87 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { reactive, onMounted, ref } from 'vue';
 import type { Conversation } from '~/types/Conversation';
 import type { Message } from '~/types/Message';
 import { useUserStore } from '~/stores/userStore';
 import useAuthFetch from '~/composables/useAuthFetch';
+import type { User } from '~/types/User';
 
 const userStore = useUserStore();
+const { $toast, $mercureClient } = useNuxtApp();
 
-// eslint-disable-next-line no-undef
-const { $toast } = useNuxtApp();
 const currentMessage = ref<string | null>(null);
 const currentAttachment = ref<string>('');
 
-const { conversation } = defineProps<{
-    conversation: Conversation;
+const props = defineProps<{
+  conversation: Conversation;
 }>();
 
+const reactiveConversation = reactive({ ...props.conversation });
+
 const isOwnMessage = (message: Message) => {
-    return message.sender?.email === userStore.email;
+  return message.sender?.email === userStore.email;
 };
 
 const getParticipantsName = () => {
-    return conversation.users
-        ?.map(user => (user.firstName ?? '') + (user.lastName ?? ''))
-        .join(', ');
+  return reactiveConversation.users
+    ?.map(user => `${user.firstName ?? ''} ${user.lastName ?? ''}`)
+    .join(', ');
 };
 
 const sendMessage = async () => {
-    try {
-        await useAuthFetch(
-            `conversation/${conversation.id}/message/new`,
-            {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(
-                    {
-                        content: currentMessage.value,
-                        attachment: currentAttachment.value,
-                    },
-                ),
-            },
-        );
-    } catch (error) {
-        if (error instanceof Error) {
-            $toast.error(error.message);
-        } else {
-            $toast.error('An unknown error occurred');
-        }
-    } finally {
-        currentMessage.value = null;
-        currentAttachment.value = '';
-        await reloadCurrentConversation();
+  try {
+    await useAuthFetch(
+      `conversation/${reactiveConversation.id}/message/new`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          content: currentMessage.value,
+          attachment: currentAttachment.value,
+        }),
+      }
+    );
+
+    const newMessage: Message = {
+        '@type': "Message",
+        '@id': Date.now(),
+        id: Date.now(),
+        content: currentMessage.value || undefined,
+        sender: userStore.currentUser() as unknown as User,
+    };
+
+    if (reactiveConversation.messages !== undefined){
+        reactiveConversation.messages.push(newMessage as Message);
     }
+  } catch (error) {
+    if (error instanceof Error) {
+      $toast.error(error.message);
+    } else {
+      $toast.error('An unknown error occurred');
+    }
+  } finally {
+    currentMessage.value = null;
+    currentAttachment.value = '';
+  }
 };
 
-const reloadCurrentConversation = async () => {
-    try {
-        const { data } = await useAuthFetch(`conversation/${conversation.id}`);
-
-        console.log(data);
-        //conversation = data?.value as Conversation;
-
-    } catch (error) {
-        if (error instanceof Error) {
-            $toast.error(error.message);
-        } else {
-            $toast.error('An unknown error occurred');
-        }
-    }
-};
 onMounted(() => {
-    userStore.loadUserFromCookies();
+  userStore.loadUserFromCookies();
+
+  $mercureClient.subscribe(`http://localhost:5001/messages`, (data: string) => {
+    const message = JSON.parse(data);
+
+    if (reactiveConversation.messages !== undefined){
+        reactiveConversation.messages.push(message);
+    }
+  });
 });
 </script>
+
 
 <style scoped>
 .textMessageInput {
