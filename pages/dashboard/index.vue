@@ -15,7 +15,7 @@
         <div data-swapy-slot="topRight" class="centered">
           <div data-swapy-item="topRight">
             <div class="module topRightModule">
-            
+              <EditorMarkdown :note-id="noteId" :title-note='noteTitle' :content-note='noteContent' @open-markdown-center="handleMarkdownCenterOpening" />
             </div>
           </div>
         </div>
@@ -36,29 +36,52 @@
       </div>
     </div>
   </div>
+
+<MarkdownCenter @open-note="handleOpeningNote" @close-markdown-center="handleMarkdownCenterClosing" v-if="isMarkdownCenterOpen" />
 </template>
 
 <script setup lang="ts">
+import type { Note } from '~/types/Note';
 import type { Swapy } from 'swapy';
 import { createSwapy } from 'swapy';
 import { onMounted, onUnmounted, ref } from 'vue';
 import messageModule from '~/components/dashboard/messageModule/messageModule.vue';
 import profileModule from '~/components/dashboard/profileModule.vue';
+import musicPlayerModule from '~/components/dashboard/music/musicPlayerModule.vue';
+import EditorMarkdown from '~/components/dashboard/markdownModule/editorMarkdown.vue';
+import MarkdownCenter from '~/components/dashboard/markdownModule/markdownCenter.vue';
 
 const { $toast } = useNuxtApp();
-import musicPlayerModule from '~/components/dashboard/music/musicPlayerModule.vue';
+let noteId:number;
+let noteTitle = '';
+let noteContent = '';
 
 const swapy = ref<Swapy | null>(null);
 const moduleZone = ref<HTMLElement | null>(null);
+
+const isMarkdownCenterOpen = ref(false);
+
+const handleMarkdownCenterOpening = (status:boolean) =>{
+  isMarkdownCenterOpen.value = status;
+};
+
+const handleMarkdownCenterClosing = () =>{
+  isMarkdownCenterOpen.value = false;
+};
+
+const handleOpeningNote = (chosenNote :Note) => {
+  noteId = chosenNote.id;
+  noteTitle = chosenNote.title ?? '';
+  noteContent = chosenNote.content ?? '';
+};
+
+
 
 onMounted(() => {
   if (moduleZone.value) {
     swapy.value = createSwapy(moduleZone.value);
     swapy.value.onSwap(() => {
-      $toast.success('You made a point',{
-        position: 'top-center',
-        transition: "slide",
-      })
+      console.log('swapped');
     })
   }
 })
@@ -78,6 +101,7 @@ onUnmounted(() => {
   width: 80vw;
   margin-left: auto;
   margin-right: auto;
+  z-index: 10;
 }
 
 .fourZone {
