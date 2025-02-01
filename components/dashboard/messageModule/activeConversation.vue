@@ -1,53 +1,61 @@
 <template>
-    <!-- Header -->
-    <div class="header flex items-center justify-between border-b p-4 pb-2 mb-4">
-        <h2 class="text-white miniFont font-bold">{{ getParticipantsName() }}</h2>
-        <span class="text-green-500 text-sm">Online</span>
-    </div>
+  <div class="header flex items-center justify-between border-b p-4 pb-2 mb-4">
+    <h2 class="text-white miniFont font-bold">{{ getParticipantsName() }}</h2>
+    <span class="text-green-500 text-sm">Online</span>
+  </div>
 
-    <div class="chatArea p-4 flex-grow overflow-y-auto">
-        <div
-            v-for="message in conversation.messages"
-            :key="message.id"
-            :class="['message', isOwnMessage(message) ? 'outgoing' : 'incoming']"
-        >
-            {{ message.content }}
-        </div>
+  <div class="chatArea p-4 flex-grow overflow-y-auto">
+    <div
+      v-for="message in reactiveConversation.messages"
+      :key="message.id"
+      :class="['message', isOwnMessage(message) ? 'outgoing' : 'incoming']"
+    >
+      {{ message.content }}
     </div>
+  </div>
 
-    <div class="messageInput bgColorWhite flex items-center">
-        <div class="flex utilsZone items-center justify-between">
-            <Icon name="ph:plus-fill" size="21px" class="media textColorBlack" />
-            <Icon name="mdi:microphone" size="21px" class="media textColorBlack" />
-        </div>
-        <input
-            class="textMessageInput bgColorBlack textColorWhite"
-            v-model="currentMessage"
-            placeholder="Message..."
-            @keyup.enter="sendMessage"
-        />
+  <div class="messageInput bgColorWhite flex items-center">
+    <div class="flex utilsZone items-center justify-between">
+      <Icon name="ph:plus-fill" size="21px" class="media textColorBlack" />
+      <Icon name="mdi:microphone" size="21px" class="media textColorBlack" />
     </div>
+    <input
+      class="textMessageInput bgColorBlack textColorWhite"
+      v-model="currentMessage"
+      placeholder="Message..."
+      @keyup.enter="sendMessage"
+      style="outline: none"
+    />
+  </div>
 </template>
 
 <script setup lang="ts">
-import { reactive, onMounted, ref } from 'vue';
+import { reactive, onMounted, ref, watch } from 'vue';
 import type { Conversation } from '~/types/Conversation';
 import type { Message } from '~/types/Message';
 import { useUserStore } from '~/stores/userStore';
 import useAuthFetch from '~/composables/useAuthFetch';
-import type { User } from '~/types/User';
+import { useWebSocket } from '~/composables/useWebSocket';
 
 const userStore = useUserStore();
-const { $toast, $mercureClient } = useNuxtApp();
+const { $toast } = useNuxtApp();
 
 const currentMessage = ref<string | null>(null);
 const currentAttachment = ref<string>('');
 
-const props = defineProps<{
-  conversation: Conversation;
-}>();
+const props = defineProps<{ conversation: Conversation }>();
 
 const reactiveConversation = reactive({ ...props.conversation });
+
+watch(
+  () => props.conversation,
+  (newConversation) => {
+    Object.assign(reactiveConversation, newConversation);
+  },
+  { deep: true, immediate: true }
+);
+
+const { connect, webSocketData } = useWebSocket();
 
 const isOwnMessage = (message: Message) => {
   return message.sender?.email === userStore.email;
@@ -74,18 +82,6 @@ const sendMessage = async () => {
         }),
       }
     );
-
-    const newMessage: Message = {
-        '@type': "Message",
-        '@id': Date.now(),
-        id: Date.now(),
-        content: currentMessage.value || undefined,
-        sender: userStore.currentUser() as unknown as User,
-    };
-
-    if (reactiveConversation.messages !== undefined){
-        reactiveConversation.messages.push(newMessage as Message);
-    }
   } catch (error) {
     if (error instanceof Error) {
       $toast.error(error.message);
@@ -98,16 +94,42 @@ const sendMessage = async () => {
   }
 };
 
+watch(
+  () => webSocketData.value['updatedMessages'],
+  (receivedData) => {
+    let newMessages: Message[] = [];
+
+    if (typeof receivedData === "string") {
+      try {
+        newMessages = JSON.parse(receivedData) as Message[];
+      } catch (error) {
+        return;
+      }
+    } else if (Array.isArray(receivedData)) {
+      newMessages = receivedData;
+    } else {
+      return;
+    }
+
+    if (newMessages && Array.isArray(newMessages)) {
+      if (reactiveConversation.messages !== undefined) {
+        const existingMessageIds = reactiveConversation.messages.map(
+          (msg) => msg.id
+        );
+        const uniqueMessages = newMessages.filter(
+          (msg) => !existingMessageIds.includes(msg.id)
+        );
+        if (uniqueMessages.length > 0) {
+          reactiveConversation.messages.push(...uniqueMessages);
+        }
+      }
+    }
+  }
+);
+
 onMounted(() => {
   userStore.loadUserFromCookies();
-
-  $mercureClient.subscribe(`http://localhost:5001/messages`, (data: string) => {
-    const message = JSON.parse(data);
-
-    if (reactiveConversation.messages !== undefined){
-        reactiveConversation.messages.push(message);
-    }
-  });
+  connect();
 });
 </script>
 

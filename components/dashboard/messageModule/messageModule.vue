@@ -5,7 +5,12 @@
     v-if="closed"
     ref="closedButton"
   >
-    <Icon name="tabler:message-filled" size="3.5em" class="messageIcon  cursor-pointer" @click="openClose" />
+    <Icon
+      name="tabler:message-filled"
+      size="3.5em"
+      class="messageIcon cursor-pointer"
+      @click="openClose"
+    />
   </div>
   <div
     v-else
@@ -14,7 +19,7 @@
   >
     <div class="leftPart flex flex-col w-56">
       <div
-        class="h-max w-max bgColorLight topComponentSize flex justify-center items-center cursor-pointer"
+        class="h-max w-max bgColorLight topComponentSize flex justify-center items-center cursor-pointer fixed-icon"
       >
         <Icon
           name="tabler:message-filled"
@@ -25,12 +30,16 @@
       </div>
 
       <div class="conversationSlider mt-3">
-        <div class="w-full littleConversation" v-for="conversation in conversations" :key="conversation.id">
+        <div
+          class="w-full littleConversation"
+          v-for="conversation in conversations"
+          :key="conversation.id"
+        >
           <little-conversation
             class="mt-8 w-full"
             :conversation="conversation"
             :is-active="activeConversation === conversation"
-            @click="activeConversation = conversation"
+            @click="activeConversation = (activeConversation === conversation ? null : conversation)"
           />
         </div>
       </div>
@@ -39,12 +48,12 @@
       </button>
     </div>
 
-      <div v-if="activeConversation" class="rightPart bg-dark flex flex-col justify-between m-4">
-        <ActiveConversation :conversation="activeConversation" />
-      </div>
-
+    <div v-if="activeConversation" class="rightPart bg-dark flex flex-col justify-between m-4">
+      <ActiveConversation :conversation="activeConversation" />
+    </div>
   </div>
 </template>
+
 
 <script setup lang="ts">
 import { ref, onMounted, onUpdated, watch, nextTick } from 'vue';
@@ -158,7 +167,7 @@ onUpdated(() => {
 }
 
 .expanded-container {
-z-index: 55;
+  z-index: 55;
   width: 70vw;
   height: 80vh;
   transition: all 0.5s cubic-bezier(0.4, 0.0, 0.2, 1);
@@ -173,7 +182,6 @@ z-index: 55;
     transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
 }
 
-
 .messageIcon {
   color: var(--color-black);
 }
@@ -182,13 +190,24 @@ z-index: 55;
   position: relative;
   height: 100%;
   display: flex;
+  flex-direction: column;
 }
 
 .conversationSlider {
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
+  flex: 0 0 70%;
+  overflow-y: auto;
+}
+
+.conversationSlider::-webkit-scrollbar {
+  width: 6px;
+}
+.conversationSlider::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 3px;
 }
 
 .createConversation {
@@ -204,7 +223,7 @@ z-index: 55;
   background-color: var(--color-black);
 }
 
-.littleConversation{
+.littleConversation {
   width: 90%;
 }
 
@@ -217,7 +236,6 @@ z-index: 55;
 .rightPart {
   width: 80%;
   height: 96.5% !important;
-
 }
-
 </style>
+
