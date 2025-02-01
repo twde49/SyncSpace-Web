@@ -26,6 +26,7 @@
     "nuxt": "^3.14.1592",
     "pinia": "^2.3.0",
     "pinia-plugin-persistedstate": "^4.2.0",
+    "socket.io-client": "^4.8.1",
     "swapy": "^1.0.3",
     "universal-cookie": "^7.2.2",
     "vue": "latest",
