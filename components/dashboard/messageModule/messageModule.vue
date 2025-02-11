@@ -43,11 +43,10 @@
           />
         </div>
       </div>
-      <button class="createConversation">
+      <button class="createConversation" @click="openCreateModal">
         <Icon name="typcn:plus" size="24px" class="textColorWhite" />
       </button>
     </div>
-
     <div v-if="activeConversation" class="rightPart bg-dark flex flex-col justify-between m-4">
       <ActiveConversation :conversation="activeConversation" />
     </div>
