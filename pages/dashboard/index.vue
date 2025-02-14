@@ -22,7 +22,7 @@
         <div data-swapy-slot="bottomLeft" class="centered">
           <div data-swapy-item="bottomLeft">
             <div class="module bottomLeftModule">
-            
+              <PasswordManager @open-password-center="handlePasswordCenterOpening" />
             </div>
           </div>
         </div>
@@ -38,6 +38,7 @@
   </div>
 
 <MarkdownCenter @open-note="handleOpeningNote" @close-markdown-center="handleMarkdownCenterClosing" v-if="isMarkdownCenterOpen" />
+<PasswordCenter @close-password-center="handlePasswordCenterClosing" v-if="isPasswordCenterOpen" />
 </template>
 
 <script setup lang="ts">
@@ -51,6 +52,8 @@ import musicPlayerModule from '~/components/dashboard/music/musicPlayerModule.vu
 import EditorMarkdown from '~/components/dashboard/markdownModule/editorMarkdown.vue';
 import MarkdownCenter from '~/components/dashboard/markdownModule/markdownCenter.vue';
 import DriveModule from '~/components/dashboard/driveModule/driveModule.vue';
+import PasswordManager from '~/components/dashboard/passwordManagerModule/passwordManager.vue'
+import PasswordCenter from '~/components/dashboard/passwordManagerModule/passwordCenter.vue';
 
 const { $toast } = useNuxtApp();
 let noteId:number;
@@ -61,6 +64,7 @@ const swapy = ref<Swapy | null>(null);
 const moduleZone = ref<HTMLElement | null>(null);
 
 const isMarkdownCenterOpen = ref(false);
+const isPasswordCenterOpen = ref(false);
 
 const handleMarkdownCenterOpening = (status:boolean) =>{
   isMarkdownCenterOpen.value = status;
@@ -68,6 +72,14 @@ const handleMarkdownCenterOpening = (status:boolean) =>{
 
 const handleMarkdownCenterClosing = () =>{
   isMarkdownCenterOpen.value = false;
+};
+
+const handlePasswordCenterOpening = (status:boolean) =>{
+  isPasswordCenterOpen.value = status;
+};
+
+const handlePasswordCenterClosing = () =>{
+  isPasswordCenterOpen.value = false;
 };
 
 const handleOpeningNote = (chosenNote :Note) => {

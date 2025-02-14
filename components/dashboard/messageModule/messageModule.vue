@@ -43,7 +43,7 @@
           />
         </div>
       </div>
-      <button class="createConversation" @click="openCreateModal">
+      <button class="createConversation">
         <Icon name="typcn:plus" size="24px" class="textColorWhite" />
       </button>
     </div>
