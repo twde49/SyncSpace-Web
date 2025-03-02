@@ -29,7 +29,6 @@
       class="relative w-full max-w-md p-6 bg-white rounded-lg shadow-lg dark:bg-gray-800"
       @mousedown.stop
     >
-      <!-- Modal Header -->
       <div class="flex items-center justify-between border-b pb-4 dark:border-gray-600">
         <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
           Sauvegarder fichier markdown?
@@ -57,7 +56,6 @@
         </button>
       </div>
 
-      <!-- Modal Content -->
       <form @submit.prevent="saveTitle" class="space-y-4 mt-4">
         <div>
           <label
@@ -75,7 +73,6 @@
           />
         </div>
 
-        <!-- Modal Footer -->
         <div class="flex justify-end gap-2">
           <button
             @click="closeModal"
@@ -103,10 +100,7 @@ import useAuthFetch from '~/composables/useAuthFetch';
 import 'md-editor-v3/lib/style.css';
 
 const { noteId, titleNote, contentNote } = defineProps<{
-  noteId: {
-    type: number,
-    required: false
-  };
+  noteId: number;
   titleNote: string;
   contentNote: string;
 }>();
