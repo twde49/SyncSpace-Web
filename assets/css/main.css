@@ -171,3 +171,7 @@ body {
 .textColorCategoryQuinary {
   color: var(--color-category-quinary) !important;
 }
+
+.globalRadius {
+  border-radius: var(--global-radius) !important;
+}

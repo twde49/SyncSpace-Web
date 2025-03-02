@@ -15,7 +15,7 @@
         <div data-swapy-slot="topRight" class="centered">
           <div data-swapy-item="topRight">
             <div class="module topRightModule">
-              <EditorMarkdown :note-id="noteId" :title-note='noteTitle' :content-note='noteContent' @open-markdown-center="handleMarkdownCenterOpening" />
+                <EditorMarkdown :note-id="noteId" :title-note='noteTitle' :content-note='noteContent' @open-markdown-center="handleMarkdownCenterOpening" />
             </div>
           </div>
         </div>
@@ -29,7 +29,7 @@
         <div data-swapy-slot="bottomRight" class="centered">
           <div data-swapy-item="bottomRight">
             <div class="module bottomRightModule">
-            
+                <DriveModule />
             </div>
           </div>
         </div>
@@ -50,6 +50,7 @@ import profileModule from '~/components/dashboard/profileModule.vue';
 import musicPlayerModule from '~/components/dashboard/music/musicPlayerModule.vue';
 import EditorMarkdown from '~/components/dashboard/markdownModule/editorMarkdown.vue';
 import MarkdownCenter from '~/components/dashboard/markdownModule/markdownCenter.vue';
+import DriveModule from '~/components/dashboard/driveModule/driveModule.vue';
 
 const { $toast } = useNuxtApp();
 let noteId:number;
@@ -79,9 +80,11 @@ const handleOpeningNote = (chosenNote :Note) => {
 
 onMounted(() => {
   if (moduleZone.value) {
-    swapy.value = createSwapy(moduleZone.value);
-    swapy.value.onSwap(() => {
-      console.log('swapped');
+    swapy.value = createSwapy(moduleZone.value,{
+        dragOnHold: true
+    });
+    swapy.value.onSwapStart(() => {
+      $toast.info('deplace ton module');
     })
   }
 })
@@ -118,8 +121,8 @@ onUnmounted(() => {
 }
 
 .module {
-  width: 450px;
-  height: 250px;
+  width: 550px;
+  height: 300px;
   background-color: var(--color-white);
   border-radius: 5px;
 }
