@@ -1,8 +1,8 @@
 <template>
   <div class="max-size">
-    <messageModule />
-    <profileModule />
-    <musicPlayerModule />
+    <MessageModule />
+    <ProfileModule />
+    <MusicPlayerModule />
     <div class="fourZoneContainer">
       <div class="fourZone" ref="moduleZone">
         <div data-swapy-slot="topLeft" class="centered">
@@ -46,9 +46,9 @@ import type { Note } from '~/types/Note';
 import type { Swapy } from 'swapy';
 import { createSwapy } from 'swapy';
 import { onMounted, onUnmounted, ref } from 'vue';
-import messageModule from '~/components/dashboard/messageModule/messageModule.vue';
-import profileModule from '~/components/dashboard/profileModule.vue';
-import musicPlayerModule from '~/components/dashboard/music/musicPlayerModule.vue';
+import MessageModule from '~/components/dashboard/messageModule/messageModule.vue';
+import ProfileModule from '~/components/dashboard/profileModule.vue';
+import MusicPlayerModule from '~/components/dashboard/music/musicPlayerModule.vue';
 import EditorMarkdown from '~/components/dashboard/markdownModule/editorMarkdown.vue';
 import MarkdownCenter from '~/components/dashboard/markdownModule/markdownCenter.vue';
 import DriveModule from '~/components/dashboard/driveModule/driveModule.vue';

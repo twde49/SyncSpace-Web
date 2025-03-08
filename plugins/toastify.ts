@@ -6,6 +6,8 @@ export default defineNuxtPlugin(nuxtApp => {
     autoClose: 3000,
     limit: 2,
     newestOnTop: true,
+    position: 'top-center',
+    transition: 'slide'
   });
 
   return {

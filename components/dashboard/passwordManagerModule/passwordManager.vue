@@ -1,8 +1,6 @@
 <template>
   <div class="container">
-    <!-- Top Zone -->
     <div class="top-zone">
-      <!-- Info Zones -->
       <div class="info-zones">
         <div class="stat-box">
           <div class="stat-text miniFont">Mots de passe</div>
@@ -23,47 +21,87 @@
       <div @click="openPasswordCenter" class="chest-zone ml-2 cursor-pointer">
         <div class="chest-content">
           <span class="normalFontItalic">Ouvrir mon Coffre</span>
-          <Icon name="fluent:vault-16-filled" class="textColorPrimary" size="40px" />
+          <Icon
+            name="fluent:vault-16-filled"
+            class="textColorPrimary"
+            size="40px"
+          />
         </div>
       </div>
     </div>
 
     <div class="generator-zone flex flex-col">
       <div class="top flex flex-row w-full justify-between">
-        <button class="generate-button" @click="generatePassword">Générer mot de passe</button>
+        <button class="generate-button" @click="generatePassword">
+          Générer mot de passe
+        </button>
         <div class="options-container">
-          <button class="options-button bgColorBlack" @click="toggleOptionsMenu">Options</button>
+          <button
+            class="options-button bgColorBlack"
+            @click="toggleOptionsMenu"
+          >
+            Options
+          </button>
           <div v-if="showOptionsMenu" class="options-menu">
             <div class="options-grid">
               <label>
-                <input type="checkbox" v-model="options.uppercase" class="option-checkbox" />
+                <input
+                  type="checkbox"
+                  v-model="options.uppercase"
+                  class="option-checkbox"
+                />
                 Uppercase
               </label>
               <label>
-                <input type="checkbox" v-model="options.lowercase" class="option-checkbox" />
+                <input
+                  type="checkbox"
+                  v-model="options.lowercase"
+                  class="option-checkbox"
+                />
                 Lowercase
               </label>
               <label>
-                <input type="checkbox" v-model="options.numbers" class="option-checkbox" />
+                <input
+                  type="checkbox"
+                  v-model="options.numbers"
+                  class="option-checkbox"
+                />
                 Numbers
               </label>
               <label>
-                <input type="checkbox" v-model="options.symbols" class="option-checkbox" />
+                <input
+                  type="checkbox"
+                  v-model="options.symbols"
+                  class="option-checkbox"
+                />
                 Symbols
               </label>
               <label>
-                <input type="checkbox" v-model="options.easyToRead" class="option-checkbox" />
+                <input
+                  type="checkbox"
+                  v-model="options.easyToRead"
+                  class="option-checkbox"
+                />
                 Easy to Read
               </label>
               <label>
-                <input type="checkbox" v-model="options.easyToSay" class="option-checkbox" />
+                <input
+                  type="checkbox"
+                  v-model="options.easyToSay"
+                  class="option-checkbox"
+                />
                 Easy to Say
               </label>
             </div>
             <div>
               <label class="textColorWhite">
                 Length:
-                <input type="number" class="textColorBlack length-input" v-model="options.length" min="1" />
+                <input
+                  type="number"
+                  class="textColorBlack length-input"
+                  v-model="options.length"
+                  min="1"
+                />
               </label>
             </div>
           </div>
@@ -82,14 +120,12 @@
 </template>
 
 <script setup>
-import { ref,onMounted } from 'vue';
-const { $generatePassword,$toast } = useNuxtApp();
+import { ref } from 'vue';
+const { $generatePassword, $toast } = useNuxtApp();
 
 const generatedPassword = ref('');
 const showOptionsMenu = ref(false);
-const emit = defineEmits(
-  ['openPasswordCenter'],
-);
+const emit = defineEmits(['openPasswordCenter']);
 
 const options = ref({
   length: 12,
@@ -113,25 +149,17 @@ const generatePassword = () => {
   }
 };
 
-const copyToClipboard = () =>{
+const copyToClipboard = () => {
   navigator.clipboard.writeText(generatedPassword.value);
-  $toast.success('Mot de passe copié', {
-    position: 'top-center',
-    transition: 'slide'
-  });
+  $toast.success('Mot de passe copié');
 };
 
 const toggleOptionsMenu = () => {
   showOptionsMenu.value = !showOptionsMenu.value;
 };
-
-onMounted(()=>{
-
-})
 </script>
 
 <style scoped>
-/* General container styling */
 .container {
   display: flex;
   flex-direction: column;
@@ -141,7 +169,6 @@ onMounted(()=>{
   margin: auto;
 }
 
-/* Top Zone */
 .top-zone {
   display: flex;
   justify-content: space-between;
@@ -203,7 +230,6 @@ onMounted(()=>{
   color: var(--color-white);
 }
 
-/* Generator Zone */
 .generator-zone {
   width: 100%;
   display: flex;
@@ -238,27 +264,31 @@ onMounted(()=>{
 .options-menu {
   color: var(--color-white);
   position: absolute;
-  bottom: 100%; /* Position above the button */
-  right: 0; /* Align to the right of the button */
+  bottom: 100%;
+  right: 0;
   background-color: var(--color-black);
-  border-radius: 8px; /* More curved edges for better visuals */
-  padding: 15px; /* Slightly larger padding */
+  border-radius: 8px;
+  padding: 15px;
   width: 350px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3), 0 0 10px rgba(0, 0, 0, 0.1); /* Updated shadow for better depth */
+  box-shadow:
+    0 4px 10px rgba(0, 0, 0, 0.3),
+    0 0 10px rgba(0, 0, 0, 0.1);
   z-index: 10;
   display: flex;
   flex-direction: column;
-  margin-bottom: 8px; /* Adjusted spacing */
-  border: 1px solid rgba(255, 255, 255, 0.2); /* Subtle border for detail */
-  backdrop-filter: blur(8px); /* Glassy effect for better details */
-  transition: transform 0.3s ease, opacity 0.3s ease; /* Smooth transition for visibility */
+  margin-bottom: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(8px);
+  transition:
+    transform 0.3s ease,
+    opacity 0.3s ease;
 }
 
 .options-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr); /* Two columns */
-  gap: 10px; /* Space between items */
-  margin-bottom: 10px; /* Space below grid */
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-bottom: 10px;
 }
 
 .length-input {
@@ -307,8 +337,7 @@ onMounted(()=>{
   background-color: #ffc299;
 }
 
-.option-checkbox:hover{
+.option-checkbox:hover {
   background-color: #ffc299;
 }
-
 </style>

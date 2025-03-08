@@ -23,7 +23,7 @@
     "flowbite": "^2.5.2",
     "gsap": "^3.12.5",
     "md-editor-v3": "^5.2.1",
-    "nuxt": "^3.14.1592",
+    "nuxt": "^3.16.0",
     "pinia": "^2.3.0",
     "pinia-plugin-persistedstate": "^4.2.0",
     "socket.io-client": "^4.8.1",

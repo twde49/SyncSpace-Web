@@ -21,7 +21,7 @@
         <div class="p-4 md:p-5">
           <ul class="space-y-4 mb-4 max-h-64 overflow-y-auto">
             <li>
-              <input type="radio" id="new-note" name="job" value="new" class="hidden peer" required @change="chosenNote = {}" />
+              <input type="radio" id="new-note" name="job" value="new" class="hidden peer" required @change="chosenNote = {} as Note" />
               <label for="new-note"
                      class="inline-flex items-center justify-between w-full p-5 text-gray-900 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-500 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 dark:peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-900 hover:bg-gray-100 dark:text-white dark:bg-gray-600 dark:hover:bg-gray-500">
                 <div class="block">
@@ -38,15 +38,15 @@
               <label :for="String(note.id)"
                      class="inline-flex items-center justify-between w-full p-5 text-gray-900 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-500 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 dark:peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-900 hover:bg-gray-100 dark:text-white dark:bg-gray-600 dark:hover:bg-gray-500">
                 <div class="block">
-                  <div class="w-full text-lg font-semibold">{{ note.title }}</div>
-                  <div class="w-full text-gray-500 dark:text-gray-400">Dernière mise à jour: <br/> {{ getFormatedDate(note.updatedAt) }}</div>
+                  <div v-if="noteToDelete !== note.id" class="w-full text-lg font-semibold">{{ note.title }}</div>
+                  <div v-if="noteToDelete !== note.id" class="w-full text-gray-500 dark:text-gray-400">Dernière mise à jour: <br/> {{ getFormatedDate(note.updatedAt) }}</div>
+                  <div v-if="noteToDelete === note.id" class="flex justify-between w-full">
+                    <button @click.stop="cancelDelete" class="bg-gray-200 text-gray-900 rounded-lg px-4 py-2">Annuler</button>
+                    <button @click.stop="deleteNote(note.id)" class="bg-red-600 text-white rounded-lg px-4 py-2">Supprimer</button>
+                  </div>
                 </div>
-                <Icon name="ph:trash-fill" size="21px" class="trashIcon" @click="confirmDelete(note.id)" />
+                <Icon v-if="noteToDelete !== note.id" name="ph:trash-fill" size="21px" class="trashIcon" @click.stop="confirmDelete(note.id)" />
               </label>
-              <div v-if="noteToDelete === note.id" class="flex justify-between mt-2">
-                <button @click="cancelDelete" class="bg-gray-200 text-gray-900 rounded-lg px-4 py-2">Annuler</button>
-                <button @click="deleteNote(note.id)" class="bg-red-600 text-white rounded-lg px-4 py-2">Supprimer</button>
-              </div>
             </li>
           </ul>
           <button
@@ -108,17 +108,11 @@ const cancelDelete = () => {
 const deleteNote = async (id: number) => {
   try {
     const response = await useAuthFetch(`note/remove/${id}`, { method: 'DELETE' });
-    
+
     if (response.status.value === 'success'){
-      $toast.success('Note supprimée avec succès', {
-        position: 'top-center',
-        transition: 'slide'
-      });
+      $toast.success('Note supprimée avec succès');
     } else {
-      $toast.error('Erreur lors de la suppression de la note', {
-        position: 'top-center',
-        transition: 'slide'
-      });
+      $toast.error('Erreur lors de la suppression de la note');
     };
     await fetchNotes();
   } catch (e) {

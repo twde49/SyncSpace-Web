@@ -92,8 +92,10 @@
           <div class="text-3xl mb-2">
             <i class="fas fa-upload"></i>
           </div>
-          <p class="text-xl font-medium">Déposez votre fichier ici</p>
-          <p class="text-sm opacity-80 mt-1">Le fichier sera téléchargé dans le dossier actuel</p>
+          <Icon name="solar:file-bold" size="48" />
+          <p class="text-xl font-medium">Aucun fichier disponible</p>
+          <p class="text-xl font-medium">Glissez-déposez vos fichiers ici</p>
+          <p class="text-sm opacity-80 mt-1">Le téléchargement s'effectuera dans le répertoire courant</p>
         </div>
       </div>
       <Transition v-else name="fade" mode="out-in">
@@ -101,6 +103,7 @@
           v-if="getFilesByTab && getFilesByTab.length > 0"
           :files="getFilesByTab"
           @file-removed="handleFileRemove"
+          @open-folder="handleFolderOpening"
         />
       </Transition>
 
@@ -126,11 +129,13 @@ const picturesFiles = ref<File[]>([]);
 const documentsFiles = ref<File[]>([]);
 const foldersFiles = ref<File[]>([]);
 const allFiles = ref<File[]>([]);
+const openedFolderFiles = ref<File[]>([]);
 
 const activeTab = ref('recent');
 const isLoading = ref(false);
 const dragover = ref(false);
 const fileInput = ref<HTMLInputElement | null>(null);
+const currentFolder = ref<File | null>(null);
 
 const changeTab = async (tab: string) => {
   isLoading.value = true;
@@ -155,6 +160,11 @@ const fetchFiles = async () => {
 
   const allResponse = await useAuthFetch('files/all');
   allFiles.value = allResponse.data.value as File[];
+  
+  if (currentFolder.value) {
+    const folderResponse = await useAuthFetch(`files/folder/${currentFolder.value.id}`);
+    openedFolderFiles.value = folderResponse.data.value as File[];
+  }
 };
 
 const getFilesByTab = computed(() => {
@@ -169,6 +179,8 @@ const getFilesByTab = computed(() => {
       return Array.isArray(foldersFiles.value) ? foldersFiles.value : [];
     case 'all':
       return Array.isArray(allFiles.value) ? allFiles.value : [];
+    case 'openedFolderFiles':
+      return Array.isArray(openedFolderFiles.value) ? openedFolderFiles.value : [];
     default:
       return [];
   }
@@ -197,6 +209,14 @@ const handleFileRemove = (fileId: string) => {
   }
 };
 
+const handleFolderOpening = async (folder: File) => {
+  const response = await useAuthFetch(`files/folder/${folder.id}`);
+  currentFolder.value = folder;
+  console.log(response.data.value as File);
+  openedFolderFiles.value = response.data.value as File[];
+  activeTab.value = 'openedFolderFiles';
+};
+
 const uploadFile = async (file: File) => {
   if (!file) return;
 
@@ -205,11 +225,17 @@ const uploadFile = async (file: File) => {
   try {
     const formData = new FormData();
     formData.append('file', file);
-
-    const response = await useAuthFetch('files/upload', {
-      method: 'POST',
-      body: formData
-    });
+    
+    // Using the correct type for the response instead of any
+    const response = await useAuthFetch(
+      currentFolder.value !== null 
+        ? `files/upload/${currentFolder.value.id}` 
+        : 'files/upload',
+      {
+        method: 'POST',
+        body: formData
+      }
+    );
 
     if (response.error.value) {
       console.error('Upload error:', response.error.value);
@@ -246,6 +272,13 @@ onMounted(async () => {
     await fetchFiles();
   });
 });
+
+watch(() => activeTab.value, (newTab) => {
+  if (newTab !== 'openedFolderFiles') {
+    currentFolder.value = null;
+  }
+});
+
 </script>
 
 <style scoped>
