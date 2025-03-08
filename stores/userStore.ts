@@ -7,13 +7,15 @@ export const useUserStore = defineStore('user', {
     lastName: '',
     email: '',
     token: '',
+    masterPasswordSet: false,
   }),
   actions: {
-    setUser(data: { firstName: string; lastName: string; email: string; token: string }) {
+    setUser(data: { firstName: string; lastName: string; email: string; token: string, masterPasswordSet: boolean }) {
       this.firstName = data.firstName;
       this.lastName = data.lastName;
       this.email = data.email;
       this.token = data.token;
+      this.masterPasswordSet = data.masterPasswordSet;
 
       const cookies = new Cookies();
       cookies.set('user', JSON.stringify(data), {
@@ -32,6 +34,7 @@ export const useUserStore = defineStore('user', {
         lastName: this.lastName,
         email: this.email,
         token: this.token,
+        masterPasswordSet: this.masterPasswordSet,
       };
     },
     loadUserFromCookies() {
@@ -44,6 +47,7 @@ export const useUserStore = defineStore('user', {
           this.lastName = userData.lastName;
           this.email = userData.email;
           this.token = userData.token;
+          this.masterPasswordSet = userData.masterPasswordSet;
         } catch (e) {
           console.error('Failed to parse user data from cookies:', e);
         }
@@ -54,6 +58,7 @@ export const useUserStore = defineStore('user', {
       this.lastName = '';
       this.email = '';
       this.token = '';
+      this.masterPasswordSet = false;
 
       const cookies = new Cookies();
       cookies.remove('user', { path: '/' });

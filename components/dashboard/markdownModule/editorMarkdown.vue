@@ -177,10 +177,7 @@ const addNewNote = async () => {
     );
 
     if (response.status.value === 'success') {
-      $toast.success('Votre note a bien été sauvegardée', {
-        position: 'top-center',
-        transition: 'slide',
-      });
+      $toast.success('Votre note a bien été sauvegardée');
       title.value = '';
       content.value = '';
       placeholder.value = getRandomPlaceholder();
@@ -190,7 +187,6 @@ const addNewNote = async () => {
     }
 
   } catch (error: any) {
-    console.log(error);
     $toast.error(error.message);
   }
 };
@@ -213,10 +209,7 @@ const updateExistingNote = async () => {
     );
 
     if (response.status.value === 'success') {
-      $toast.success('Votre note a bien été sauvegardée', {
-        position: 'top-center',
-        transition: 'slide',
-      });
+      $toast.success('Votre note a bien été sauvegardée');
       title.value = '';
       content.value = '';
       placeholder.value = getRandomPlaceholder();
@@ -226,7 +219,6 @@ const updateExistingNote = async () => {
     }
 
   } catch (error: any) {
-    console.log(error);
     $toast.error(error.message);
   }
 };
