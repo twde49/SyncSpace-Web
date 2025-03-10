@@ -1,6 +1,7 @@
 <template>
   <div class="max-size">
     <MessageModule />
+    <NotificationDrawer />
     <ProfileModule />
     <MusicPlayerModule />
     <div class="fourZoneContainer">
@@ -62,6 +63,7 @@ import DriveModule from '~/components/dashboard/driveModule/driveModule.vue';
 import PasswordManager from '~/components/dashboard/passwordManagerModule/passwordManager.vue'
 import PasswordCenter from '~/components/dashboard/passwordManagerModule/passwordCenter.vue';
 import CalendarModule from '~/components/dashboard/calendarModule/calendarModule.vue';
+import NotificationDrawer from '~/components/dashboard/notificationDrawer/NotificationDrawer.vue';
 import { useRouter } from 'vue-router';
   
 const { $toast } = useNuxtApp();
@@ -129,21 +131,6 @@ const showContextMenu = (event: MouseEvent) => {
   }
 };
 
-const handleRefresh = () => {
-  $toast.info('Refreshing module: ' + contextMenu.value.targetModule);
-  contextMenu.value.show = false;
-};
-
-const handleEdit = () => {
-  $toast.info('Editing module: ' + contextMenu.value.targetModule);
-  contextMenu.value.show = false;
-};
-
-const handleSwapModules = () => {
-  $toast.info('Ready to swap modules');
-  contextMenu.value.show = false;
-};
-
 const handleSettings = () => {
   router.push('/settings');
   contextMenu.value.show = false;
@@ -159,7 +146,6 @@ onMounted(() => {
     });
   }
 
-  // Close context menu when clicking outside
   document.addEventListener('click', () => {
     contextMenu.value.show = false;
   });
