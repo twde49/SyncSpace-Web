@@ -173,7 +173,7 @@ onUpdated(() => {
   display: flex;
   justify-content: flex-end;
   align-items: flex-start;
-  z-index: 15;
+  z-index: 99999;
   animation: fadeIn 0.5s ease;
 }
 
