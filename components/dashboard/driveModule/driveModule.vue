@@ -328,6 +328,6 @@ watch(() => activeTab.value, (newTab) => {
 
 .drop-overlay {
   transition: all 0.3s ease;
-  border: 3px dashed #3b82f6;
+  border: 3px dashed var(--color-primary);
 }
 </style>

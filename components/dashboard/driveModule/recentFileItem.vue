@@ -8,6 +8,7 @@
       >
         <div v-for="file in files" :key="file.id">
           <div
+            @contextmenu.prevent="showFileActions(file)"
             :class="file.isFolder ? 'bgColorPrimary cursor-pointer' : 'bgColorBlack'"
             class="fileItem globalRadius flex items-center p-2 my-2 rounded-lg w-full"
             @click="openFolder(file)"
@@ -70,17 +71,6 @@
               </div>
             </div>
             <div class="fileActionWrapper relative flex">
-              <button
-                v-if="!file.isFolder"
-                class="fileAction text-white"
-                @click.stop="toggleMenu(String(file.id))"
-              >
-                <Icon
-                  name="bi:three-dots-vertical"
-                  class="flex text-white"
-                  size="24"
-                />
-              </button>
               <div
                 v-if="activeMenu === String(file.id)"
                 class="actionMenu absolute right-0 w-48 bg-white rounded-md shadow-lg z-50"
@@ -174,7 +164,6 @@ const toggleMenu = (fileId: string) => {
     activeMenu.value = null;
   } else {
     activeMenu.value = fileId;
-    // Store the position of the clicked item
     nextTick(() => {
       const element = document.querySelector(`[data-file-id="${fileId}"]`);
       if (element) {
@@ -185,17 +174,8 @@ const toggleMenu = (fileId: string) => {
   }
 };
 
-const getMenuPosition = (fileId: string) => {
-  const element = document.querySelector(`[data-file-id="${fileId}"]`);
-  if (element) {
-    const rect = element.getBoundingClientRect();
-    return rect.top;
-  }
-  return window.innerHeight / 2;
-};
-
-const getMenuRightPosition = () => {
-  return 20; // Fixed position from the right
+const showFileActions = (file: File) => {
+  toggleMenu(String(file.id));
 };
 
 const closeMenuOnOutsideClick = (event: MouseEvent) => {
