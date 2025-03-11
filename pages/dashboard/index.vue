@@ -53,7 +53,7 @@
 import type { Note } from '~/types/Note';
 import type { Swapy } from 'swapy';
 import { createSwapy } from 'swapy';
-import { onMounted, onUnmounted, ref } from 'vue';
+import { onMounted, onUnmounted, ref, watch } from 'vue';
 import MessageModule from '~/components/dashboard/messageModule/messageModule.vue';
 import ProfileModule from '~/components/dashboard/profileModule.vue';
 import MusicPlayerModule from '~/components/dashboard/music/musicPlayerModule.vue';
@@ -65,7 +65,7 @@ import PasswordCenter from '~/components/dashboard/passwordManagerModule/passwor
 import CalendarModule from '~/components/dashboard/calendarModule/calendarModule.vue';
 import NotificationDrawer from '~/components/dashboard/notificationDrawer/NotificationDrawer.vue';
 import { useRouter } from 'vue-router';
-  
+
 const { $toast } = useNuxtApp();
 let noteId:number;
 let noteTitle = '';
@@ -79,7 +79,6 @@ const moduleZone = ref<HTMLElement | null>(null);
 const isMarkdownCenterOpen = ref(false);
 const isPasswordCenterOpen = ref(false);
 
-// Context menu state
 const contextMenu = ref({
   show: false,
   x: 0,
@@ -109,13 +108,11 @@ const handleOpeningNote = (chosenNote :Note) => {
   noteContent = chosenNote.content ?? '';
 };
 
-// Context menu functions
 const showContextMenu = (event: MouseEvent) => {
   contextMenu.value.show = true;
   contextMenu.value.x = event.clientX;
   contextMenu.value.y = event.clientY;
 
-  // Determine which module was right-clicked
   const target = event.target as HTMLElement;
   const moduleElement = target.closest('.module');
   if (moduleElement) {
@@ -140,9 +137,6 @@ onMounted(() => {
   if (moduleZone.value) {
     swapy.value = createSwapy(moduleZone.value,{
         dragOnHold: true
-    });
-    swapy.value.onSwapStart(() => {
-      $toast.info('deplace ton module');
     });
   }
 
