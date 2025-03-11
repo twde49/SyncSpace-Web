@@ -237,7 +237,7 @@ function closeDayModal() {
   left: 0;
   background: var(--color-white);
   border: 1px solid var(--color-black);
-  border-radius: 4px;
+  border-radius: 5px;
   padding: 5px;
   z-index: 100;
   display: grid;

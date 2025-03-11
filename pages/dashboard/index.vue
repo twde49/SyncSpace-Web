@@ -1,6 +1,7 @@
 <template>
   <div class="max-size">
     <MessageModule />
+    <NotificationDrawer />
     <ProfileModule />
     <MusicPlayerModule />
     <div class="fourZoneContainer">
@@ -52,7 +53,7 @@
 import type { Note } from '~/types/Note';
 import type { Swapy } from 'swapy';
 import { createSwapy } from 'swapy';
-import { onMounted, onUnmounted, ref } from 'vue';
+import { onMounted, onUnmounted, ref, watch } from 'vue';
 import MessageModule from '~/components/dashboard/messageModule/messageModule.vue';
 import ProfileModule from '~/components/dashboard/profileModule.vue';
 import MusicPlayerModule from '~/components/dashboard/music/musicPlayerModule.vue';
@@ -62,8 +63,9 @@ import DriveModule from '~/components/dashboard/driveModule/driveModule.vue';
 import PasswordManager from '~/components/dashboard/passwordManagerModule/passwordManager.vue'
 import PasswordCenter from '~/components/dashboard/passwordManagerModule/passwordCenter.vue';
 import CalendarModule from '~/components/dashboard/calendarModule/calendarModule.vue';
+import NotificationDrawer from '~/components/dashboard/notificationDrawer/NotificationDrawer.vue';
 import { useRouter } from 'vue-router';
-  
+
 const { $toast } = useNuxtApp();
 let noteId:number;
 let noteTitle = '';
@@ -77,7 +79,6 @@ const moduleZone = ref<HTMLElement | null>(null);
 const isMarkdownCenterOpen = ref(false);
 const isPasswordCenterOpen = ref(false);
 
-// Context menu state
 const contextMenu = ref({
   show: false,
   x: 0,
@@ -107,13 +108,11 @@ const handleOpeningNote = (chosenNote :Note) => {
   noteContent = chosenNote.content ?? '';
 };
 
-// Context menu functions
 const showContextMenu = (event: MouseEvent) => {
   contextMenu.value.show = true;
   contextMenu.value.x = event.clientX;
   contextMenu.value.y = event.clientY;
 
-  // Determine which module was right-clicked
   const target = event.target as HTMLElement;
   const moduleElement = target.closest('.module');
   if (moduleElement) {
@@ -129,21 +128,6 @@ const showContextMenu = (event: MouseEvent) => {
   }
 };
 
-const handleRefresh = () => {
-  $toast.info('Refreshing module: ' + contextMenu.value.targetModule);
-  contextMenu.value.show = false;
-};
-
-const handleEdit = () => {
-  $toast.info('Editing module: ' + contextMenu.value.targetModule);
-  contextMenu.value.show = false;
-};
-
-const handleSwapModules = () => {
-  $toast.info('Ready to swap modules');
-  contextMenu.value.show = false;
-};
-
 const handleSettings = () => {
   router.push('/settings');
   contextMenu.value.show = false;
@@ -154,12 +138,8 @@ onMounted(() => {
     swapy.value = createSwapy(moduleZone.value,{
         dragOnHold: true
     });
-    swapy.value.onSwapStart(() => {
-      $toast.info('deplace ton module');
-    });
   }
 
-  // Close context menu when clicking outside
   document.addEventListener('click', () => {
     contextMenu.value.show = false;
   });

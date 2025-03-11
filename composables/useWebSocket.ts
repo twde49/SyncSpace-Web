@@ -30,6 +30,13 @@ export function useWebSocket() {
         socket.on('connect_error', () => {
             socket = null;
         });
+
+        socket.on('getNotification', (notification: any, userEmail: any) => {
+          webSocketData.value.type = 'notification';
+          webSocketData.value.notification = notification;
+          webSocketData.value.userEmail = userEmail;
+          console.log('websocketData',webSocketData)
+        });
     };
 
     const send = (data: any) => {

@@ -1,6 +1,6 @@
 <template>
   <div class="header flex items-center justify-between border-b p-4 pb-2 mb-4 z-20">
-    <h2 class="text-white miniFont font-bold">{{ getParticipantsName() }}</h2>
+    <h2 class="text-white miniFont font-bold">{{ getConversationName() }}</h2>
     <span class="text-green-500 text-sm">Online</span>
   </div>
 
@@ -164,7 +164,11 @@ const isOwnMessage = (message: Message) => {
   return message.sender?.email === userStore.email;
 };
 
-const getParticipantsName = () => {
+const getConversationName = () => {
+  if (reactiveConversation.name) {
+    return reactiveConversation.name;
+  }
+  
   if (reactiveConversation.users?.length === 2) {
     return reactiveConversation.users
       ?.filter(user => user.email !== userStore.email)

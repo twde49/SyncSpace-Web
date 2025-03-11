@@ -84,6 +84,21 @@
           <Icon name="mdi:close" size="1.5em" />
         </button>
       </div>
+      <div class="relative my-4 px-5">
+        <input 
+          type="text" 
+          id="convName" 
+          v-model="conversationName" 
+          class="w-full pb-2 pt-7 px-0 bg-transparent border-0 border-b border-gray-300 focus:border-blue-500 focus:ring-0 focus:outline-none transition-all peer" 
+          placeholder=" "
+        />
+        <label 
+          for="convName" 
+          class="absolute left-5 top-4 text-gray-500 text-sm transition-all duration-300 peer-focus:text-xs peer-focus:top-0 peer-focus:text-blue-500 peer-placeholder-shown:top-4 peer-placeholder-shown:text-base peer-not-placeholder-shown:text-xs peer-not-placeholder-shown:top-0"
+        >
+          Nom de la conversation
+        </label>
+      </div>
       <div class="p-5 flex-1 overflow-y-auto max-h-[50vh]">
         <div class="mb-4">
           <input
@@ -204,6 +219,7 @@ const showNewConvModal = ref(false);
 const searchQuery = ref('');
 const searchResults = ref<User[]>([]);
 const selectedUsers = ref<User[]>([]);
+const conversationName = ref('');
 const isSearching = ref(false);
 const activeMenu = ref<string | null>(null);
 const menuPositions = ref<{ [key: string]: number }>({});
@@ -332,11 +348,13 @@ const createConversation = async () => {
     const userIds = selectedUsers.value.map(user => user.id);
     const response = await useAuthFetch('conversation/new', {
       method: 'POST',
-      body: { userIds },
+      body: { 
+        userIds,
+        name: conversationName.value
+      },
     });
 
     if (response.data.value && typeof response.data.value === 'object' && 'content' in response.data.value) {
-      $toast.success('Conversation created successfully');
       await getConversations();
       const newConversation = (response.data.value as { content: Conversation }).content;
       activeConversation.value = newConversation;
