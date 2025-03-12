@@ -1,7 +1,7 @@
 <template>
   <div class="header flex items-center justify-between border-b p-4 pb-2 mb-4 z-20">
     <h2 class="text-white miniFont font-bold">{{ getConversationName() }}</h2>
-    <span class="text-green-500 text-sm">Online</span>
+    <span :class="checkIfUsersAreOnline() === 'Online' ? 'text-green-500 text-sm' : 'text-red-500 text-sm'">{{checkIfUsersAreOnline()}}</span>
   </div>
 
   <div
@@ -201,6 +201,16 @@ const toggleMenu = (messageId: string) => {
       }
     });
   }
+};
+
+const checkIfUsersAreOnline = () => {
+  const users = reactiveConversation.users;
+  if (!users) return 'Offline';
+
+  const onlineUsers = users.filter(user => user.isOnline);
+  if (onlineUsers.length === 0) return 'Offline';
+  if (onlineUsers.length < users.length) return 'Offline';
+  return 'Online';
 };
 
 onMounted(() => {

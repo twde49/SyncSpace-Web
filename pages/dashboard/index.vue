@@ -53,7 +53,7 @@
 import type { Note } from '~/types/Note';
 import type { Swapy } from 'swapy';
 import { createSwapy } from 'swapy';
-import { onMounted, onUnmounted, ref, watch } from 'vue';
+import { onMounted, onUnmounted, ref } from 'vue';
 import MessageModule from '~/components/dashboard/messageModule/messageModule.vue';
 import ProfileModule from '~/components/dashboard/profileModule.vue';
 import MusicPlayerModule from '~/components/dashboard/music/musicPlayerModule.vue';
@@ -137,6 +137,10 @@ onMounted(() => {
   if (moduleZone.value) {
     swapy.value = createSwapy(moduleZone.value,{
         dragOnHold: true
+    });
+    
+    swapy.value.onSwapStart(() => {
+      $toast.info('Module peut être déplacé');
     });
   }
 

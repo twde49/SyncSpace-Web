@@ -1,6 +1,8 @@
 import { ref } from 'vue';
 import { io } from 'socket.io-client';
 import type { Socket } from 'socket.io-client';
+import type { Notification } from '~/types/Notification';
+import type { Message } from '~/types/Message';
 
 const webSocketData = ref<Record<string, any>>({});
 let socket: Socket | null = null;
@@ -18,9 +20,15 @@ export function useWebSocket() {
                 webSocketData.value[message.type] = message.data;
             }
         });
+        
+      socket.on('checkUser', (socketId: string) => {
+        webSocketData.value.type = 'checkUser';
+        webSocketData.value.socketId = socketId;
+      });
 
-        socket.on('updatedMessages', (newMessages: any) => {
-            webSocketData.value['updatedMessages'] = newMessages;
+        socket.on('updatedMessages', (newMessages: Message[]) => {
+          webSocketData.value.type = 'updatedMessages';
+          webSocketData.value.updatedMessages = newMessages;
         });
 
         socket.on('disconnect', () => {
@@ -30,12 +38,15 @@ export function useWebSocket() {
         socket.on('connect_error', () => {
             socket = null;
         });
+        
+        socket.on('refreshConversations', () => {
+          webSocketData.value.type = 'refreshConversations';
+        })
 
-        socket.on('getNotification', (notification: any, userEmail: any) => {
+        socket.on('getNotification', (notification: Notification, userEmail: string) => {
           webSocketData.value.type = 'notification';
           webSocketData.value.notification = notification;
           webSocketData.value.userEmail = userEmail;
-          console.log('websocketData',webSocketData)
         });
     };
 
@@ -46,10 +57,20 @@ export function useWebSocket() {
 
         socket.emit('message', data);
     };
+    
+    const isOnline = (userEmail: string,jwtToken:string) => {
+      socket?.emit('userOnline', userEmail,jwtToken);
+    }
+    
+    const isOffline = (userEmail: string,jwtToken:string) => {
+      socket?.emit('userOffline', userEmail,jwtToken);
+    }
 
     return {
         connect,
         send,
         webSocketData,
+        isOnline,
+        isOffline
     };
 }

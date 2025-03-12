@@ -205,7 +205,9 @@ import LittleConversation from '~/components/dashboard/messageModule/littleConve
 import ActiveConversation from '~/components/dashboard/messageModule/activeConversation.vue';
 import type { User } from '~/types/User';
 import { useUserStore } from '~/stores/userStore';
+import { useWebSocket } from '#imports';
 
+const { webSocketData } = useWebSocket();
 gsap.registerPlugin(Draggable);
 const { $toast } = useNuxtApp();
 const closed = ref(true);
@@ -358,6 +360,7 @@ const createConversation = async () => {
       await getConversations();
       const newConversation = (response.data.value as { content: Conversation }).content;
       activeConversation.value = newConversation;
+      conversationName.value = '';
       closeNewConvModal();
     }
   } catch (error: unknown) {
@@ -439,6 +442,12 @@ onMounted(async () => {
   });
   applyDraggable();
   userStore.loadUserFromCookies();
+});
+
+watch(webSocketData.value,async (newData) => {
+  if (newData.type === 'refreshConversations') {
+    await getConversations();
+  }
 });
 
 onUpdated(() => {
