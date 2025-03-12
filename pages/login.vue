@@ -117,6 +117,7 @@ const loginUser = async () => {
       lastName: data.user.lastName,
       email: data.user.userEmail,
       token: data.token,
+      masterPasswordSet: data.user.masterPasswordSet
     });
 
     $toast.success('Vous avez bien été authentifié.', {

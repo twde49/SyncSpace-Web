@@ -11,10 +11,16 @@
   <div
     v-else
     class="drawer-container"
-    @click.self="openClose"
+    @click.self="closeDrawer"
     ref="drawerContainer"
   >
     <div class="drawer bgColorLight" ref="drawer">
+      <div class="drawer-header">
+        <WeatherInfo class="weather-component" />
+        <div class="parameters-icon">
+          <Icon name="solar:settings-bold" size="1em" class="textColorBlack" />
+        </div>
+      </div>
       <span class="profile-name drawer-profile-name">{{ initialUser }}</span>
       <ul class="space-y-4 mt-8">
         <li
@@ -45,6 +51,11 @@ import { useRouter } from 'vue-router';
 import { gsap } from 'gsap';
 import { Draggable } from 'gsap/Draggable';
 import { useUserStore } from '~/stores/userStore';
+import WeatherInfo from './weatherModule/weatherInfo.vue';
+import { useWebSocket } from '#imports';
+
+const { connect, webSocketData, isOnline, isOffline } = useWebSocket();
+
 gsap.registerPlugin(Draggable);
 
 const initialUser = ref('');
@@ -83,8 +94,31 @@ const applyDraggable = () => {
   });
 };
 
+const closeDrawer = () => {
+  if (drawer.value && drawerContainer.value) {
+    gsap.to(drawer.value, {
+      duration: 0.5,
+      x: '100%',
+      ease: 'power2.inOut',
+    });
+
+    gsap.to(drawerContainer.value, {
+      duration: 0.5,
+      opacity: 0,
+      ease: 'power2.inOut',
+      onComplete: () => {
+        closed.value = true;
+      }
+    });
+  }
+};
+
 const openClose = () => {
-  closed.value = !closed.value;
+  if (closed.value) {
+    closed.value = false;
+  } else {
+    closeDrawer();
+  }
 };
 
 const getInitialCurrentUser = () => {
@@ -95,6 +129,7 @@ const getInitialCurrentUser = () => {
 };
 
 const logout = () => {
+  isOffline(userStore.email,userStore.token);
   userStore.logout();
   route.push('/');
 }
@@ -109,11 +144,20 @@ onMounted(() => {
   applyDraggable();
   userStore.loadUserFromCookies();
   componentMounted.value = true;
+  connect();
 });
 
 watch(componentMounted, mounted => {
   if (mounted) {
     initialUser.value = getInitialCurrentUser();
+  }
+});
+
+
+watch(webSocketData.value,async (newData) => {
+  if (newData.type === 'checkUser') {
+    userStore.setSocketId(newData.socketId.id);
+    isOnline(userStore.email,userStore.token);
   }
 });
 
@@ -151,7 +195,7 @@ onUpdated(() => {
 }
 
 .drawer-profile-name {
-  margin-top: 6rem;
+  margin-top: 10rem;
 }
 
 .marged-right {
@@ -185,8 +229,39 @@ onUpdated(() => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  transform: translateX(100%);
-  animation: slideIn 0.5s ease forwards;
+  transform: translateX(0);
+  animation: slideIn 0.5s ease;
+  position: relative;
+}
+
+.drawer-header {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  width: 100%;
+  padding: 1rem 2rem;
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.weather-component {
+  margin-right: 1rem;
+}
+
+.parameters-icon {
+  font-size: 24px;
+  cursor: pointer;
+  color: var(--color-black);
+  transition: transform 0.3s ease;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  transform-origin: center;
+}
+
+.parameters-icon:hover {
+  transform: rotate(45deg);
 }
 
 @keyframes fadeIn {
