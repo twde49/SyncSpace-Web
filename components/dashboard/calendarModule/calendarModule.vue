@@ -330,13 +330,16 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, nextTick } from 'vue';
+import { ref, computed, onMounted, nextTick, watch } from 'vue';
 import type { Event } from '~/types/Event';
 import useAuthFetch from '~/composables/useAuthFetch';
 import type { User } from '~/types/User';
 import { useUserStore } from '~/stores/userStore';
+import { useWebSocket } from '#imports';
+
 const userStore = useUserStore();
 const { $toast } = useNuxtApp();
+const { connect, webSocketData } = useWebSocket();
 
 const currentDate = ref(new Date());
 const month = computed(() => currentDate.value.getMonth());
@@ -705,8 +708,15 @@ function closeDayModal(): void {
   showDayModal.value = false;
 }
 
+watch(webSocketData.value, async (data) => {
+  if (data.type === 'refreshCalendar') {
+    await fetchEvents();
+  }
+});
+
 onMounted(async () => {
   userStore.loadUserFromCookies();
+  connect();
   await nextTick(async () => {
     await fetchEvents();
   });

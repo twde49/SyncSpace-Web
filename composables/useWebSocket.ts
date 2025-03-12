@@ -40,7 +40,13 @@ export function useWebSocket() {
         });
         
         socket.on('refreshConversations', () => {
+          console.log('useWebSocket refresh conversation on')
           webSocketData.value.type = 'refreshConversations';
+        })
+        
+        
+        socket.on('refreshCalendar', ()=>{
+          webSocketData.value.type = 'refreshCalendar';
         })
 
         socket.on('getNotification', (notification: Notification, userEmail: string) => {

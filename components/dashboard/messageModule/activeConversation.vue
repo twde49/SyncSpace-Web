@@ -148,6 +148,7 @@ const messages = computed(() => {
 const emits = defineEmits<{
   'message-sent': [],
   'update-message': [],
+  'refresh-conversations': []
 }>();
 
 watch(
@@ -326,6 +327,12 @@ const sendMessage = async () => {
   }
 };
 
+watch(webSocketData.value, (newData) => {
+  if (newData.type === 'refreshConversations') {
+    emits('refresh-conversations');
+  }
+});
+
 watch(
   () => webSocketData.value.updatedMessages,
   receivedData => {
@@ -334,7 +341,7 @@ watch(
     if (typeof receivedData === 'string') {
       try {
         newMessages = JSON.parse(receivedData) as Message[];
-      } catch (error: unknown) {
+      } catch (error) {
         console.error(error);
         return;
       }
@@ -344,18 +351,13 @@ watch(
       return;
     }
 
-    if (newMessages && Array.isArray(newMessages)) {
-      if (reactiveConversation.messages !== undefined) {
-        const existingMessageIds = reactiveConversation.messages.map(
-          msg => msg.id,
-        );
-        const uniqueMessages = newMessages.filter(
-          msg => !existingMessageIds.includes(msg.id),
-        );
-        if (uniqueMessages.length > 0) {
-          reactiveConversation.messages.push(...uniqueMessages);
-        }
-      }
+    if (!reactiveConversation.messages) return;
+
+    const existingMessageIds = new Set(reactiveConversation.messages.map(msg => msg.id));
+    const uniqueMessages = newMessages.filter(msg => !existingMessageIds.has(msg.id));
+
+    if (uniqueMessages.length > 0) {
+      reactiveConversation.messages.push(...uniqueMessages);
     }
   },
 );

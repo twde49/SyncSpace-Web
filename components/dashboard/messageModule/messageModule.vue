@@ -72,7 +72,7 @@
       </button>
     </div>
     <div v-if="activeConversation" class="flex-1 h-[98%] bg-[var(--color-black)] text-white rounded m-2 flex flex-col">
-      <ActiveConversation :conversation="activeConversation" @message-sent="getConversations" @update-message="getConversations" />
+        <ActiveConversation :conversation="activeConversation" @message-sent="getConversations" @update-message="getConversations" />
     </div>
   </div>
 
@@ -370,6 +370,7 @@ const createConversation = async () => {
 };
 
 const getConversations = async () => {
+  console.log('Fetching conversations...');
   try {
     const response = await useAuthFetch('conversations');
 
@@ -389,7 +390,7 @@ const removeConversation = async () => {
           method: 'DELETE',
         },
       );
-      $toast.success('Conversation deleted successfully');
+      
       await getConversations();
       showDeleteModal.value = false;
       conversationToDelete.value = null;

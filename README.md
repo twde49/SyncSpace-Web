@@ -82,7 +82,7 @@ npm run dev
 ```
 
 5. **Accéder à l'application** :  
-   Ouvrez votre navigateur et rendez-vous sur : `http://localhost:3000` 🚀.
+   Ouvrez votre navigateur et rendez-vous sur : `http://localhost:4000` 🚀.
 
 ---
 
