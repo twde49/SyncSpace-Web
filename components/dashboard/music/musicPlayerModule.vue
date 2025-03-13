@@ -56,19 +56,19 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
-import VolumeControl from '~/components/dashboard/music/VolumeControl.vue';
+import { computed } from "vue";
+import VolumeControl from "~/components/dashboard/music/VolumeControl.vue";
 
 const coverUrl: string =
-  'https://images2.alphacoders.com/135/thumb-1920-1354873.png';
+	"https://images2.alphacoders.com/135/thumb-1920-1354873.png";
 const musicPlayer = {
-  musicName: 'Navigating',
-  album: 'Clancy',
-  artist: 'Twenty One Pilots',
+	musicName: "Navigating",
+	album: "Clancy",
+	artist: "Twenty One Pilots",
 };
 
 const getMaxValueFromCurrentMusic = computed(() => {
-  return (204 / 84) * 100;
+	return (204 / 84) * 100;
 });
 </script>
 

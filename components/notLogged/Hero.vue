@@ -20,81 +20,81 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
-import { gsap } from 'gsap';
+import { ref, onMounted } from "vue";
+import { gsap } from "gsap";
 
-const words = ['musiques', 'documents', 'tâches', 'contacts', 'idées'];
-const displayedText = ref('');
+const words = ["musiques", "documents", "tâches", "contacts", "idées"];
+const displayedText = ref("");
 let index = 0;
 
 const animateText = (newWord: string) => {
-  const tl = gsap.timeline();
-  const splitText = newWord.split('');
+	const tl = gsap.timeline();
+	const splitText = newWord.split("");
 
-  tl.to(displayedText, {
-    duration: 0.5,
-    textContent: '',
-    onUpdate: () => {
-      displayedText.value = '';
-    },
-  });
+	tl.to(displayedText, {
+		duration: 0.5,
+		textContent: "",
+		onUpdate: () => {
+			displayedText.value = "";
+		},
+	});
 
-  for (const letter of splitText) {
-    tl.to(
-      {},
-      {
-        duration: 0.1,
-        onComplete: () => {
-          displayedText.value += letter;
-        },
-      },
-    );
-  }
+	for (const letter of splitText) {
+		tl.to(
+			{},
+			{
+				duration: 0.1,
+				onComplete: () => {
+					displayedText.value += letter;
+				},
+			},
+		);
+	}
 };
 
 const addButtonAnimations = () => {
-  const startButton = document.querySelector('.start-button');
-  const discoverButton = document.querySelector('.discover-button');
+	const startButton = document.querySelector(".start-button");
+	const discoverButton = document.querySelector(".discover-button");
 
-  for (const button of [startButton, discoverButton]) {
-    button?.addEventListener('mouseenter', () => {
-      gsap.to(button, {
-        scale: 1.1,
-        duration: 0.3,
-        ease: 'power1.out',
-      });
-    });
+	for (const button of [startButton, discoverButton]) {
+		button?.addEventListener("mouseenter", () => {
+			gsap.to(button, {
+				scale: 1.1,
+				duration: 0.3,
+				ease: "power1.out",
+			});
+		});
 
-    button?.addEventListener('mouseleave', () => {
-      gsap.to(button, {
-        scale: 1,
-        duration: 0.3,
-        ease: 'power1.out',
-      });
-    });
+		button?.addEventListener("mouseleave", () => {
+			gsap.to(button, {
+				scale: 1,
+				duration: 0.3,
+				ease: "power1.out",
+			});
+		});
 
-    button?.addEventListener('click', () => {
-      gsap.to(button, {
-        scale: 0.9,
-        duration: 0.1,
-        ease: 'power1.inOut',
-        onComplete: () => {
-          gsap.to(button, { scale: 1, duration: 0.2, ease: 'power1.out' });
-        },
-      });
-    });
-  }
+		button?.addEventListener("click", () => {
+			gsap.to(button, {
+				scale: 0.9,
+				duration: 0.1,
+				ease: "power1.inOut",
+				onComplete: () => {
+					gsap.to(button, { scale: 1, duration: 0.2, ease: "power1.out" });
+				},
+			});
+		});
+	}
 };
 
 onMounted(() => {
-  animateText(words[index]);
+	animateText(words[index]);
 
-  setInterval(() => {
-    index = (index + 1) % words.length;
-    animateText(words[index]);
-  }, 3000);
+	setInterval(() => {
+		index = (index + 1) % words.length;
+		animateText(words[index]);
+	}, 3000);
 
-  addButtonAnimations();
+	addButtonAnimations();
 });
 </script>
 

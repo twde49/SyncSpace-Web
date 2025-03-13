@@ -84,57 +84,57 @@
 </template>
 
 <script setup lang="ts">
-import Navbar from '~/components/notLogged/Navbar.vue';
-import { useRouter } from 'vue-router';
-import { ref } from 'vue';
-import { toast } from 'vue3-toastify';
-import 'vue3-toastify/dist/index.css';
+import Navbar from "~/components/notLogged/Navbar.vue";
+import { useRouter } from "vue-router";
+import { ref } from "vue";
+import { toast } from "vue3-toastify";
+import "vue3-toastify/dist/index.css";
 const acceptTerms = ref(false);
-const firstName = ref('');
-const lastName = ref('');
-const email = ref('');
-const password = ref('');
+const firstName = ref("");
+const lastName = ref("");
+const email = ref("");
+const password = ref("");
 const route = useRouter();
 
 const checkCompletedForm = () => {
-  return (
-    acceptTerms.value === false ||
-    firstName.value === '' ||
-    lastName.value === '' ||
-    email.value === '' ||
-    password.value === ''
-  );
+	return (
+		acceptTerms.value === false ||
+		firstName.value === "" ||
+		lastName.value === "" ||
+		email.value === "" ||
+		password.value === ""
+	);
 };
 
 const registerUser = async () => {
-  try {
-    if (!checkCompletedForm()) {
-      const response = await fetch('https://localhost:8000/api/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          firstName: firstName.value,
-          lastName: lastName.value,
-          email: email.value,
-          password: password.value,
-        }),
-      });
+	try {
+		if (!checkCompletedForm()) {
+			const response = await fetch("https://localhost:8000/api/register", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					firstName: firstName.value,
+					lastName: lastName.value,
+					email: email.value,
+					password: password.value,
+				}),
+			});
 
-      if (!response.ok) {
-        throw new Error(`Error: ${response.status} ${response.statusText}`);
-      }
+			if (!response.ok) {
+				throw new Error(`Error: ${response.status} ${response.statusText}`);
+			}
 
-      toast.success('Votre compte a été créé avec succès', {
-        onClose: () => {
-          route.push('/login');
-        },
-      });
-    }
-  } catch (error) {
-    console.error(error);
-  }
+			toast.success("Votre compte a été créé avec succès", {
+				onClose: () => {
+					route.push("/login");
+				},
+			});
+		}
+	} catch (error) {
+		console.error(error);
+	}
 };
 </script>
 

@@ -59,83 +59,83 @@
 </template>
 
 <script setup lang="ts">
-import Navbar from '~/components/notLogged/Navbar.vue';
-import { useRouter } from 'vue-router';
-import { ref } from 'vue';
-import { useUserStore } from '~/stores/userStore';
-import 'vue3-toastify/dist/index.css';
+import Navbar from "~/components/notLogged/Navbar.vue";
+import { useRouter } from "vue-router";
+import { ref } from "vue";
+import { useUserStore } from "~/stores/userStore";
+import "vue3-toastify/dist/index.css";
 
 const { $toast } = useNuxtApp();
-const email = ref('');
-const password = ref('');
+const email = ref("");
+const password = ref("");
 const isLoading = ref(false);
 const route = useRouter();
 const userStore = useUserStore();
 
-const API_BASE_URL = 'https://localhost:8000';
+const API_BASE_URL = "https://localhost:8000";
 
 const isValidEmail = (email: string) =>
-  /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+	/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
 const isValidForm = () => {
-  if (!email.value || !password.value) return false;
-  if (!isValidEmail(email.value)) return false;
-  if (password.value.length < 6) return false;
-  return true;
+	if (!email.value || !password.value) return false;
+	if (!isValidEmail(email.value)) return false;
+	if (password.value.length < 6) return false;
+	return true;
 };
 
 const loginUser = async () => {
-  if (isLoading.value) return;
+	if (isLoading.value) return;
 
-  isLoading.value = true;
-  try {
-    const response = await fetch(`${API_BASE_URL}/api/login_check`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        username: email.value,
-        password: password.value,
-      }),
-    });
+	isLoading.value = true;
+	try {
+		const response = await fetch(`${API_BASE_URL}/api/login_check`, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				username: email.value,
+				password: password.value,
+			}),
+		});
 
-    if (!response.ok) {
-      if (response.status === 401) {
-        $toast.error('Identifiants incorrects. Veuillez réessayer.');
-      } else if (response.status >= 500) {
-        $toast.error('Erreur serveur. Veuillez réessayer plus tard.');
-      } else {
-        $toast.error(`Erreur inattendue: ${response.status}`);
-      }
-      return;
-    }
+		if (!response.ok) {
+			if (response.status === 401) {
+				$toast.error("Identifiants incorrects. Veuillez réessayer.");
+			} else if (response.status >= 500) {
+				$toast.error("Erreur serveur. Veuillez réessayer plus tard.");
+			} else {
+				$toast.error(`Erreur inattendue: ${response.status}`);
+			}
+			return;
+		}
 
-    const data = await response.json();
+		const data = await response.json();
 
-    if (!data || !data.user || !data.token) {
-      throw new Error('Réponse invalide du serveur.');
-    }
+		if (!data || !data.user || !data.token) {
+			throw new Error("Réponse invalide du serveur.");
+		}
 
-    userStore.setUser({
-      firstName: data.user.firstName,
-      lastName: data.user.lastName,
-      email: data.user.userEmail,
-      token: data.token,
-      masterPasswordSet: data.user.masterPasswordSet,
-    });
+		userStore.setUser({
+			firstName: data.user.firstName,
+			lastName: data.user.lastName,
+			email: data.user.userEmail,
+			token: data.token,
+			masterPasswordSet: data.user.masterPasswordSet,
+		});
 
-    $toast.success('Vous avez bien été authentifié.', {
-      onClose: () => {
-        route.push('/dashboard');
-      },
-    });
-  } catch (error) {
-    console.error(error);
-    $toast.error('Une erreur est survenue lors de la connexion.');
-  } finally {
-    isLoading.value = false;
-  }
+		$toast.success("Vous avez bien été authentifié.", {
+			onClose: () => {
+				route.push("/dashboard");
+			},
+		});
+	} catch (error) {
+		console.error(error);
+		$toast.error("Une erreur est survenue lors de la connexion.");
+	} finally {
+		isLoading.value = false;
+	}
 };
 </script>
 

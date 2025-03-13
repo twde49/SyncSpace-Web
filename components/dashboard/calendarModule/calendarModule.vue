@@ -474,12 +474,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, nextTick, watch } from 'vue';
-import type { Event } from '~/types/Event';
-import useAuthFetch from '~/composables/useAuthFetch';
-import type { User } from '~/types/User';
-import { useUserStore } from '~/stores/userStore';
-import { useWebSocket } from '#imports';
+import { ref, computed, onMounted, nextTick, watch } from "vue";
+import type { Event } from "~/types/Event";
+import useAuthFetch from "~/composables/useAuthFetch";
+import type { User } from "~/types/User";
+import { useUserStore } from "~/stores/userStore";
+import { useWebSocket } from "#imports";
 
 const userStore = useUserStore();
 const { $toast } = useNuxtApp();
@@ -492,21 +492,21 @@ const currentMonthName = computed(() => monthNames[month.value]);
 const hoveredDay = ref<Date | null>(null);
 
 const monthNames = [
-  'Janvier',
-  'Février',
-  'Mars',
-  'Avril',
-  'Mai',
-  'Juin',
-  'Juillet',
-  'Août',
-  'Septembre',
-  'Octobre',
-  'Novembre',
-  'Décembre',
+	"Janvier",
+	"Février",
+	"Mars",
+	"Avril",
+	"Mai",
+	"Juin",
+	"Juillet",
+	"Août",
+	"Septembre",
+	"Octobre",
+	"Novembre",
+	"Décembre",
 ];
 
-const daysOfWeek = ['l', 'm', 'm', 'j', 'v', 's', 'd'];
+const daysOfWeek = ["l", "m", "m", "j", "v", "s", "d"];
 
 const showMonthDropdown = ref(false);
 const showDayModal = ref(false);
@@ -516,395 +516,395 @@ const selectedDay = ref<Date | null>(null);
 const selectedEvent = ref<Event | null>(null);
 
 const newEvent = ref({
-  title: '',
-  description: '',
-  startDateInput: '',
-  startTimeInput: '',
-  endDateInput: '',
-  endTimeInput: '',
-  color: '#4a5568',
-  isAllDay: false,
+	title: "",
+	description: "",
+	startDateInput: "",
+	startTimeInput: "",
+	endDateInput: "",
+	endTimeInput: "",
+	color: "#4a5568",
+	isAllDay: false,
 });
 
-const searchQuery = ref('');
+const searchQuery = ref("");
 const searchResults = ref<User[]>([]);
 const selectedUsers = ref<User[]>([]);
 const isSearching = ref(false);
 
 const searchUsers = async (): Promise<void> => {
-  if (!searchQuery.value.trim()) {
-    searchResults.value = [];
-    return;
-  }
+	if (!searchQuery.value.trim()) {
+		searchResults.value = [];
+		return;
+	}
 
-  isSearching.value = true;
+	isSearching.value = true;
 
-  try {
-    const response = await useAuthFetch('conversation/user/search', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        username: searchQuery.value,
-      }),
-    });
+	try {
+		const response = await useAuthFetch("conversation/user/search", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				username: searchQuery.value,
+			}),
+		});
 
-    if (response.data.value) {
-      searchResults.value = response.data.value as User[];
-    }
+		if (response.data.value) {
+			searchResults.value = response.data.value as User[];
+		}
 
-    const currentUser = userStore.email;
+		const currentUser = userStore.email;
 
-    searchResults.value = searchResults.value.filter(
-      user => user.email !== currentUser,
-    );
-  } catch (error: unknown) {
-    const err = error as Error;
-    $toast.error(err.message || 'Error searching for users');
-  } finally {
-    isSearching.value = false;
-  }
+		searchResults.value = searchResults.value.filter(
+			(user) => user.email !== currentUser,
+		);
+	} catch (error: unknown) {
+		const err = error as Error;
+		$toast.error(err.message || "Error searching for users");
+	} finally {
+		isSearching.value = false;
+	}
 };
 
 function selectUser(user: User): void {
-  if (!selectedUsers.value.some(u => u.id === user.id)) {
-    selectedUsers.value.push(user);
-  }
-  searchQuery.value = '';
-  searchResults.value = [];
+	if (!selectedUsers.value.some((u) => u.id === user.id)) {
+		selectedUsers.value.push(user);
+	}
+	searchQuery.value = "";
+	searchResults.value = [];
 }
 
 function removeUser(user: User): void {
-  selectedUsers.value = selectedUsers.value.filter(u => u.id !== user.id);
+	selectedUsers.value = selectedUsers.value.filter((u) => u.id !== user.id);
 }
 
 const selectedDayFormatted = computed(() => {
-  if (!selectedDay.value) return '';
+	if (!selectedDay.value) return "";
 
-  const day = selectedDay.value.getDate();
-  const month = monthNames[selectedDay.value.getMonth()];
-  const year = selectedDay.value.getFullYear();
+	const day = selectedDay.value.getDate();
+	const month = monthNames[selectedDay.value.getMonth()];
+	const year = selectedDay.value.getFullYear();
 
-  return `${day} ${month} ${year}`;
+	return `${day} ${month} ${year}`;
 });
 
 function formatDayTooltip(day: Date): string {
-  if (!day) return '';
+	if (!day) return "";
 
-  const dayNum = day.getDate();
-  const month = monthNames[day.getMonth()];
-  const year = day.getFullYear();
-  const events = getEventCount(day);
+	const dayNum = day.getDate();
+	const month = monthNames[day.getMonth()];
+	const year = day.getFullYear();
+	const events = getEventCount(day);
 
-  return `${dayNum} ${month} ${year} - ${events ? `${events} événement(s)` : 'Aucun événement'}`;
+	return `${dayNum} ${month} ${year} - ${events ? `${events} événement(s)` : "Aucun événement"}`;
 }
 
 function toggleMonthDropdown(): void {
-  showMonthDropdown.value = !showMonthDropdown.value;
+	showMonthDropdown.value = !showMonthDropdown.value;
 }
 
 function setMonth(index: number): void {
-  console.log('setMonth', monthNames[index]);
-  const newDate = new Date(currentDate.value);
-  newDate.setMonth(index);
-  currentDate.value = newDate;
-  showMonthDropdown.value = false;
+	console.log("setMonth", monthNames[index]);
+	const newDate = new Date(currentDate.value);
+	newDate.setMonth(index);
+	currentDate.value = newDate;
+	showMonthDropdown.value = false;
 }
 
 const visibleDays = computed(() => {
-  const startOfWeek = new Date(currentDate.value);
-  startOfWeek.setDate(
-    currentDate.value.getDate() - currentDate.value.getDay() + 1,
-  );
-  const days: Date[] = [];
+	const startOfWeek = new Date(currentDate.value);
+	startOfWeek.setDate(
+		currentDate.value.getDate() - currentDate.value.getDay() + 1,
+	);
+	const days: Date[] = [];
 
-  for (let i = 0; i < 14; i++) {
-    const day = new Date(startOfWeek);
-    day.setDate(startOfWeek.getDate() + i);
-    days.push(day);
-  }
-  return days;
+	for (let i = 0; i < 14; i++) {
+		const day = new Date(startOfWeek);
+		day.setDate(startOfWeek.getDate() + i);
+		days.push(day);
+	}
+	return days;
 });
 
 function prevWeek(): void {
-  const newDate = new Date(currentDate.value);
-  newDate.setDate(currentDate.value.getDate() - 7);
-  currentDate.value = newDate;
+	const newDate = new Date(currentDate.value);
+	newDate.setDate(currentDate.value.getDate() - 7);
+	currentDate.value = newDate;
 }
 
 function nextWeek(): void {
-  const newDate = new Date(currentDate.value);
-  newDate.setDate(currentDate.value.getDate() + 7);
-  currentDate.value = newDate;
+	const newDate = new Date(currentDate.value);
+	newDate.setDate(currentDate.value.getDate() + 7);
+	currentDate.value = newDate;
 }
 
 function isToday(day: Date): boolean {
-  const today = new Date();
-  return today.toDateString() === day.toDateString();
+	const today = new Date();
+	return today.toDateString() === day.toDateString();
 }
 
 const events = ref<Event[]>([]);
 function hasEvents(day: Date): boolean {
-  return events.value.some(event => {
-    const startDate =
-      typeof event.startDate === 'string'
-        ? new Date(event.startDate)
-        : event.startDate;
-    const endDate =
-      typeof event.endDate === 'string'
-        ? new Date(event.endDate)
-        : event.endDate;
+	return events.value.some((event) => {
+		const startDate =
+			typeof event.startDate === "string"
+				? new Date(event.startDate)
+				: event.startDate;
+		const endDate =
+			typeof event.endDate === "string"
+				? new Date(event.endDate)
+				: event.endDate;
 
-    if (startDate && endDate)
-      return (
-        startDate.toDateString() === day.toDateString() ||
-        endDate.toDateString() === day.toDateString() ||
-        (startDate < day && endDate > day)
-      );
-  });
+		if (startDate && endDate)
+			return (
+				startDate.toDateString() === day.toDateString() ||
+				endDate.toDateString() === day.toDateString() ||
+				(startDate < day && endDate > day)
+			);
+	});
 }
 
 function getEventCount(day: Date): number {
-  return events.value.filter(event => {
-    const startDate =
-      typeof event.startDate === 'string'
-        ? new Date(event.startDate)
-        : event.startDate;
-    const endDate =
-      typeof event.endDate === 'string'
-        ? new Date(event.endDate)
-        : event.endDate;
+	return events.value.filter((event) => {
+		const startDate =
+			typeof event.startDate === "string"
+				? new Date(event.startDate)
+				: event.startDate;
+		const endDate =
+			typeof event.endDate === "string"
+				? new Date(event.endDate)
+				: event.endDate;
 
-    if (startDate && endDate)
-      return (
-        startDate.toDateString() === day.toDateString() ||
-        endDate.toDateString() === day.toDateString() ||
-        (startDate < day && endDate > day)
-      );
-  }).length;
+		if (startDate && endDate)
+			return (
+				startDate.toDateString() === day.toDateString() ||
+				endDate.toDateString() === day.toDateString() ||
+				(startDate < day && endDate > day)
+			);
+	}).length;
 }
 
 function getEventsForHour(day: Date | null, hour: number): Event[] {
-  if (!day) return [];
+	if (!day) return [];
 
-  return events.value.filter(event => {
-    const startDate =
-      typeof event.startDate === 'string'
-        ? new Date(event.startDate)
-        : event.startDate;
-    const endDate =
-      typeof event.endDate === 'string'
-        ? new Date(event.endDate)
-        : event.endDate;
+	return events.value.filter((event) => {
+		const startDate =
+			typeof event.startDate === "string"
+				? new Date(event.startDate)
+				: event.startDate;
+		const endDate =
+			typeof event.endDate === "string"
+				? new Date(event.endDate)
+				: event.endDate;
 
-    if (!startDate || !endDate) return false;
+		if (!startDate || !endDate) return false;
 
-    const dayMatch =
-      startDate.toDateString() === day.toDateString() ||
-      endDate.toDateString() === day.toDateString() ||
-      (startDate < day && endDate > day);
+		const dayMatch =
+			startDate.toDateString() === day.toDateString() ||
+			endDate.toDateString() === day.toDateString() ||
+			(startDate < day && endDate > day);
 
-    const hourMatch =
-      startDate.getHours() <= hour &&
-      (endDate.getHours() > hour ||
-        (endDate.getHours() === hour && endDate.getMinutes() > 0));
+		const hourMatch =
+			startDate.getHours() <= hour &&
+			(endDate.getHours() > hour ||
+				(endDate.getHours() === hour && endDate.getMinutes() > 0));
 
-    return dayMatch && hourMatch;
-  });
+		return dayMatch && hourMatch;
+	});
 }
 
 function formatDateForInput(date: Date): string {
-  return date.toISOString().split('T')[0];
+	return date.toISOString().split("T")[0];
 }
 
 function openAddEventModalForDay(day: Date | null): void {
-  if (!day) return;
+	if (!day) return;
 
-  const today = new Date(day);
+	const today = new Date(day);
 
-  // Set time to 9:00 AM for start and 10:00 AM for end
-  const startHour = 9;
-  const endHour = 10;
+	// Set time to 9:00 AM for start and 10:00 AM for end
+	const startHour = 9;
+	const endHour = 10;
 
-  today.setHours(startHour, 0, 0, 0);
+	today.setHours(startHour, 0, 0, 0);
 
-  const endTime = new Date(today);
-  endTime.setHours(endHour, 0, 0, 0);
+	const endTime = new Date(today);
+	endTime.setHours(endHour, 0, 0, 0);
 
-  newEvent.value = {
-    title: '',
-    description: '',
-    startDateInput: formatDateForInput(today),
-    startTimeInput: `${startHour.toString().padStart(2, '0')}:00`,
-    endDateInput: formatDateForInput(today),
-    endTimeInput: `${endHour.toString().padStart(2, '0')}:00`,
-    color: '#4a5568',
-    isAllDay: false,
-  };
+	newEvent.value = {
+		title: "",
+		description: "",
+		startDateInput: formatDateForInput(today),
+		startTimeInput: `${startHour.toString().padStart(2, "0")}:00`,
+		endDateInput: formatDateForInput(today),
+		endTimeInput: `${endHour.toString().padStart(2, "0")}:00`,
+		color: "#4a5568",
+		isAllDay: false,
+	};
 
-  selectedUsers.value = [];
-  searchQuery.value = '';
-  searchResults.value = [];
+	selectedUsers.value = [];
+	searchQuery.value = "";
+	searchResults.value = [];
 
-  showAddEventModal.value = true;
+	showAddEventModal.value = true;
 }
 
 function openAddEventModal(): void {
-  const today = new Date();
-  const tomorrow = new Date(today);
-  tomorrow.setDate(today.getDate() + 1);
+	const today = new Date();
+	const tomorrow = new Date(today);
+	tomorrow.setDate(today.getDate() + 1);
 
-  newEvent.value = {
-    title: '',
-    description: '',
-    startDateInput: formatDateForInput(today),
-    startTimeInput: '09:00',
-    endDateInput: formatDateForInput(today),
-    endTimeInput: '10:00',
-    color: '#4a5568',
-    isAllDay: false,
-  };
+	newEvent.value = {
+		title: "",
+		description: "",
+		startDateInput: formatDateForInput(today),
+		startTimeInput: "09:00",
+		endDateInput: formatDateForInput(today),
+		endTimeInput: "10:00",
+		color: "#4a5568",
+		isAllDay: false,
+	};
 
-  selectedUsers.value = [];
-  searchQuery.value = '';
-  searchResults.value = [];
+	selectedUsers.value = [];
+	searchQuery.value = "";
+	searchResults.value = [];
 
-  showAddEventModal.value = true;
+	showAddEventModal.value = true;
 }
 
 function openEventDetailModal(event: Event): void {
-  selectedEvent.value = event;
-  showEventDetailModal.value = true;
+	selectedEvent.value = event;
+	showEventDetailModal.value = true;
 }
 
 function closeEventDetailModal(): void {
-  showEventDetailModal.value = false;
-  selectedEvent.value = null;
+	showEventDetailModal.value = false;
+	selectedEvent.value = null;
 }
 
 function formatEventDate(event: Event | null): string {
-  if (!event) return '';
+	if (!event) return "";
 
-  const startDate =
-    typeof event.startDate === 'string'
-      ? new Date(event.startDate)
-      : event.startDate;
-  const endDate =
-    typeof event.endDate === 'string' ? new Date(event.endDate) : event.endDate;
+	const startDate =
+		typeof event.startDate === "string"
+			? new Date(event.startDate)
+			: event.startDate;
+	const endDate =
+		typeof event.endDate === "string" ? new Date(event.endDate) : event.endDate;
 
-  if (!startDate || !endDate) return '';
+	if (!startDate || !endDate) return "";
 
-  const sameDay = startDate.toDateString() === endDate.toDateString();
+	const sameDay = startDate.toDateString() === endDate.toDateString();
 
-  const formatDatePart = (date: Date) => {
-    return `${date.getDate()} ${monthNames[date.getMonth()]} ${date.getFullYear()}`;
-  };
+	const formatDatePart = (date: Date) => {
+		return `${date.getDate()} ${monthNames[date.getMonth()]} ${date.getFullYear()}`;
+	};
 
-  const formatTimePart = (date: Date) => {
-    return date.toLocaleTimeString('fr-FR', {
-      hour: '2-digit',
-      minute: '2-digit',
-    });
-  };
+	const formatTimePart = (date: Date) => {
+		return date.toLocaleTimeString("fr-FR", {
+			hour: "2-digit",
+			minute: "2-digit",
+		});
+	};
 
-  if (event.isAllDay) {
-    return sameDay
-      ? `${formatDatePart(startDate)} (Journée entière)`
-      : `Du ${formatDatePart(startDate)} au ${formatDatePart(endDate)} (Journée entière)`;
-  }
+	if (event.isAllDay) {
+		return sameDay
+			? `${formatDatePart(startDate)} (Journée entière)`
+			: `Du ${formatDatePart(startDate)} au ${formatDatePart(endDate)} (Journée entière)`;
+	}
 
-  return sameDay
-    ? `${formatDatePart(startDate)} de ${formatTimePart(startDate)} à ${formatTimePart(endDate)}`
-    : `Du ${formatDatePart(startDate)} ${formatTimePart(startDate)} au ${formatDatePart(endDate)} ${formatTimePart(endDate)}`;
+	return sameDay
+		? `${formatDatePart(startDate)} de ${formatTimePart(startDate)} à ${formatTimePart(endDate)}`
+		: `Du ${formatDatePart(startDate)} ${formatTimePart(startDate)} au ${formatDatePart(endDate)} ${formatTimePart(endDate)}`;
 }
 
 function editEvent(event: Event | null): void {
-  if (!event) return;
-  console.log('Edit event:', event);
+	if (!event) return;
+	console.log("Edit event:", event);
 }
 
 function closeAddEventModal(): void {
-  showAddEventModal.value = false;
+	showAddEventModal.value = false;
 }
 
 async function saveEvent(): Promise<void> {
-  try {
-    const startDate = new Date(
-      `${newEvent.value.startDateInput}T${newEvent.value.startTimeInput}`,
-    );
-    const endDate = new Date(
-      `${newEvent.value.endDateInput}T${newEvent.value.endTimeInput}`,
-    );
+	try {
+		const startDate = new Date(
+			`${newEvent.value.startDateInput}T${newEvent.value.startTimeInput}`,
+		);
+		const endDate = new Date(
+			`${newEvent.value.endDateInput}T${newEvent.value.endTimeInput}`,
+		);
 
-    const eventData = {
-      title: newEvent.value.title,
-      description: newEvent.value.description,
-      startDate,
-      endDate,
-      color: newEvent.value.color,
-      participantsIds: selectedUsers.value.map(user => user.id),
-      isAllDay: newEvent.value.isAllDay,
-    };
+		const eventData = {
+			title: newEvent.value.title,
+			description: newEvent.value.description,
+			startDate,
+			endDate,
+			color: newEvent.value.color,
+			participantsIds: selectedUsers.value.map((user) => user.id),
+			isAllDay: newEvent.value.isAllDay,
+		};
 
-    const response = await useAuthFetch('events/create', {
-      method: 'POST',
-      body: eventData,
-    });
+		const response = await useAuthFetch("events/create", {
+			method: "POST",
+			body: eventData,
+		});
 
-    if (response.data.value) {
-      const newEventObj = response.data.value as Event;
-      if (typeof newEventObj.startDate === 'string') {
-        newEventObj.startDate = new Date(newEventObj.startDate);
-      }
-      if (typeof newEventObj.endDate === 'string') {
-        newEventObj.endDate = new Date(newEventObj.endDate);
-      }
-      events.value.push(newEventObj);
-      closeAddEventModal();
-    }
-  } catch (error) {
-    console.error('Error saving event:', error);
-  }
+		if (response.data.value) {
+			const newEventObj = response.data.value as Event;
+			if (typeof newEventObj.startDate === "string") {
+				newEventObj.startDate = new Date(newEventObj.startDate);
+			}
+			if (typeof newEventObj.endDate === "string") {
+				newEventObj.endDate = new Date(newEventObj.endDate);
+			}
+			events.value.push(newEventObj);
+			closeAddEventModal();
+		}
+	} catch (error) {
+		console.error("Error saving event:", error);
+	}
 }
 
 const fetchEvents = async (): Promise<void> => {
-  try {
-    const response = await useAuthFetch('events/all');
-    events.value = response.data.value as Event[];
-    for (const event of events.value) {
-      if (typeof event.startDate === 'string') {
-        event.startDate = new Date(event.startDate);
-      }
-      if (typeof event.endDate === 'string') {
-        event.endDate = new Date(event.endDate);
-      }
-    }
-  } catch (error) {
-    console.error('Error fetching events:', error);
-  }
+	try {
+		const response = await useAuthFetch("events/all");
+		events.value = response.data.value as Event[];
+		for (const event of events.value) {
+			if (typeof event.startDate === "string") {
+				event.startDate = new Date(event.startDate);
+			}
+			if (typeof event.endDate === "string") {
+				event.endDate = new Date(event.endDate);
+			}
+		}
+	} catch (error) {
+		console.error("Error fetching events:", error);
+	}
 };
 
 function openDay(day: Date): void {
-  selectedDay.value = day;
-  showDayModal.value = true;
+	selectedDay.value = day;
+	showDayModal.value = true;
 }
 
 function closeDayModal(): void {
-  showDayModal.value = false;
+	showDayModal.value = false;
 }
 
-watch(webSocketData.value, async data => {
-  if (data.type === 'refreshCalendar') {
-    await fetchEvents();
-  }
+watch(webSocketData.value, async (data) => {
+	if (data.type === "refreshCalendar") {
+		await fetchEvents();
+	}
 });
 
 onMounted(async () => {
-  userStore.loadUserFromCookies();
-  connect();
-  await nextTick(async () => {
-    await fetchEvents();
-  });
+	userStore.loadUserFromCookies();
+	connect();
+	await nextTick(async () => {
+		await fetchEvents();
+	});
 });
 </script>

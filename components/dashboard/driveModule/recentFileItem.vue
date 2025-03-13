@@ -220,14 +220,14 @@
 </template>
 
 <script setup lang="ts">
-import useAuthFetch from '~/composables/useAuthFetch';
-import type { File } from '~/types/File';
-import { ref, onMounted, onUnmounted, nextTick, computed } from 'vue';
+import useAuthFetch from "~/composables/useAuthFetch";
+import type { File } from "~/types/File";
+import { ref, onMounted, onUnmounted, nextTick, computed } from "vue";
 
 const { $toast } = useNuxtApp();
 
 const { files } = defineProps<{
-  files: File[];
+	files: File[];
 }>();
 
 const activeMenu = ref<string | null>(null);
@@ -237,189 +237,189 @@ const menuPositions = ref<{ [key: string]: number }>({});
 const currentPreviewFile = ref<File | null>(null);
 
 const toggleMenu = (fileId: string) => {
-  if (activeMenu.value === fileId) {
-    activeMenu.value = null;
-  } else {
-    activeMenu.value = fileId;
-    nextTick(() => {
-      const element = document.querySelector(`[data-file-id="${fileId}"]`);
-      if (element) {
-        const rect = element.getBoundingClientRect();
-        menuPositions.value[fileId] = rect.top;
-      }
-    });
-  }
+	if (activeMenu.value === fileId) {
+		activeMenu.value = null;
+	} else {
+		activeMenu.value = fileId;
+		nextTick(() => {
+			const element = document.querySelector(`[data-file-id="${fileId}"]`);
+			if (element) {
+				const rect = element.getBoundingClientRect();
+				menuPositions.value[fileId] = rect.top;
+			}
+		});
+	}
 };
 
 const showFileActions = (file: File) => {
-  toggleMenu(String(file.id));
+	toggleMenu(String(file.id));
 };
 
 const closeMenuOnOutsideClick = (event: MouseEvent) => {
-  if (
-    activeMenu.value !== null &&
-    !(event.target as Element).closest('.fileActionWrapper')
-  ) {
-    activeMenu.value = null;
-  }
+	if (
+		activeMenu.value !== null &&
+		!(event.target as Element).closest(".fileActionWrapper")
+	) {
+		activeMenu.value = null;
+	}
 };
 
 const openFolder = (file: File) => {
-  if (file.isFolder) {
-    emit('openFolder', file);
-  }
+	if (file.isFolder) {
+		emit("openFolder", file);
+	}
 };
 
 onMounted(() => {
-  document.addEventListener('click', closeMenuOnOutsideClick);
+	document.addEventListener("click", closeMenuOnOutsideClick);
 });
 
 onUnmounted(() => {
-  document.removeEventListener('click', closeMenuOnOutsideClick);
+	document.removeEventListener("click", closeMenuOnOutsideClick);
 });
 
 const downloadFile = async (file: File) => {
-  try {
-    activeMenu.value = null;
-    const response = await useAuthFetch(`files/download/${file.id}`, {
-      responseType: 'blob',
-    });
+	try {
+		activeMenu.value = null;
+		const response = await useAuthFetch(`files/download/${file.id}`, {
+			responseType: "blob",
+		});
 
-    const data = response.data.value;
-    if (!data) {
-      throw new Error('Failed to download file');
-    }
+		const data = response.data.value;
+		if (!data) {
+			throw new Error("Failed to download file");
+		}
 
-    const url = URL.createObjectURL(data as Blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = file.originalName || file.filename;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-  } catch (error) {
-    console.error('Error downloading file:', error);
-  }
+		const url = URL.createObjectURL(data as Blob);
+		const a = document.createElement("a");
+		a.href = url;
+		a.download = file.originalName || file.filename;
+		document.body.appendChild(a);
+		a.click();
+		document.body.removeChild(a);
+		URL.revokeObjectURL(url);
+	} catch (error) {
+		console.error("Error downloading file:", error);
+	}
 };
 
 const filePreviewUrl = ref<string | null>(null);
 const showPreviewModal = ref<boolean>(false);
 
 const previewableFile = computed(() => {
-  if (!currentPreviewFile.value) return false;
-  return (
-    isImage(currentPreviewFile.value) ||
-    currentPreviewFile.value.mimeType === 'application/pdf'
-  );
+	if (!currentPreviewFile.value) return false;
+	return (
+		isImage(currentPreviewFile.value) ||
+		currentPreviewFile.value.mimeType === "application/pdf"
+	);
 });
 
 const previewFile = async (file: File) => {
-  try {
-    if (file.isFolder) return;
+	try {
+		if (file.isFolder) return;
 
-    currentPreviewFile.value = file;
+		currentPreviewFile.value = file;
 
-    if (!isImage(file) && file.mimeType !== 'application/pdf') {
-      $toast.info(
-        'Ce type de fichier ne peut pas être prévisualisé. Veuillez le télécharger.',
-      );
-      return;
-    }
+		if (!isImage(file) && file.mimeType !== "application/pdf") {
+			$toast.info(
+				"Ce type de fichier ne peut pas être prévisualisé. Veuillez le télécharger.",
+			);
+			return;
+		}
 
-    activeMenu.value = null;
-    const response = await useAuthFetch(`files/preview/${file.id}`, {
-      responseType: 'blob',
-    });
+		activeMenu.value = null;
+		const response = await useAuthFetch(`files/preview/${file.id}`, {
+			responseType: "blob",
+		});
 
-    const data = response.data.value;
-    if (!data) {
-      throw new Error('Failed to preview file');
-    }
+		const data = response.data.value;
+		if (!data) {
+			throw new Error("Failed to preview file");
+		}
 
-    const blob = new Blob([data as Blob], { type: file.mimeType });
-    filePreviewUrl.value = URL.createObjectURL(blob);
-    showPreviewModal.value = true;
-  } catch (error) {
-    console.error('Error previewing file:', error);
-    $toast.error(
-      'Erreur lors de la prévisualisation. Veuillez télécharger le fichier.',
-    );
-  }
+		const blob = new Blob([data as Blob], { type: file.mimeType });
+		filePreviewUrl.value = URL.createObjectURL(blob);
+		showPreviewModal.value = true;
+	} catch (error) {
+		console.error("Error previewing file:", error);
+		$toast.error(
+			"Erreur lors de la prévisualisation. Veuillez télécharger le fichier.",
+		);
+	}
 };
 
 const closePreviewModal = () => {
-  showPreviewModal.value = false;
-  if (filePreviewUrl.value) {
-    URL.revokeObjectURL(filePreviewUrl.value);
-    filePreviewUrl.value = null;
-  }
-  currentPreviewFile.value = null;
+	showPreviewModal.value = false;
+	if (filePreviewUrl.value) {
+		URL.revokeObjectURL(filePreviewUrl.value);
+		filePreviewUrl.value = null;
+	}
+	currentPreviewFile.value = null;
 };
 
 const openDeleteModal = (file: File) => {
-  fileToDelete.value = file;
-  showDeleteModal.value = true;
-  activeMenu.value = null;
+	fileToDelete.value = file;
+	showDeleteModal.value = true;
+	activeMenu.value = null;
 };
 
 const cancelDelete = () => {
-  showDeleteModal.value = false;
-  fileToDelete.value = null;
+	showDeleteModal.value = false;
+	fileToDelete.value = null;
 };
 
 const confirmDelete = async () => {
-  if (!fileToDelete.value) return;
+	if (!fileToDelete.value) return;
 
-  try {
-    await useAuthFetch(`files/remove/${fileToDelete.value.id}`, {
-      method: 'DELETE',
-    });
+	try {
+		await useAuthFetch(`files/remove/${fileToDelete.value.id}`, {
+			method: "DELETE",
+		});
 
-    if (fileToDelete.value.isFolder) {
-      $toast.info('Le dossier a bien été supprimé');
-    } else {
-      $toast.info('Le fichier a bien été supprimé');
-    }
+		if (fileToDelete.value.isFolder) {
+			$toast.info("Le dossier a bien été supprimé");
+		} else {
+			$toast.info("Le fichier a bien été supprimé");
+		}
 
-    emit('file-removed', fileToDelete.value.id);
-    showDeleteModal.value = false;
-    fileToDelete.value = null;
-  } catch (error) {
-    console.error('Error removing file:', error);
-    $toast.error('Erreur lors de la suppression');
-  }
+		emit("file-removed", fileToDelete.value.id);
+		showDeleteModal.value = false;
+		fileToDelete.value = null;
+	} catch (error) {
+		console.error("Error removing file:", error);
+		$toast.error("Erreur lors de la suppression");
+	}
 };
 
-const emit = defineEmits(['file-removed', 'openFolder']);
+const emit = defineEmits(["file-removed", "openFolder"]);
 
 const getFileSize = (size: number) => {
-  const units = ['B', 'KB', 'MB', 'GB', 'TB'];
-  let i = 0;
-  let bytes = size;
-  while (bytes >= 1024 && i < units.length - 1) {
-    bytes /= 1024;
-    i++;
-  }
-  return `${bytes.toFixed(2)} ${units[i]}`;
+	const units = ["B", "KB", "MB", "GB", "TB"];
+	let i = 0;
+	let bytes = size;
+	while (bytes >= 1024 && i < units.length - 1) {
+		bytes /= 1024;
+		i++;
+	}
+	return `${bytes.toFixed(2)} ${units[i]}`;
 };
 
 const isImage = (file: File) => {
-  if (!file) return false;
-  const imageExtensions = [
-    'image/jpeg',
-    'image/jpg',
-    'image/png',
-    'image/gif',
-    'image/bmp',
-    'image/webp',
-    'image/svg+xml',
-    'image/tiff',
-    'image/tif',
-    'image/heic',
-    'image/heif',
-  ];
-  return imageExtensions.includes(file.mimeType.toLowerCase());
+	if (!file) return false;
+	const imageExtensions = [
+		"image/jpeg",
+		"image/jpg",
+		"image/png",
+		"image/gif",
+		"image/bmp",
+		"image/webp",
+		"image/svg+xml",
+		"image/tiff",
+		"image/tif",
+		"image/heic",
+		"image/heif",
+	];
+	return imageExtensions.includes(file.mimeType.toLowerCase());
 };
 </script>
 

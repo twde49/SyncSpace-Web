@@ -46,8 +46,8 @@
 </template>
 
 <script setup lang="ts">
-import type { Notification } from '~/types/Notification';
+import type { Notification } from "~/types/Notification";
 
 const { notifications } = defineProps<{ notifications: Notification[] }>();
-defineEmits(['readNotification']);
+defineEmits(["readNotification"]);
 </script>

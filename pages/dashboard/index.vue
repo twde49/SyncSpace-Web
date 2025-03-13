@@ -80,26 +80,26 @@
 </template>
 
 <script setup lang="ts">
-import type { Note } from '~/types/Note';
-import type { Swapy } from 'swapy';
-import { createSwapy } from 'swapy';
-import { onMounted, onUnmounted, ref } from 'vue';
-import MessageModule from '~/components/dashboard/messageModule/messageModule.vue';
-import ProfileModule from '~/components/dashboard/profileModule.vue';
-import MusicPlayerModule from '~/components/dashboard/music/musicPlayerModule.vue';
-import EditorMarkdown from '~/components/dashboard/markdownModule/editorMarkdown.vue';
-import MarkdownCenter from '~/components/dashboard/markdownModule/markdownCenter.vue';
-import DriveModule from '~/components/dashboard/driveModule/driveModule.vue';
-import PasswordManager from '~/components/dashboard/passwordManagerModule/passwordManager.vue';
-import PasswordCenter from '~/components/dashboard/passwordManagerModule/passwordCenter.vue';
-import CalendarModule from '~/components/dashboard/calendarModule/calendarModule.vue';
-import NotificationDrawer from '~/components/dashboard/notificationDrawer/NotificationDrawer.vue';
-import { useRouter } from 'vue-router';
+import type { Note } from "~/types/Note";
+import type { Swapy } from "swapy";
+import { createSwapy } from "swapy";
+import { onMounted, onUnmounted, ref } from "vue";
+import MessageModule from "~/components/dashboard/messageModule/messageModule.vue";
+import ProfileModule from "~/components/dashboard/profileModule.vue";
+import MusicPlayerModule from "~/components/dashboard/music/musicPlayerModule.vue";
+import EditorMarkdown from "~/components/dashboard/markdownModule/editorMarkdown.vue";
+import MarkdownCenter from "~/components/dashboard/markdownModule/markdownCenter.vue";
+import DriveModule from "~/components/dashboard/driveModule/driveModule.vue";
+import PasswordManager from "~/components/dashboard/passwordManagerModule/passwordManager.vue";
+import PasswordCenter from "~/components/dashboard/passwordManagerModule/passwordCenter.vue";
+import CalendarModule from "~/components/dashboard/calendarModule/calendarModule.vue";
+import NotificationDrawer from "~/components/dashboard/notificationDrawer/NotificationDrawer.vue";
+import { useRouter } from "vue-router";
 
 const { $toast } = useNuxtApp();
 let noteId: number;
-let noteTitle = '';
-let noteContent = '';
+let noteTitle = "";
+let noteContent = "";
 
 const router = useRouter();
 
@@ -110,80 +110,80 @@ const isMarkdownCenterOpen = ref(false);
 const isPasswordCenterOpen = ref(false);
 
 const contextMenu = ref({
-  show: false,
-  x: 0,
-  y: 0,
-  targetModule: '',
+	show: false,
+	x: 0,
+	y: 0,
+	targetModule: "",
 });
 
 const handleMarkdownCenterOpening = (status: boolean) => {
-  isMarkdownCenterOpen.value = status;
+	isMarkdownCenterOpen.value = status;
 };
 
 const handleMarkdownCenterClosing = () => {
-  isMarkdownCenterOpen.value = false;
+	isMarkdownCenterOpen.value = false;
 };
 
 const handlePasswordCenterOpening = (status: boolean) => {
-  isPasswordCenterOpen.value = status;
+	isPasswordCenterOpen.value = status;
 };
 
 const handlePasswordCenterClosing = () => {
-  isPasswordCenterOpen.value = false;
+	isPasswordCenterOpen.value = false;
 };
 
 const handleOpeningNote = (chosenNote: Note) => {
-  noteId = chosenNote.id;
-  noteTitle = chosenNote.title ?? '';
-  noteContent = chosenNote.content ?? '';
+	noteId = chosenNote.id;
+	noteTitle = chosenNote.title ?? "";
+	noteContent = chosenNote.content ?? "";
 };
 
 const showContextMenu = (event: MouseEvent) => {
-  contextMenu.value.show = true;
-  contextMenu.value.x = event.clientX;
-  contextMenu.value.y = event.clientY;
+	contextMenu.value.show = true;
+	contextMenu.value.x = event.clientX;
+	contextMenu.value.y = event.clientY;
 
-  const target = event.target as HTMLElement;
-  const moduleElement = target.closest('.module');
-  if (moduleElement) {
-    if (moduleElement.classList.contains('topLeftModule')) {
-      contextMenu.value.targetModule = 'topLeft';
-    } else if (moduleElement.classList.contains('topRightModule')) {
-      contextMenu.value.targetModule = 'topRight';
-    } else if (moduleElement.classList.contains('bottomLeftModule')) {
-      contextMenu.value.targetModule = 'bottomLeft';
-    } else if (moduleElement.classList.contains('bottomRightModule')) {
-      contextMenu.value.targetModule = 'bottomRight';
-    }
-  }
+	const target = event.target as HTMLElement;
+	const moduleElement = target.closest(".module");
+	if (moduleElement) {
+		if (moduleElement.classList.contains("topLeftModule")) {
+			contextMenu.value.targetModule = "topLeft";
+		} else if (moduleElement.classList.contains("topRightModule")) {
+			contextMenu.value.targetModule = "topRight";
+		} else if (moduleElement.classList.contains("bottomLeftModule")) {
+			contextMenu.value.targetModule = "bottomLeft";
+		} else if (moduleElement.classList.contains("bottomRightModule")) {
+			contextMenu.value.targetModule = "bottomRight";
+		}
+	}
 };
 
 const handleSettings = () => {
-  router.push('/settings');
-  contextMenu.value.show = false;
+	router.push("/settings");
+	contextMenu.value.show = false;
 };
 
 onMounted(() => {
-  if (moduleZone.value) {
-    swapy.value = createSwapy(moduleZone.value, {
-      dragOnHold: true,
-    });
+	if (moduleZone.value) {
+		swapy.value = createSwapy(moduleZone.value, {
+			dragOnHold: true,
+		});
 
-    swapy.value.onSwapStart(() => {
-      $toast.info('Module peut être déplacé');
-    });
-  }
+		swapy.value.onSwapStart(() => {
+			$toast.info("Module peut être déplacé");
+		});
+	}
 
-  document.addEventListener('click', () => {
-    contextMenu.value.show = false;
-  });
+	document.addEventListener("click", () => {
+		contextMenu.value.show = false;
+	});
 });
 
 onUnmounted(() => {
-  swapy.value?.destroy();
-  document.removeEventListener('click', () => {
-    contextMenu.value.show = false;
-  });
+	swapy.value?.destroy();
+	document.removeEventListener("click", () => {
+		contextMenu.value.show = false;
+	});
 });
 </script>
 

@@ -125,12 +125,12 @@
 </template>
 
 <script setup lang="ts">
-import 'vue3-toastify/dist/index.css';
-import { gsap } from 'gsap';
-import { Draggable } from 'gsap/Draggable';
-import { ref, onMounted, onUnmounted } from 'vue';
-import autoAnimate from '@formkit/auto-animate';
-import { createSwapy } from 'swapy';
+import "vue3-toastify/dist/index.css";
+import { gsap } from "gsap";
+import { Draggable } from "gsap/Draggable";
+import { ref, onMounted, onUnmounted } from "vue";
+import autoAnimate from "@formkit/auto-animate";
+import { createSwapy } from "swapy";
 gsap.registerPlugin(Draggable);
 
 const { $toast } = useNuxtApp();
@@ -138,28 +138,28 @@ const dropdown = ref();
 const show = ref(false);
 
 onMounted(() => {
-  autoAnimate(dropdown.value);
-  Draggable.create('.flair--3b', {
-    type: 'rotation',
-    inertia: true,
-  });
+	autoAnimate(dropdown.value);
+	Draggable.create(".flair--3b", {
+		type: "rotation",
+		inertia: true,
+	});
 });
 
 const notify = () => {
-  $toast.error('Something went wrong');
+	$toast.error("Something went wrong");
 };
 
 const swapy = ref();
 const containerswapy = ref();
 
 onMounted(() => {
-  if (containerswapy.value) {
-    swapy.value = createSwapy(containerswapy.value);
-  }
+	if (containerswapy.value) {
+		swapy.value = createSwapy(containerswapy.value);
+	}
 });
 
 onUnmounted(() => {
-  swapy.value?.destroy();
+	swapy.value?.destroy();
 });
 </script>
 

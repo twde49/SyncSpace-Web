@@ -96,134 +96,134 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, watch } from 'vue';
-import { type Footers, MdEditor, type ToolbarNames } from 'md-editor-v3';
-import useAuthFetch from '~/composables/useAuthFetch';
-import 'md-editor-v3/lib/style.css';
+import { ref, watch } from "vue";
+import { type Footers, MdEditor, type ToolbarNames } from "md-editor-v3";
+import useAuthFetch from "~/composables/useAuthFetch";
+import "md-editor-v3/lib/style.css";
 
 const { noteId, titleNote, contentNote } = defineProps<{
-  noteId: number;
-  titleNote: string;
-  contentNote: string;
+	noteId: number;
+	titleNote: string;
+	contentNote: string;
 }>();
 
 const { $colorMode } = useNuxtApp();
 
 const placeholders = [
-  'Écrivez votre première idée brillante ici...',
-  'Une page blanche, infinie en possibilités...',
-  "Quel est votre message au monde aujourd'hui ?",
-  'Un titre, un mot, une phrase... lancez-vous !',
-  "Tout commence par un mot. Qu'allez-vous écrire ?",
-  'Commencez à écrire, vos pensées prendront forme.',
-  'Laissez vos idées couler librement ici...',
-  "Que voulez-vous raconter aujourd'hui ?",
-  'Ajoutez une touche de créativité...',
-  "Il n'y a pas de mauvaises idées, seulement des débuts prometteurs.",
+	"Écrivez votre première idée brillante ici...",
+	"Une page blanche, infinie en possibilités...",
+	"Quel est votre message au monde aujourd'hui ?",
+	"Un titre, un mot, une phrase... lancez-vous !",
+	"Tout commence par un mot. Qu'allez-vous écrire ?",
+	"Commencez à écrire, vos pensées prendront forme.",
+	"Laissez vos idées couler librement ici...",
+	"Que voulez-vous raconter aujourd'hui ?",
+	"Ajoutez une touche de créativité...",
+	"Il n'y a pas de mauvaises idées, seulement des débuts prometteurs.",
 ];
 
 const footer: Footers[] = [];
-const excluded: ToolbarNames[] = ['github', 'preview', 'sub', 'sup', 'catalog'];
+const excluded: ToolbarNames[] = ["github", "preview", "sub", "sup", "catalog"];
 const content = ref<string>(contentNote);
 const showModal = ref(false);
 const title = ref(titleNote);
 const { $toast } = useNuxtApp();
-const emit = defineEmits(['openMarkdownCenter']);
+const emit = defineEmits(["openMarkdownCenter"]);
 
 const getRandomPlaceholder = () => {
-  const randomIndex = Math.floor(Math.random() * placeholders.length);
-  return placeholders[randomIndex];
+	const randomIndex = Math.floor(Math.random() * placeholders.length);
+	return placeholders[randomIndex];
 };
 
 const placeholder = ref(getRandomPlaceholder());
 
 const openMarkdownCenter = () => {
-  emit('openMarkdownCenter', true);
+	emit("openMarkdownCenter", true);
 };
 
 const handleSave = () => {
-  if (!showModal.value) {
-    showModal.value = true;
-  }
+	if (!showModal.value) {
+		showModal.value = true;
+	}
 };
 
 const closeModal = () => {
-  showModal.value = false;
+	showModal.value = false;
 };
 
 const saveTitle = async () => {
-  if (noteId) {
-    return await updateExistingNote();
-  }
-  return await addNewNote();
+	if (noteId) {
+		return await updateExistingNote();
+	}
+	return await addNewNote();
 };
 
 const addNewNote = async () => {
-  try {
-    const response = await useAuthFetch('note/save', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        title: title.value,
-        content: content.value,
-      }),
-    });
+	try {
+		const response = await useAuthFetch("note/save", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				title: title.value,
+				content: content.value,
+			}),
+		});
 
-    if (response.status.value === 'success') {
-      $toast.success('Votre note a bien été sauvegardée');
-      title.value = '';
-      content.value = '';
-      placeholder.value = getRandomPlaceholder();
-      closeModal();
-    } else {
-      $toast.error("Quelque chose n'a pas marché");
-    }
-  } catch (error: unknown) {
-    $toast.error((error as Error).message);
-  }
+		if (response.status.value === "success") {
+			$toast.success("Votre note a bien été sauvegardée");
+			title.value = "";
+			content.value = "";
+			placeholder.value = getRandomPlaceholder();
+			closeModal();
+		} else {
+			$toast.error("Quelque chose n'a pas marché");
+		}
+	} catch (error: unknown) {
+		$toast.error((error as Error).message);
+	}
 };
 
 const updateExistingNote = async () => {
-  try {
-    const response = await useAuthFetch(`note/save/${noteId}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        title: title.value,
-        content: content.value,
-      }),
-    });
+	try {
+		const response = await useAuthFetch(`note/save/${noteId}`, {
+			method: "PUT",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				title: title.value,
+				content: content.value,
+			}),
+		});
 
-    if (response.status.value === 'success') {
-      $toast.success('Votre note a bien été sauvegardée');
-      title.value = '';
-      content.value = '';
-      placeholder.value = getRandomPlaceholder();
-      closeModal();
-    } else {
-      $toast.error("Quelque chose n'a pas marché");
-    }
-  } catch (error: unknown) {
-    $toast.error((error as Error).message);
-  }
+		if (response.status.value === "success") {
+			$toast.success("Votre note a bien été sauvegardée");
+			title.value = "";
+			content.value = "";
+			placeholder.value = getRandomPlaceholder();
+			closeModal();
+		} else {
+			$toast.error("Quelque chose n'a pas marché");
+		}
+	} catch (error: unknown) {
+		$toast.error((error as Error).message);
+	}
 };
 
 watch(
-  () => titleNote,
-  newTitle => {
-    title.value = newTitle;
-  },
+	() => titleNote,
+	(newTitle) => {
+		title.value = newTitle;
+	},
 );
 
 watch(
-  () => contentNote,
-  newContent => {
-    content.value = newContent;
-  },
+	() => contentNote,
+	(newContent) => {
+		content.value = newContent;
+	},
 );
 </script>
 

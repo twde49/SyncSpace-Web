@@ -19,26 +19,26 @@
 
 <script>
 export default {
-  name: 'VolumeControl',
-  data() {
-    return {
-      volume: 10,
-    };
-  },
-  methods: {
-    handleVolumeChange() {
-      this.adjustVolume(this.volume / 100);
-    },
-    adjustVolume(value) {
-      const audioElement = this.$refs.audioElement;
-      if (audioElement) {
-        audioElement.volume = value;
-      }
-    },
-  },
-  mounted() {
-    this.adjustVolume(this.volume / 100);
-  },
+	name: "VolumeControl",
+	data() {
+		return {
+			volume: 10,
+		};
+	},
+	methods: {
+		handleVolumeChange() {
+			this.adjustVolume(this.volume / 100);
+		},
+		adjustVolume(value) {
+			const audioElement = this.$refs.audioElement;
+			if (audioElement) {
+				audioElement.volume = value;
+			}
+		},
+	},
+	mounted() {
+		this.adjustVolume(this.volume / 100);
+	},
 };
 </script>
 

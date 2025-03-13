@@ -238,16 +238,16 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUpdated, watch, nextTick } from 'vue';
-import { gsap } from 'gsap';
-import { Draggable } from 'gsap/Draggable';
-import useAuthFetch from '~/composables/useAuthFetch';
-import type { Conversation } from '~/types/Conversation';
-import LittleConversation from '~/components/dashboard/messageModule/littleConversation.vue';
-import ActiveConversation from '~/components/dashboard/messageModule/activeConversation.vue';
-import type { User } from '~/types/User';
-import { useUserStore } from '~/stores/userStore';
-import { useWebSocket } from '#imports';
+import { ref, onMounted, onUpdated, watch, nextTick } from "vue";
+import { gsap } from "gsap";
+import { Draggable } from "gsap/Draggable";
+import useAuthFetch from "~/composables/useAuthFetch";
+import type { Conversation } from "~/types/Conversation";
+import LittleConversation from "~/components/dashboard/messageModule/littleConversation.vue";
+import ActiveConversation from "~/components/dashboard/messageModule/activeConversation.vue";
+import type { User } from "~/types/User";
+import { useUserStore } from "~/stores/userStore";
+import { useWebSocket } from "#imports";
 
 const { webSocketData } = useWebSocket();
 gsap.registerPlugin(Draggable);
@@ -260,10 +260,10 @@ const conversations = ref<Conversation[] | null>(null);
 const userStore = useUserStore();
 
 const showNewConvModal = ref(false);
-const searchQuery = ref('');
+const searchQuery = ref("");
 const searchResults = ref<User[]>([]);
 const selectedUsers = ref<User[]>([]);
-const conversationName = ref('');
+const conversationName = ref("");
 const isSearching = ref(false);
 const activeMenu = ref<string | null>(null);
 const menuPositions = ref<{ [key: string]: number }>({});
@@ -271,248 +271,248 @@ const conversationToDelete = ref<Conversation | null>(null);
 const showDeleteModal = ref(false);
 
 const applyDraggable = () => {
-  if (draggableInstance) {
-    for (const instance of draggableInstance) {
-      instance.kill();
-    }
-    draggableInstance = null;
-  }
+	if (draggableInstance) {
+		for (const instance of draggableInstance) {
+			instance.kill();
+		}
+		draggableInstance = null;
+	}
 
-  draggableInstance = Draggable.create('#messageMenuClosed', {
-    type: 'rotation',
-    inertia: true,
-    throwResistance: 1000,
-    snap: value => Math.round(value / 15) * 15,
-    zIndexBoost: false,
-  });
+	draggableInstance = Draggable.create("#messageMenuClosed", {
+		type: "rotation",
+		inertia: true,
+		throwResistance: 1000,
+		snap: (value) => Math.round(value / 15) * 15,
+		zIndexBoost: false,
+	});
 };
 
 const activeConversation = ref<Conversation | null>(null);
 
 const openClose = async () => {
-  const duration = 0.5;
-  if (closed.value) {
-    gsap.to(expandedContainer.value, {
-      duration,
-      width: '70vw',
-      height: '80vh',
-      ease: 'power2.inOut',
-    });
-    gsap.to(closedButton.value, {
-      duration,
-      opacity: 0,
-      ease: 'power2.inOut',
-    });
-    await nextTick();
-    closed.value = false;
-  } else {
-    gsap.to(expandedContainer.value, {
-      duration,
-      width: '100px',
-      height: '100px',
-      ease: 'power2.inOut',
-    });
-    gsap.to(closedButton.value, {
-      duration,
-      opacity: 1,
-      ease: 'power2.inOut',
-    });
-    await nextTick();
-    closed.value = true;
-  }
+	const duration = 0.5;
+	if (closed.value) {
+		gsap.to(expandedContainer.value, {
+			duration,
+			width: "70vw",
+			height: "80vh",
+			ease: "power2.inOut",
+		});
+		gsap.to(closedButton.value, {
+			duration,
+			opacity: 0,
+			ease: "power2.inOut",
+		});
+		await nextTick();
+		closed.value = false;
+	} else {
+		gsap.to(expandedContainer.value, {
+			duration,
+			width: "100px",
+			height: "100px",
+			ease: "power2.inOut",
+		});
+		gsap.to(closedButton.value, {
+			duration,
+			opacity: 1,
+			ease: "power2.inOut",
+		});
+		await nextTick();
+		closed.value = true;
+	}
 };
 
 const openNewConvModal = () => {
-  showNewConvModal.value = true;
-  searchQuery.value = '';
-  searchResults.value = [];
-  selectedUsers.value = [];
+	showNewConvModal.value = true;
+	searchQuery.value = "";
+	searchResults.value = [];
+	selectedUsers.value = [];
 };
 
 const closeNewConvModal = () => {
-  showNewConvModal.value = false;
+	showNewConvModal.value = false;
 };
 
 const searchUsers = async () => {
-  if (!searchQuery.value.trim()) {
-    searchResults.value = [];
-    return;
-  }
+	if (!searchQuery.value.trim()) {
+		searchResults.value = [];
+		return;
+	}
 
-  isSearching.value = true;
+	isSearching.value = true;
 
-  try {
-    const response = await useAuthFetch('conversation/user/search', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        username: searchQuery.value,
-      }),
-    });
+	try {
+		const response = await useAuthFetch("conversation/user/search", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				username: searchQuery.value,
+			}),
+		});
 
-    if (response.data.value) {
-      searchResults.value = response.data.value as User[];
-    }
+		if (response.data.value) {
+			searchResults.value = response.data.value as User[];
+		}
 
-    const currentUser = userStore.email;
+		const currentUser = userStore.email;
 
-    searchResults.value = searchResults.value.filter(
-      user => user.email !== currentUser,
-    );
-  } catch (error: unknown) {
-    const err = error as Error;
-    $toast.error(err.message || 'Error searching for users');
-  } finally {
-    isSearching.value = false;
-  }
+		searchResults.value = searchResults.value.filter(
+			(user) => user.email !== currentUser,
+		);
+	} catch (error: unknown) {
+		const err = error as Error;
+		$toast.error(err.message || "Error searching for users");
+	} finally {
+		isSearching.value = false;
+	}
 };
 
 const selectUser = (user: User) => {
-  if (!selectedUsers.value.some(selected => selected.id === user.id)) {
-    selectedUsers.value.push(user);
-  }
-  searchQuery.value = '';
-  searchResults.value = [];
+	if (!selectedUsers.value.some((selected) => selected.id === user.id)) {
+		selectedUsers.value.push(user);
+	}
+	searchQuery.value = "";
+	searchResults.value = [];
 };
 
 const removeUser = (user: User) => {
-  selectedUsers.value = selectedUsers.value.filter(
-    selected => selected.id !== user.id,
-  );
+	selectedUsers.value = selectedUsers.value.filter(
+		(selected) => selected.id !== user.id,
+	);
 };
 
 const createConversation = async () => {
-  if (selectedUsers.value.length === 0) {
-    return;
-  }
+	if (selectedUsers.value.length === 0) {
+		return;
+	}
 
-  try {
-    const userIds = selectedUsers.value.map(user => user.id);
-    const response = await useAuthFetch('conversation/new', {
-      method: 'POST',
-      body: {
-        userIds,
-        name: conversationName.value,
-      },
-    });
+	try {
+		const userIds = selectedUsers.value.map((user) => user.id);
+		const response = await useAuthFetch("conversation/new", {
+			method: "POST",
+			body: {
+				userIds,
+				name: conversationName.value,
+			},
+		});
 
-    if (
-      response.data.value &&
-      typeof response.data.value === 'object' &&
-      'content' in response.data.value
-    ) {
-      await getConversations();
-      const newConversation = (response.data.value as { content: Conversation })
-        .content;
-      activeConversation.value = newConversation;
-      conversationName.value = '';
-      closeNewConvModal();
-    }
-  } catch (error: unknown) {
-    const err = error as Error;
-    $toast.error(err.message || 'Error creating conversation');
-  }
+		if (
+			response.data.value &&
+			typeof response.data.value === "object" &&
+			"content" in response.data.value
+		) {
+			await getConversations();
+			const newConversation = (response.data.value as { content: Conversation })
+				.content;
+			activeConversation.value = newConversation;
+			conversationName.value = "";
+			closeNewConvModal();
+		}
+	} catch (error: unknown) {
+		const err = error as Error;
+		$toast.error(err.message || "Error creating conversation");
+	}
 };
 
 const getConversations = async () => {
-  console.log('Fetching conversations...');
-  try {
-    const response = await useAuthFetch('conversations');
+	console.log("Fetching conversations...");
+	try {
+		const response = await useAuthFetch("conversations");
 
-    conversations.value = response.data.value as Conversation[];
-  } catch (error: unknown) {
-    const err = error as Error;
-    $toast.error(err.message || 'Error fetching conversations');
-  }
+		conversations.value = response.data.value as Conversation[];
+	} catch (error: unknown) {
+		const err = error as Error;
+		$toast.error(err.message || "Error fetching conversations");
+	}
 };
 
 const removeConversation = async () => {
-  try {
-    if (conversationToDelete.value) {
-      await useAuthFetch(
-        `conversation/remove/${conversationToDelete.value.id}`,
-        {
-          method: 'DELETE',
-        },
-      );
+	try {
+		if (conversationToDelete.value) {
+			await useAuthFetch(
+				`conversation/remove/${conversationToDelete.value.id}`,
+				{
+					method: "DELETE",
+				},
+			);
 
-      await getConversations();
-      showDeleteModal.value = false;
-      conversationToDelete.value = null;
-    }
-  } catch (error: unknown) {
-    const err = error as Error;
-    $toast.error(err.message || 'Error deleting conversation');
-  }
+			await getConversations();
+			showDeleteModal.value = false;
+			conversationToDelete.value = null;
+		}
+	} catch (error: unknown) {
+		const err = error as Error;
+		$toast.error(err.message || "Error deleting conversation");
+	}
 };
 
 const showConversationMenu = (conversation: Conversation) => {
-  toggleMenu(String(conversation.id));
+	toggleMenu(String(conversation.id));
 };
 
 const toggleMenu = (conversationId: string) => {
-  if (activeMenu.value === conversationId) {
-    activeMenu.value = null;
-  } else {
-    activeMenu.value = conversationId;
-    nextTick(() => {
-      const element = document.querySelector(
-        `[data-conversation-id="${conversationId}"]`,
-      );
-      if (element) {
-        const rect = element.getBoundingClientRect();
-        menuPositions.value[conversationId] = rect.right;
-      }
-    });
-  }
+	if (activeMenu.value === conversationId) {
+		activeMenu.value = null;
+	} else {
+		activeMenu.value = conversationId;
+		nextTick(() => {
+			const element = document.querySelector(
+				`[data-conversation-id="${conversationId}"]`,
+			);
+			if (element) {
+				const rect = element.getBoundingClientRect();
+				menuPositions.value[conversationId] = rect.right;
+			}
+		});
+	}
 };
 
 const openDeleteModal = (conversation: Conversation) => {
-  conversationToDelete.value = conversation;
-  showDeleteModal.value = true;
-  activeMenu.value = null;
+	conversationToDelete.value = conversation;
+	showDeleteModal.value = true;
+	activeMenu.value = null;
 };
 
 const cancelDelete = () => {
-  showDeleteModal.value = false;
-  conversationToDelete.value = null;
+	showDeleteModal.value = false;
+	conversationToDelete.value = null;
 };
 
-watch(closed, value => {
-  return value ? applyDraggable() : () => {};
+watch(closed, (value) => {
+	return value ? applyDraggable() : () => {};
 });
 
 onMounted(async () => {
-  await nextTick(async () => {
-    await getConversations();
-  });
-  applyDraggable();
-  userStore.loadUserFromCookies();
+	await nextTick(async () => {
+		await getConversations();
+	});
+	applyDraggable();
+	userStore.loadUserFromCookies();
 });
 
-watch(webSocketData.value, async newData => {
-  if (newData.type === 'refreshConversations') {
-    await getConversations();
-  }
+watch(webSocketData.value, async (newData) => {
+	if (newData.type === "refreshConversations") {
+		await getConversations();
+	}
 });
 
 onUpdated(() => {
-  if (closed.value) {
-    applyDraggable();
-  }
+	if (closed.value) {
+		applyDraggable();
+	}
 });
 
 onMounted(() => {
-  document.addEventListener('click', event => {
-    if (
-      activeMenu.value &&
-      !(event.target as Element)?.closest?.('.message-container')
-    ) {
-      activeMenu.value = null;
-    }
-  });
+	document.addEventListener("click", (event) => {
+		if (
+			activeMenu.value &&
+			!(event.target as Element)?.closest?.(".message-container")
+		) {
+			activeMenu.value = null;
+		}
+	});
 });
 </script>
 

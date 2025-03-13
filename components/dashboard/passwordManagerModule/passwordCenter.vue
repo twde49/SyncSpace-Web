@@ -135,18 +135,18 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
-import type { PasswordItem } from '~/types/PasswordItem';
-import useAuthFetch from '~/composables/useAuthFetch';
-import * as cryptoUtils from '~/utils/cryptoUtils';
-import { useUserStore } from '~/stores/userStore';
-import { useMasterPasswordStore } from '@/stores/masterPassword';
+import { ref, onMounted } from "vue";
+import type { PasswordItem } from "~/types/PasswordItem";
+import useAuthFetch from "~/composables/useAuthFetch";
+import * as cryptoUtils from "~/utils/cryptoUtils";
+import { useUserStore } from "~/stores/userStore";
+import { useMasterPasswordStore } from "@/stores/masterPassword";
 
 const userStore = useUserStore();
 const { $toast } = useNuxtApp();
-const emit = defineEmits(['closePasswordCenter', 'openPassword']);
+const emit = defineEmits(["closePasswordCenter", "openPassword"]);
 const closeModal = () => {
-  emit('closePasswordCenter');
+	emit("closePasswordCenter");
 };
 
 const masterPasswordStore = useMasterPasswordStore();
@@ -159,139 +159,139 @@ const isMasterPasswordSet = ref<boolean>(false);
 const isMasterPasswordActive = ref<boolean>(false);
 
 const getFormattedDate = (date: string | undefined) => {
-  if (!date) return '';
-  return new Date(date).toLocaleDateString('fr-FR', {
-    month: 'long',
-    day: 'numeric',
-  });
+	if (!date) return "";
+	return new Date(date).toLocaleDateString("fr-FR", {
+		month: "long",
+		day: "numeric",
+	});
 };
 
 const createMasterPassword = async () => {
-  if (!masterPassword.value) {
-    $toast.error('Veuillez entrer un mot de passe maître.');
-    return;
-  }
+	if (!masterPassword.value) {
+		$toast.error("Veuillez entrer un mot de passe maître.");
+		return;
+	}
 
-  await useAuthFetch('passwords/set-master-password', {
-    method: 'POST',
-    body: JSON.stringify({ masterPassword: masterPassword.value }),
-  });
+	await useAuthFetch("passwords/set-master-password", {
+		method: "POST",
+		body: JSON.stringify({ masterPassword: masterPassword.value }),
+	});
 
-  userStore.masterPasswordSet = true;
-  $toast.success('Mot de passe maître défini avec succès.');
+	userStore.masterPasswordSet = true;
+	$toast.success("Mot de passe maître défini avec succès.");
 };
 
 const verifyMasterPassword = async () => {
-  if (!masterPassword.value) {
-    $toast.error('Veuillez entrer votre mot de passe maître.');
-    return;
-  }
+	if (!masterPassword.value) {
+		$toast.error("Veuillez entrer votre mot de passe maître.");
+		return;
+	}
 
-  const success = await masterPasswordStore.authenticate(masterPassword.value);
+	const success = await masterPasswordStore.authenticate(masterPassword.value);
 
-  if (success) {
-    encryptionKey.value = (await cryptoUtils.deriveKey(
-      masterPassword.value,
-    )) as CryptoKey;
-    isMasterPasswordActive.value = true;
-    $toast.success('Coffre déverrouillé !');
-    await fetchPasswords();
-  } else {
-    isMasterPasswordActive.value = false;
-    $toast.error('Mot de passe incorrect.');
-  }
+	if (success) {
+		encryptionKey.value = (await cryptoUtils.deriveKey(
+			masterPassword.value,
+		)) as CryptoKey;
+		isMasterPasswordActive.value = true;
+		$toast.success("Coffre déverrouillé !");
+		await fetchPasswords();
+	} else {
+		isMasterPasswordActive.value = false;
+		$toast.error("Mot de passe incorrect.");
+	}
 };
 
 const fetchPasswords = async () => {
-  if (!masterPassword.value) {
-    $toast.error('Veuillez entrer votre mot de passe maître.', {
-      position: 'top-center',
-    });
-    return;
-  }
+	if (!masterPassword.value) {
+		$toast.error("Veuillez entrer votre mot de passe maître.", {
+			position: "top-center",
+		});
+		return;
+	}
 
-  encryptionKey.value = (await cryptoUtils.deriveKey(
-    masterPassword.value,
-  )) as CryptoKey;
+	encryptionKey.value = (await cryptoUtils.deriveKey(
+		masterPassword.value,
+	)) as CryptoKey;
 
-  const res = await useAuthFetch('passwords/list');
-  const encryptedPasswords = res.data.value as PasswordItem[];
+	const res = await useAuthFetch("passwords/list");
+	const encryptedPasswords = res.data.value as PasswordItem[];
 
-  passwords.value = await Promise.all(
-    encryptedPasswords.map(async (password: PasswordItem) => {
-      const decryptedPwd = await cryptoUtils.decryptData(
-        password.passwordEncrypted,
-        password.iv,
-        encryptionKey.value as CryptoKey,
-      );
+	passwords.value = await Promise.all(
+		encryptedPasswords.map(async (password: PasswordItem) => {
+			const decryptedPwd = await cryptoUtils.decryptData(
+				password.passwordEncrypted,
+				password.iv,
+				encryptionKey.value as CryptoKey,
+			);
 
-      return {
-        ...password,
-        decryptedPassword: decryptedPwd,
-      };
-    }),
-  );
+			return {
+				...password,
+				decryptedPassword: decryptedPwd,
+			};
+		}),
+	);
 };
 
 const openPassword = (chosenPassword: PasswordItem | undefined) => {
-  if (!isMasterPasswordActive.value) {
-    $toast.error(
-      'Votre session de mot de passe maître a expiré. Veuillez vous authentifier à nouveau.',
-    );
-    encryptionKey.value = null;
-    return;
-  }
+	if (!isMasterPasswordActive.value) {
+		$toast.error(
+			"Votre session de mot de passe maître a expiré. Veuillez vous authentifier à nouveau.",
+		);
+		encryptionKey.value = null;
+		return;
+	}
 
-  emit('openPassword', chosenPassword);
-  emit('closePasswordCenter');
+	emit("openPassword", chosenPassword);
+	emit("closePasswordCenter");
 };
 
 const confirmDelete = (id: number) => {
-  if (!isMasterPasswordActive.value) {
-    $toast.error(
-      'Votre session de mot de passe maître a expiré. Veuillez vous authentifier à nouveau.',
-    );
-    encryptionKey.value = null;
-    return;
-  }
+	if (!isMasterPasswordActive.value) {
+		$toast.error(
+			"Votre session de mot de passe maître a expiré. Veuillez vous authentifier à nouveau.",
+		);
+		encryptionKey.value = null;
+		return;
+	}
 
-  passwordToDelete.value = id;
+	passwordToDelete.value = id;
 };
 
 const cancelDelete = () => {
-  passwordToDelete.value = null;
+	passwordToDelete.value = null;
 };
 
 const deletePassword = async (id: number) => {
-  if (!isMasterPasswordActive.value) {
-    $toast.error(
-      'Votre session de mot de passe maître a expiré. Veuillez vous authentifier à nouveau.',
-    );
-    encryptionKey.value = null;
-    return;
-  }
+	if (!isMasterPasswordActive.value) {
+		$toast.error(
+			"Votre session de mot de passe maître a expiré. Veuillez vous authentifier à nouveau.",
+		);
+		encryptionKey.value = null;
+		return;
+	}
 
-  await useAuthFetch(`passwords/remove/${id}`, { method: 'DELETE' });
-  await fetchPasswords();
-  $toast.success('Mot de passe supprimé.');
+	await useAuthFetch(`passwords/remove/${id}`, { method: "DELETE" });
+	await fetchPasswords();
+	$toast.success("Mot de passe supprimé.");
 };
 
 const checkMasterPasswordExistence = async () => {
-  const res = await useAuthFetch('passwords/get-master-password-hash');
-  if (res.data.value !== null) {
-    isMasterPasswordSet.value = true;
-    return;
-  }
-  isMasterPasswordSet.value = false;
-  if (!res.data.value) {
-    $toast.error('Veuillez entrer votre mot de passe maître.', {
-      position: 'top-center',
-    });
-  }
+	const res = await useAuthFetch("passwords/get-master-password-hash");
+	if (res.data.value !== null) {
+		isMasterPasswordSet.value = true;
+		return;
+	}
+	isMasterPasswordSet.value = false;
+	if (!res.data.value) {
+		$toast.error("Veuillez entrer votre mot de passe maître.", {
+			position: "top-center",
+		});
+	}
 };
 
 onMounted(async () => {
-  checkMasterPasswordExistence();
-  isMasterPasswordActive.value = masterPasswordStore.isAuthenticated;
+	checkMasterPasswordExistence();
+	isMasterPasswordActive.value = masterPasswordStore.isAuthenticated;
 });
 </script>

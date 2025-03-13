@@ -111,7 +111,7 @@
 </template>
 
 <script setup lang="ts">
-import LightDarkModeSwitch from '~/components/Switch/LightDarkModeSwitch.vue';
+import LightDarkModeSwitch from "~/components/Switch/LightDarkModeSwitch.vue";
 </script>
 
 <style scoped>

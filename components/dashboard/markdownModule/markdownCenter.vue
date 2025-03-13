@@ -137,13 +137,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
-import type { Note } from '~/types/Note';
-import useAuthFetch from '~/composables/useAuthFetch';
+import { ref, onMounted } from "vue";
+import type { Note } from "~/types/Note";
+import useAuthFetch from "~/composables/useAuthFetch";
 const { $toast } = useNuxtApp();
-const emit = defineEmits(['closeMarkdownCenter', 'openNote']);
+const emit = defineEmits(["closeMarkdownCenter", "openNote"]);
 const closeModal = () => {
-  emit('closeMarkdownCenter', true);
+	emit("closeMarkdownCenter", true);
 };
 
 const notes = ref<Note[]>([]);
@@ -151,53 +151,53 @@ const chosenNote = ref<Note | undefined>();
 const noteToDelete = ref<number | null>(null);
 
 const getFormatedDate = (date: string | undefined) => {
-  if (!date) return '';
-  const d = new Date(date);
-  return d.toLocaleDateString('fr-FR', {
-    month: 'long',
-    day: 'numeric',
-  });
+	if (!date) return "";
+	const d = new Date(date);
+	return d.toLocaleDateString("fr-FR", {
+		month: "long",
+		day: "numeric",
+	});
 };
 
 const fetchNotes = async () => {
-  const res = await useAuthFetch('notes');
-  notes.value = res.data.value as Note[];
+	const res = await useAuthFetch("notes");
+	notes.value = res.data.value as Note[];
 };
 
 const openNote = (chosenNote: Note | undefined) => {
-  emit('openNote', chosenNote);
-  emit('closeMarkdownCenter');
+	emit("openNote", chosenNote);
+	emit("closeMarkdownCenter");
 };
 
 const confirmDelete = (id: number) => {
-  noteToDelete.value = id;
+	noteToDelete.value = id;
 };
 
 const cancelDelete = () => {
-  noteToDelete.value = null;
+	noteToDelete.value = null;
 };
 
 const deleteNote = async (id: number) => {
-  try {
-    const response = await useAuthFetch(`note/remove/${id}`, {
-      method: 'DELETE',
-    });
+	try {
+		const response = await useAuthFetch(`note/remove/${id}`, {
+			method: "DELETE",
+		});
 
-    if (response.status.value === 'success') {
-      $toast.success('Note supprimée avec succès');
-    } else {
-      $toast.error('Erreur lors de la suppression de la note');
-    }
-    await fetchNotes();
-  } catch (e) {
-    console.error(e);
-  } finally {
-    noteToDelete.value = null;
-  }
+		if (response.status.value === "success") {
+			$toast.success("Note supprimée avec succès");
+		} else {
+			$toast.error("Erreur lors de la suppression de la note");
+		}
+		await fetchNotes();
+	} catch (e) {
+		console.error(e);
+	} finally {
+		noteToDelete.value = null;
+	}
 };
 
 onMounted(async () => {
-  await fetchNotes();
+	await fetchNotes();
 });
 </script>
 

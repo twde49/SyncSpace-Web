@@ -120,42 +120,42 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref } from "vue";
 const { $generatePassword, $toast } = useNuxtApp();
 
-const generatedPassword = ref('');
+const generatedPassword = ref("");
 const showOptionsMenu = ref(false);
-const emit = defineEmits(['openPasswordCenter']);
+const emit = defineEmits(["openPasswordCenter"]);
 
 const options = ref({
-  length: 12,
-  uppercase: true,
-  lowercase: true,
-  numbers: true,
-  symbols: false,
-  easyToRead: false,
-  easyToSay: false,
+	length: 12,
+	uppercase: true,
+	lowercase: true,
+	numbers: true,
+	symbols: false,
+	easyToRead: false,
+	easyToSay: false,
 });
 
 const openPasswordCenter = () => {
-  emit('openPasswordCenter', true);
+	emit("openPasswordCenter", true);
 };
 
 const generatePassword = () => {
-  try {
-    generatedPassword.value = $generatePassword(options.value);
-  } catch (error) {
-    alert(error.message);
-  }
+	try {
+		generatedPassword.value = $generatePassword(options.value);
+	} catch (error) {
+		alert(error.message);
+	}
 };
 
 const copyToClipboard = () => {
-  navigator.clipboard.writeText(generatedPassword.value);
-  $toast.success('Mot de passe copié');
+	navigator.clipboard.writeText(generatedPassword.value);
+	$toast.success("Mot de passe copié");
 };
 
 const toggleOptionsMenu = () => {
-  showOptionsMenu.value = !showOptionsMenu.value;
+	showOptionsMenu.value = !showOptionsMenu.value;
 };
 </script>
 

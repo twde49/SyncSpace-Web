@@ -1,12 +1,12 @@
-import type { User } from './User';
+import type { User } from "./User";
 
 export type Notification = {
-  '@id': number;
-  '@type': 'Notification';
-  id: number;
-  title?: string;
-  content?: string;
-  createdAt?: string;
-  isRead?: boolean;
-  relatedTo: User;
+	"@id": number;
+	"@type": "Notification";
+	id: number;
+	title?: string;
+	content?: string;
+	createdAt?: string;
+	isRead?: boolean;
+	relatedTo: User;
 };

@@ -45,13 +45,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, nextTick, watch } from 'vue';
-import gsap from 'gsap';
-import NotificationList from './NotificationList.vue';
-import type { Notification } from '@/types/Notification';
-import { useAuthFetch } from '#imports';
-import { useUserStore } from '@/stores/userStore';
-import { useWebSocket } from '~/composables/useWebSocket';
+import { ref, onMounted, nextTick, watch } from "vue";
+import gsap from "gsap";
+import NotificationList from "./NotificationList.vue";
+import type { Notification } from "@/types/Notification";
+import { useAuthFetch } from "#imports";
+import { useUserStore } from "@/stores/userStore";
+import { useWebSocket } from "~/composables/useWebSocket";
 
 const { $toast } = useNuxtApp();
 const { connect, webSocketData } = useWebSocket();
@@ -61,77 +61,77 @@ const notificationDrawer = ref(null);
 const notifications = ref<Notification[]>([]);
 
 const toggleNotificationDrawer = () => {
-  isNotificationDrawerOpen.value = !isNotificationDrawerOpen.value;
+	isNotificationDrawerOpen.value = !isNotificationDrawerOpen.value;
 
-  if (isNotificationDrawerOpen.value) {
-    gsap.to(notificationDrawer.value, {
-      duration: 0.3,
-      opacity: 1,
-      scale: 1,
-      ease: 'back.out(1.7)',
-    });
-  } else {
-    gsap.to(notificationDrawer.value, {
-      duration: 0.2,
-      opacity: 0,
-      scale: 0.95,
-      ease: 'power2.in',
-    });
-  }
+	if (isNotificationDrawerOpen.value) {
+		gsap.to(notificationDrawer.value, {
+			duration: 0.3,
+			opacity: 1,
+			scale: 1,
+			ease: "back.out(1.7)",
+		});
+	} else {
+		gsap.to(notificationDrawer.value, {
+			duration: 0.2,
+			opacity: 0,
+			scale: 0.95,
+			ease: "power2.in",
+		});
+	}
 };
 
 const fetchNotifications = async () => {
-  try {
-    const res = await useAuthFetch('notifications/all');
-    notifications.value = res.data.value as Notification[];
-  } catch (error) {
-    console.error('Error fetching notifications:', error);
-  }
+	try {
+		const res = await useAuthFetch("notifications/all");
+		notifications.value = res.data.value as Notification[];
+	} catch (error) {
+		console.error("Error fetching notifications:", error);
+	}
 };
 
 const readNotification = async (id: number) => {
-  try {
-    await useAuthFetch(`notifications/${id}/read`, {
-      method: 'PUT',
-    });
-    notifications.value = notifications.value.filter(n => n.id !== id);
-  } catch (error) {
-    console.error('Error reading notification:', error);
-  }
+	try {
+		await useAuthFetch(`notifications/${id}/read`, {
+			method: "PUT",
+		});
+		notifications.value = notifications.value.filter((n) => n.id !== id);
+	} catch (error) {
+		console.error("Error reading notification:", error);
+	}
 };
 
 const readAllNotifications = async () => {
-  try {
-    await useAuthFetch('notifications/readAll', {
-      method: 'PUT',
-    });
-    notifications.value = [];
-  } catch (error) {
-    console.error('Error reading all notifications:', error);
-  }
+	try {
+		await useAuthFetch("notifications/readAll", {
+			method: "PUT",
+		});
+		notifications.value = [];
+	} catch (error) {
+		console.error("Error reading all notifications:", error);
+	}
 };
 
-watch(webSocketData.value, async newData => {
-  if (newData.type === 'notification') {
-    if (newData.userEmail === userStore.email) {
-      $toast.info(newData.notification.title);
-      await fetchNotifications();
-    }
-  }
+watch(webSocketData.value, async (newData) => {
+	if (newData.type === "notification") {
+		if (newData.userEmail === userStore.email) {
+			$toast.info(newData.notification.title);
+			await fetchNotifications();
+		}
+	}
 });
 
 onMounted(async () => {
-  await nextTick(async () => {
-    await fetchNotifications();
-  });
-  if (notificationDrawer.value) {
-    gsap.set(notificationDrawer.value, {
-      opacity: 0,
-      scale: 0.95,
-    });
-  }
-  userStore.loadUserFromCookies();
-  connect();
+	await nextTick(async () => {
+		await fetchNotifications();
+	});
+	if (notificationDrawer.value) {
+		gsap.set(notificationDrawer.value, {
+			opacity: 0,
+			scale: 0.95,
+		});
+	}
+	userStore.loadUserFromCookies();
+	connect();
 });
 </script>
 
