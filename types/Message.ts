@@ -3,7 +3,7 @@ import type { User } from '~/types/User';
 export type Message = {
   '@id': number;
   '@type': 'Message';
-  id: number
+  id: number;
   content?: string;
   type?: string;
   sentAt?: Date;

@@ -1,30 +1,42 @@
 <template>
   <div class="w-full px-4 h-full">
     <div class="flex justify-between items-center text-lg mb-8">
-      <div class="relative flex justify-center items-center megaFont textColorSecondary">
-        <button class="flex pt-4 pl-4 justify-center items-center" @click="toggleMonthDropdown">{{ currentMonthName.slice(0, 3) }}
-        <Icon name="solar:alt-arrow-down-line-duotone" size="1.4em" />
+      <div
+        class="relative flex justify-center items-center megaFont textColorSecondary"
+      >
+        <button
+          class="flex pt-4 pl-4 justify-center items-center"
+          @click="toggleMonthDropdown"
+        >
+          {{ currentMonthName.slice(0, 3) }}
+          <Icon name="solar:alt-arrow-down-line-duotone" size="1.4em" />
         </button>
-        <div v-if="showMonthDropdown" class="absolute w-max top-full left-0 bg-[var(--color-white)] border border-[var(--color-black)] rounded p-1.5 z-100 grid grid-cols-4 grid-rows-3 gap-1.5 shadow-lg visible opacity-100 z-10">
-          <div v-for="(monthName, index) in monthNames" :key="index" 
-               class="p-1.5 w-fit cursor-pointer hover:bg-[var(--color-secondary)] hover:rounded hover:text-[var(--color-white)]" 
-               @click="setMonth(index)">
+        <div
+          v-if="showMonthDropdown"
+          class="absolute w-max top-full left-0 bg-[var(--color-white)] border border-[var(--color-black)] rounded p-1.5 z-100 grid grid-cols-4 grid-rows-3 gap-1.5 shadow-lg visible opacity-100 z-10"
+        >
+          <div
+            v-for="(monthName, index) in monthNames"
+            :key="index"
+            class="p-1.5 w-fit cursor-pointer hover:bg-[var(--color-secondary)] hover:rounded hover:text-[var(--color-white)]"
+            @click="setMonth(index)"
+          >
             {{ monthName.slice(0, 3) }}
           </div>
         </div>
       </div>
 
       <div class="ml-2">
-        <button 
-          @click="currentDate = new Date()" 
+        <button
+          @click="currentDate = new Date()"
           class="flex justify-center items-center textColorSecondary rounded-full"
           data-tooltip-target="tooltip-today"
         >
           <Icon name="material-symbols:today" size="1.2em" />
         </button>
-        <div 
-          id="tooltip-today" 
-          role="tooltip" 
+        <div
+          id="tooltip-today"
+          role="tooltip"
           class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bgColorPrimary rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
         >
           Aller à la date du jour
@@ -37,16 +49,16 @@
       </div>
 
       <div class="textColorSecondary ml-2">
-        <Icon 
-          name="solar:add-square-bold" 
-          size="1.4em" 
-          class="TextColorSecondary cursor-pointer" 
+        <Icon
+          name="solar:add-square-bold"
+          size="1.4em"
+          class="TextColorSecondary cursor-pointer"
           data-tooltip-target="tooltip-add-event"
           @click="openAddEventModal"
         />
-        <div 
-          id="tooltip-add-event" 
-          role="tooltip" 
+        <div
+          id="tooltip-add-event"
+          role="tooltip"
           class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bgColorPrimary rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
         >
           Ajouter un événement
@@ -56,34 +68,54 @@
 
       <div class="flex">
         <button @click="prevWeek" class="text-2xl">
-            <Icon class="bgColorSecondary" name="solar:alt-arrow-left-outline" size="1.2em" />
+          <Icon
+            class="bgColorSecondary"
+            name="solar:alt-arrow-left-outline"
+            size="1.2em"
+          />
         </button>
         <button @click="nextWeek" class="text-2xl">
-            <Icon class="bgColorSecondary" name="solar:alt-arrow-right-outline" size="1.2em" />
+          <Icon
+            class="bgColorSecondary"
+            name="solar:alt-arrow-right-outline"
+            size="1.2em"
+          />
         </button>
       </div>
     </div>
 
     <div class="grid grid-cols-7 text-center mb-2.5">
-      <div class="day" v-for="(day, index) in daysOfWeek" :key="index">{{ day }}</div>
+      <div class="day" v-for="(day, index) in daysOfWeek" :key="index">
+        {{ day }}
+      </div>
     </div>
 
     <div class="grid grid-cols-7 gap-1.5">
       <div
         v-for="(day, index) in visibleDays"
         :key="index"
-        :class="['text-center p-2.5 bg-[var(--color-black)] text-[var(--color-white)] rounded-full cursor-pointer relative flex justify-center items-center w-16 h-16', { 'bg-[var(--color-primary)] text-[var(--color-white)]': isToday(day) }]"
+        :class="[
+          'text-center p-2.5 bg-[var(--color-black)] text-[var(--color-white)] rounded-full cursor-pointer relative flex justify-center items-center w-16 h-16',
+          {
+            'bg-[var(--color-primary)] text-[var(--color-white)]': isToday(day),
+          },
+        ]"
         @click="openDay(day)"
         :data-tooltip-target="'tooltip-day-' + index"
         @mouseenter="hoveredDay = day as Date"
         @dblclick="openAddEventModalForDay(day)"
       >
         <div>{{ day.getDate() }}</div>
-        <div v-if="hasEvents(day)" class="absolute bottom-1.5 right-1.5 bg-[var(--color-white)] text-[var(--color-black)] rounded-full p-0.5 w-[30px] h-[15px] border border-[var(--color-primary)] flex items-center justify-center miniFont">{{ getEventCount(day) }}</div>
+        <div
+          v-if="hasEvents(day)"
+          class="absolute bottom-1.5 right-1.5 bg-[var(--color-white)] text-[var(--color-black)] rounded-full p-0.5 w-[30px] h-[15px] border border-[var(--color-primary)] flex items-center justify-center miniFont"
+        >
+          {{ getEventCount(day) }}
+        </div>
 
-        <div 
-          :id="'tooltip-day-' + index" 
-          role="tooltip" 
+        <div
+          :id="'tooltip-day-' + index"
+          role="tooltip"
           class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bgColorPrimary rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
         >
           {{ formatDayTooltip(day) }}
@@ -92,29 +124,52 @@
       </div>
     </div>
 
-    <div v-if="showDayModal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-[1000]" @click.self="closeDayModal">
-      <div class="bg-[var(--color-white)] w-[90%] max-w-[800px] max-h-[90vh] rounded-lg overflow-y-auto shadow-lg">
-        <div class="flex justify-between items-center p-4 text-[var(--color-black)] border-b border-[var(--color-primary)]">
+    <div
+      v-if="showDayModal"
+      class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-[1000]"
+      @click.self="closeDayModal"
+    >
+      <div
+        class="bg-[var(--color-white)] w-[90%] max-w-[800px] max-h-[90vh] rounded-lg overflow-y-auto shadow-lg"
+      >
+        <div
+          class="flex justify-between items-center p-4 text-[var(--color-black)] border-b border-[var(--color-primary)]"
+        >
           <h2 class="m-0">{{ selectedDayFormatted }}</h2>
           <div class="flex items-center">
-            <button 
+            <button
               @click="openAddEventModalForDay(selectedDay)"
               class="mr-4 bg-[var(--color-primary)] text-white px-3 py-1 rounded flex items-center"
             >
               <Icon name="solar:add-line-duotone" class="mr-1" />
               Ajouter
             </button>
-            <button @click="closeDayModal" class="bg-transparent border-0 text-2xl cursor-pointer">&times;</button>
+            <button
+              @click="closeDayModal"
+              class="bg-transparent border-0 text-2xl cursor-pointer"
+            >
+              &times;
+            </button>
           </div>
         </div>
         <div class="p-4">
           <div class="flex flex-col gap-2.5">
-            <div v-for="hour in 24" :key="hour-1" class="flex min-h-[60px] border-b border-[var(--color-black)]">
-              <div class="w-[60px] text-right pr-2.5 font-bold text-[var(--color-black)]">{{ hour-1 }}:00</div>
-              <div class="flex-grow pl-2.5 border-l border-[var(--color-primary)]">
-                <div 
-                  v-for="event in getEventsForHour(selectedDay, hour-1)" 
-                  :key="event.id" 
+            <div
+              v-for="hour in 24"
+              :key="hour - 1"
+              class="flex min-h-[60px] border-b border-[var(--color-black)]"
+            >
+              <div
+                class="w-[60px] text-right pr-2.5 font-bold text-[var(--color-black)]"
+              >
+                {{ hour - 1 }}:00
+              </div>
+              <div
+                class="flex-grow pl-2.5 border-l border-[var(--color-primary)]"
+              >
+                <div
+                  v-for="event in getEventsForHour(selectedDay, hour - 1)"
+                  :key="event.id"
                   class="text-[var(--color-white)] p-2 rounded mb-1.5 cursor-pointer"
                   :style="{ backgroundColor: event.color || '#666' }"
                   @click="openEventDetailModal(event)"
@@ -128,20 +183,38 @@
       </div>
     </div>
 
-    <div v-if="showEventDetailModal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-[1000]" @click.self="closeEventDetailModal">
-      <div class="bg-[var(--color-white)] w-[90%] max-w-[800px] max-h-[90vh] rounded-lg overflow-y-auto shadow-lg">
-        <div class="flex justify-between items-center p-4 text-[var(--color-black)] border-b" :style="{ borderColor: selectedEvent?.color || 'var(--color-primary)' }">
+    <div
+      v-if="showEventDetailModal"
+      class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-[1000]"
+      @click.self="closeEventDetailModal"
+    >
+      <div
+        class="bg-[var(--color-white)] w-[90%] max-w-[800px] max-h-[90vh] rounded-lg overflow-y-auto shadow-lg"
+      >
+        <div
+          class="flex justify-between items-center p-4 text-[var(--color-black)] border-b"
+          :style="{
+            borderColor: selectedEvent?.color || 'var(--color-primary)',
+          }"
+        >
           <h2 class="m-0">{{ selectedEvent?.title }}</h2>
           <div class="flex items-center">
-            <button 
+            <button
               @click="editEvent(selectedEvent)"
               class="mr-4 px-3 py-1 rounded flex items-center text-white"
-              :style="{ backgroundColor: selectedEvent?.color || 'var(--color-primary)' }"
+              :style="{
+                backgroundColor: selectedEvent?.color || 'var(--color-primary)',
+              }"
             >
               <Icon name="material-symbols:edit-outline" class="mr-1" />
               Modifier
             </button>
-            <button @click="closeEventDetailModal" class="bg-transparent border-0 text-2xl cursor-pointer">&times;</button>
+            <button
+              @click="closeEventDetailModal"
+              class="bg-transparent border-0 text-2xl cursor-pointer"
+            >
+              &times;
+            </button>
           </div>
         </div>
         <div class="p-4 text-[var(--color-black)]">
@@ -154,20 +227,40 @@
                   {{ formatEventDate(selectedEvent) }}
                 </span>
               </div>
-              <div class="flex mb-2 items-center" v-if="selectedEvent?.description">
+              <div
+                class="flex mb-2 items-center"
+                v-if="selectedEvent?.description"
+              >
                 <Icon name="mdi:text" class="mr-2" />
                 <span>{{ selectedEvent?.description }}</span>
               </div>
-              <div class="flex mb-2 items-center" v-if="selectedEvent?.isAllDay">
+              <div
+                class="flex mb-2 items-center"
+                v-if="selectedEvent?.isAllDay"
+              >
                 <Icon name="mdi:clock-outline" class="mr-2" />
                 <span>Journée entière</span>
               </div>
             </div>
 
-            <div v-if="selectedEvent?.participants && selectedEvent.participants.length > 0">
+            <div
+              v-if="
+                selectedEvent?.participants &&
+                selectedEvent.participants.length > 0
+              "
+            >
               <h3 class="text-lg font-bold mb-2">Participants</h3>
               <div class="flex flex-wrap gap-2">
-                <div v-for="user in selectedEvent.participants" :key="user.id" class="flex items-center px-2.5 py-1.5 rounded-full text-sm" :style="{ backgroundColor: selectedEvent?.color || 'var(--color-primary)', color: 'white' }">
+                <div
+                  v-for="user in selectedEvent.participants"
+                  :key="user.id"
+                  class="flex items-center px-2.5 py-1.5 rounded-full text-sm"
+                  :style="{
+                    backgroundColor:
+                      selectedEvent?.color || 'var(--color-primary)',
+                    color: 'white',
+                  }"
+                >
                   <span>{{ user.email }}</span>
                 </div>
               </div>
@@ -177,40 +270,57 @@
       </div>
     </div>
 
-    <div v-if="showAddEventModal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-[1000]" @click.self="closeAddEventModal">
-      <div class="bg-[var(--color-white)] w-[90%] max-w-[800px] max-h-[90vh] rounded-lg overflow-y-auto shadow-lg">
-        <div class="flex justify-between items-center p-4 text-[var(--color-black)] border-b border-[var(--color-primary)]">
+    <div
+      v-if="showAddEventModal"
+      class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-[1000]"
+      @click.self="closeAddEventModal"
+    >
+      <div
+        class="bg-[var(--color-white)] w-[90%] max-w-[800px] max-h-[90vh] rounded-lg overflow-y-auto shadow-lg"
+      >
+        <div
+          class="flex justify-between items-center p-4 text-[var(--color-black)] border-b border-[var(--color-primary)]"
+        >
           <h2 class="m-0">Ajouter un événement</h2>
-          <button @click="closeAddEventModal" class="bg-transparent border-0 text-2xl cursor-pointer">&times;</button>
+          <button
+            @click="closeAddEventModal"
+            class="bg-transparent border-0 text-2xl cursor-pointer"
+          >
+            &times;
+          </button>
         </div>
         <div class="p-4">
           <form @submit.prevent="saveEvent" class="text-[var(--color-black)]">
             <div class="mb-4">
-              <label for="event-title" class="block mb-1.5 font-bold">Titre</label>
-              <input 
-                type="text" 
-                id="event-title" 
-                v-model="newEvent.title" 
+              <label for="event-title" class="block mb-1.5 font-bold">
+                Titre
+              </label>
+              <input
+                type="text"
+                id="event-title"
+                v-model="newEvent.title"
                 class="w-full p-2 rounded bg-[var(--color-black)] text-[var(--color-white)]"
                 required
               />
             </div>
 
             <div class="mb-4">
-              <label for="event-description" class="block mb-1.5 font-bold">Description</label>
-              <textarea 
-                id="event-description" 
-                v-model="newEvent.description" 
+              <label for="event-description" class="block mb-1.5 font-bold">
+                Description
+              </label>
+              <textarea
+                id="event-description"
+                v-model="newEvent.description"
                 class="w-full p-2 rounded bg-[var(--color-black)] text-[var(--color-white)] min-h-[100px] resize-y"
               ></textarea>
             </div>
 
             <div class="mb-4">
               <div class="flex items-center">
-                <input 
-                  type="checkbox" 
-                  id="isAllDay" 
-                  v-model="newEvent.isAllDay" 
+                <input
+                  type="checkbox"
+                  id="isAllDay"
+                  v-model="newEvent.isAllDay"
                   class="mr-2"
                 />
                 <label for="isAllDay">Journée entière</label>
@@ -220,21 +330,23 @@
             <div class="flex flex-col gap-4 mb-4">
               <div class="mb-2.5">
                 <div class="mb-1.5">
-                  <label for="start-date" class="block mb-1.5 font-bold">Date de début</label>
+                  <label for="start-date" class="block mb-1.5 font-bold">
+                    Date de début
+                  </label>
                 </div>
                 <div class="flex gap-2.5 items-center">
-                  <input 
-                    type="date" 
-                    id="start-date" 
-                    v-model="newEvent.startDateInput" 
+                  <input
+                    type="date"
+                    id="start-date"
+                    v-model="newEvent.startDateInput"
                     class="w-full p-2 rounded bg-[var(--color-black)] text-[var(--color-white)] flex-2"
                     required
                   />
-                  <input 
+                  <input
                     v-if="!newEvent.isAllDay"
-                    type="time" 
-                    id="start-time" 
-                    v-model="newEvent.startTimeInput" 
+                    type="time"
+                    id="start-time"
+                    v-model="newEvent.startTimeInput"
                     class="w-full p-2 rounded bg-[var(--color-black)] text-[var(--color-white)] flex-1"
                     required
                   />
@@ -243,21 +355,23 @@
 
               <div class="mb-2.5">
                 <div class="mb-1.5">
-                  <label for="end-date" class="block mb-1.5 font-bold">Date de fin</label>
+                  <label for="end-date" class="block mb-1.5 font-bold">
+                    Date de fin
+                  </label>
                 </div>
                 <div class="flex gap-2.5 items-center">
-                  <input 
-                    type="date" 
-                    id="end-date" 
-                    v-model="newEvent.endDateInput" 
+                  <input
+                    type="date"
+                    id="end-date"
+                    v-model="newEvent.endDateInput"
                     class="w-full p-2 rounded bg-[var(--color-black)] text-[var(--color-white)] flex-2"
                     required
                   />
-                  <input 
+                  <input
                     v-if="!newEvent.isAllDay"
-                    type="time" 
-                    id="end-time" 
-                    v-model="newEvent.endTimeInput" 
+                    type="time"
+                    id="end-time"
+                    v-model="newEvent.endTimeInput"
                     class="w-full p-2 rounded bg-[var(--color-black)] text-[var(--color-white)] flex-1"
                     required
                   />
@@ -266,17 +380,21 @@
             </div>
 
             <div class="mb-4">
-              <label for="event-color" class="block mb-1.5 font-bold">Couleur</label>
-              <input 
-                type="color" 
-                id="event-color" 
-                v-model="newEvent.color" 
+              <label for="event-color" class="block mb-1.5 font-bold">
+                Couleur
+              </label>
+              <input
+                type="color"
+                id="event-color"
+                v-model="newEvent.color"
                 class="w-full h-10 p-0 rounded bg-[var(--color-black)] text-[var(--color-white)]"
               />
             </div>
 
             <div class="mb-4">
-              <label for="participants" class="block mb-1.5 font-bold">Participants</label>
+              <label for="participants" class="block mb-1.5 font-bold">
+                Participants
+              </label>
               <div>
                 <input
                   type="text"
@@ -286,14 +404,19 @@
                   @input="searchUsers"
                 />
               </div>
-              <div class="max-h-[200px] overflow-y-auto border border-gray-200 rounded mb-4" v-if="searchResults.length > 0">
+              <div
+                class="max-h-[200px] overflow-y-auto border border-gray-200 rounded mb-4"
+                v-if="searchResults.length > 0"
+              >
                 <div
                   v-for="user in searchResults"
                   :key="user.id"
                   class="flex items-center p-2.5 border-b border-gray-200 cursor-pointer hover:bg-gray-100"
                   @click="selectUser(user)"
                 >
-                  <div class="w-10 h-10 rounded-full overflow-hidden bg-gray-200 flex justify-center items-center mr-2.5">
+                  <div
+                    class="w-10 h-10 rounded-full overflow-hidden bg-gray-200 flex justify-center items-center mr-2.5"
+                  >
                     <Icon name="mdi:account" size="1.5em" />
                   </div>
                   <div class="flex flex-col">
@@ -302,15 +425,25 @@
                   </div>
                 </div>
               </div>
-              <div class="py-4 text-center text-gray-500" v-else-if="searchQuery && !isSearching">
+              <div
+                class="py-4 text-center text-gray-500"
+                v-else-if="searchQuery && !isSearching"
+              >
                 Pas d'utilisateurs trouvés
               </div>
               <div class="mt-5" v-if="selectedUsers.length > 0">
                 <h4 class="mt-0 mb-2.5">Utilisateurs sélectionnés</h4>
                 <div class="flex flex-wrap gap-2">
-                  <div v-for="user in selectedUsers" :key="user.id" class="flex items-center bg-[var(--color-primary)] px-2.5 py-1.5 rounded-full text-sm">
+                  <div
+                    v-for="user in selectedUsers"
+                    :key="user.id"
+                    class="flex items-center bg-[var(--color-primary)] px-2.5 py-1.5 rounded-full text-sm"
+                  >
                     <span>{{ user.email }}</span>
-                    <button @click="removeUser(user)" class="bg-transparent border-0 cursor-pointer ml-1.5 flex items-center justify-center">
+                    <button
+                      @click="removeUser(user)"
+                      class="bg-transparent border-0 cursor-pointer ml-1.5 flex items-center justify-center"
+                    >
                       <Icon name="mdi:close" size="0.8em" />
                     </button>
                   </div>
@@ -319,8 +452,19 @@
             </div>
 
             <div class="flex justify-end gap-2.5 mt-5">
-              <button type="submit" class="py-2 px-4 rounded bg-[var(--color-primary)] text-[var(--color-white)] border-0 cursor-pointer">Enregistrer</button>
-              <button type="button" @click="closeAddEventModal" class="py-2 px-4 rounded bg-transparent text-[var(--color-black)] border border-[var(--color-primary)] cursor-pointer">Annuler</button>
+              <button
+                type="submit"
+                class="py-2 px-4 rounded bg-[var(--color-primary)] text-[var(--color-white)] border-0 cursor-pointer"
+              >
+                Enregistrer
+              </button>
+              <button
+                type="button"
+                @click="closeAddEventModal"
+                class="py-2 px-4 rounded bg-transparent text-[var(--color-black)] border border-[var(--color-primary)] cursor-pointer"
+              >
+                Annuler
+              </button>
             </div>
           </form>
         </div>
@@ -348,10 +492,21 @@ const currentMonthName = computed(() => monthNames[month.value]);
 const hoveredDay = ref<Date | null>(null);
 
 const monthNames = [
-  "Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"
+  'Janvier',
+  'Février',
+  'Mars',
+  'Avril',
+  'Mai',
+  'Juin',
+  'Juillet',
+  'Août',
+  'Septembre',
+  'Octobre',
+  'Novembre',
+  'Décembre',
 ];
 
-const daysOfWeek = ["l", "m", "m", "j", "v", "s", "d"];
+const daysOfWeek = ['l', 'm', 'm', 'j', 'v', 's', 'd'];
 
 const showMonthDropdown = ref(false);
 const showDayModal = ref(false);
@@ -450,7 +605,7 @@ function toggleMonthDropdown(): void {
 }
 
 function setMonth(index: number): void {
-  console.log("setMonth", monthNames[index]);
+  console.log('setMonth', monthNames[index]);
   const newDate = new Date(currentDate.value);
   newDate.setMonth(index);
   currentDate.value = newDate;
@@ -459,7 +614,9 @@ function setMonth(index: number): void {
 
 const visibleDays = computed(() => {
   const startOfWeek = new Date(currentDate.value);
-  startOfWeek.setDate(currentDate.value.getDate() - currentDate.value.getDay() + 1);
+  startOfWeek.setDate(
+    currentDate.value.getDate() - currentDate.value.getDay() + 1,
+  );
   const days: Date[] = [];
 
   for (let i = 0; i < 14; i++) {
@@ -490,29 +647,41 @@ function isToday(day: Date): boolean {
 const events = ref<Event[]>([]);
 function hasEvents(day: Date): boolean {
   return events.value.some(event => {
-    const startDate = typeof event.startDate === 'string' ? new Date(event.startDate) : event.startDate;
-    const endDate = typeof event.endDate === 'string' ? new Date(event.endDate) : event.endDate;
+    const startDate =
+      typeof event.startDate === 'string'
+        ? new Date(event.startDate)
+        : event.startDate;
+    const endDate =
+      typeof event.endDate === 'string'
+        ? new Date(event.endDate)
+        : event.endDate;
 
     if (startDate && endDate)
-    return (
-      startDate.toDateString() === day.toDateString() || 
-      endDate.toDateString() === day.toDateString() || 
-      (startDate < day && endDate > day)
-    );
+      return (
+        startDate.toDateString() === day.toDateString() ||
+        endDate.toDateString() === day.toDateString() ||
+        (startDate < day && endDate > day)
+      );
   });
 }
 
 function getEventCount(day: Date): number {
   return events.value.filter(event => {
-    const startDate = typeof event.startDate === 'string' ? new Date(event.startDate) : event.startDate;
-    const endDate = typeof event.endDate === 'string' ? new Date(event.endDate) : event.endDate;
+    const startDate =
+      typeof event.startDate === 'string'
+        ? new Date(event.startDate)
+        : event.startDate;
+    const endDate =
+      typeof event.endDate === 'string'
+        ? new Date(event.endDate)
+        : event.endDate;
 
     if (startDate && endDate)
-    return (
-      startDate.toDateString() === day.toDateString() || 
-      endDate.toDateString() === day.toDateString() || 
-      (startDate < day && endDate > day)
-    );
+      return (
+        startDate.toDateString() === day.toDateString() ||
+        endDate.toDateString() === day.toDateString() ||
+        (startDate < day && endDate > day)
+      );
   }).length;
 }
 
@@ -520,20 +689,26 @@ function getEventsForHour(day: Date | null, hour: number): Event[] {
   if (!day) return [];
 
   return events.value.filter(event => {
-    const startDate = typeof event.startDate === 'string' ? new Date(event.startDate) : event.startDate;
-    const endDate = typeof event.endDate === 'string' ? new Date(event.endDate) : event.endDate;
+    const startDate =
+      typeof event.startDate === 'string'
+        ? new Date(event.startDate)
+        : event.startDate;
+    const endDate =
+      typeof event.endDate === 'string'
+        ? new Date(event.endDate)
+        : event.endDate;
 
     if (!startDate || !endDate) return false;
 
-    const dayMatch = 
-      startDate.toDateString() === day.toDateString() || 
-      endDate.toDateString() === day.toDateString() || 
+    const dayMatch =
+      startDate.toDateString() === day.toDateString() ||
+      endDate.toDateString() === day.toDateString() ||
       (startDate < day && endDate > day);
 
-    const hourMatch = 
-      startDate.getHours() <= hour && 
-      (endDate.getHours() > hour || 
-       (endDate.getHours() === hour && endDate.getMinutes() > 0));
+    const hourMatch =
+      startDate.getHours() <= hour &&
+      (endDate.getHours() > hour ||
+        (endDate.getHours() === hour && endDate.getMinutes() > 0));
 
     return dayMatch && hourMatch;
   });
@@ -565,7 +740,7 @@ function openAddEventModalForDay(day: Date | null): void {
     endDateInput: formatDateForInput(today),
     endTimeInput: `${endHour.toString().padStart(2, '0')}:00`,
     color: '#4a5568',
-    isAllDay: false
+    isAllDay: false,
   };
 
   selectedUsers.value = [];
@@ -588,7 +763,7 @@ function openAddEventModal(): void {
     endDateInput: formatDateForInput(today),
     endTimeInput: '10:00',
     color: '#4a5568',
-    isAllDay: false
+    isAllDay: false,
   };
 
   selectedUsers.value = [];
@@ -611,8 +786,12 @@ function closeEventDetailModal(): void {
 function formatEventDate(event: Event | null): string {
   if (!event) return '';
 
-  const startDate = typeof event.startDate === 'string' ? new Date(event.startDate) : event.startDate;
-  const endDate = typeof event.endDate === 'string' ? new Date(event.endDate) : event.endDate;
+  const startDate =
+    typeof event.startDate === 'string'
+      ? new Date(event.startDate)
+      : event.startDate;
+  const endDate =
+    typeof event.endDate === 'string' ? new Date(event.endDate) : event.endDate;
 
   if (!startDate || !endDate) return '';
 
@@ -623,11 +802,14 @@ function formatEventDate(event: Event | null): string {
   };
 
   const formatTimePart = (date: Date) => {
-    return date.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+    return date.toLocaleTimeString('fr-FR', {
+      hour: '2-digit',
+      minute: '2-digit',
+    });
   };
 
   if (event.isAllDay) {
-    return sameDay 
+    return sameDay
       ? `${formatDatePart(startDate)} (Journée entière)`
       : `Du ${formatDatePart(startDate)} au ${formatDatePart(endDate)} (Journée entière)`;
   }
@@ -648,8 +830,12 @@ function closeAddEventModal(): void {
 
 async function saveEvent(): Promise<void> {
   try {
-    const startDate = new Date(`${newEvent.value.startDateInput}T${newEvent.value.startTimeInput}`);
-    const endDate = new Date(`${newEvent.value.endDateInput}T${newEvent.value.endTimeInput}`);
+    const startDate = new Date(
+      `${newEvent.value.startDateInput}T${newEvent.value.startTimeInput}`,
+    );
+    const endDate = new Date(
+      `${newEvent.value.endDateInput}T${newEvent.value.endTimeInput}`,
+    );
 
     const eventData = {
       title: newEvent.value.title,
@@ -658,12 +844,12 @@ async function saveEvent(): Promise<void> {
       endDate,
       color: newEvent.value.color,
       participantsIds: selectedUsers.value.map(user => user.id),
-      isAllDay: newEvent.value.isAllDay
+      isAllDay: newEvent.value.isAllDay,
     };
 
     const response = await useAuthFetch('events/create', {
       method: 'POST',
-      body: eventData
+      body: eventData,
     });
 
     if (response.data.value) {
@@ -708,7 +894,7 @@ function closeDayModal(): void {
   showDayModal.value = false;
 }
 
-watch(webSocketData.value, async (data) => {
+watch(webSocketData.value, async data => {
   if (data.type === 'refreshCalendar') {
     await fetchEvents();
   }

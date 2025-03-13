@@ -8,10 +8,16 @@ export const useUserStore = defineStore('user', {
     email: '',
     token: '',
     masterPasswordSet: false,
-    socketId: ''
+    socketId: '',
   }),
   actions: {
-    setUser(data: { firstName: string; lastName: string; email: string; token: string, masterPasswordSet: boolean}) {
+    setUser(data: {
+      firstName: string;
+      lastName: string;
+      email: string;
+      token: string;
+      masterPasswordSet: boolean;
+    }) {
       this.firstName = data.firstName;
       this.lastName = data.lastName;
       this.email = data.email;
@@ -26,12 +32,17 @@ export const useUserStore = defineStore('user', {
         httpOnly: false,
       });
     },
-    
+
     setSocketId(socketId: string) {
       this.socketId = socketId;
     },
     currentUser() {
-      if (this.token === '' || this.email === '' || this.firstName === '' || this.lastName === '') {
+      if (
+        this.token === '' ||
+        this.email === '' ||
+        this.firstName === '' ||
+        this.lastName === ''
+      ) {
         return null;
       }
       return {

@@ -1,7 +1,17 @@
 <template>
-  <div class="header flex items-center justify-between border-b p-4 pb-2 mb-4 z-20">
+  <div
+    class="header flex items-center justify-between border-b p-4 pb-2 mb-4 z-20"
+  >
     <h2 class="text-white miniFont font-bold">{{ getConversationName() }}</h2>
-    <span :class="checkIfUsersAreOnline() === 'Online' ? 'text-green-500 text-sm' : 'text-red-500 text-sm'">{{checkIfUsersAreOnline()}}</span>
+    <span
+      :class="
+        checkIfUsersAreOnline() === 'Online'
+          ? 'text-green-500 text-sm'
+          : 'text-red-500 text-sm'
+      "
+    >
+      {{ checkIfUsersAreOnline() }}
+    </span>
   </div>
 
   <div
@@ -68,31 +78,37 @@
     </div>
   </div>
 
-  <div v-if="showEditModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+  <div
+    v-if="showEditModal"
+    class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+  >
     <div class="bg-white rounded-lg p-6 w-11/12 max-w-md">
       <div class="flex justify-between items-center mb-4">
         <h3 class="text-lg font-semibold text-gray-900">Modifier le message</h3>
-        <button @click="closeEditModal" class="text-gray-500 hover:text-gray-700">
+        <button
+          @click="closeEditModal"
+          class="text-gray-500 hover:text-gray-700"
+        >
           <Icon name="heroicons:x-mark" size="24" />
         </button>
       </div>
       <div class="mb-4">
-        <textarea 
-          v-model="editedMessageContent" 
+        <textarea
+          v-model="editedMessageContent"
           class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 text-gray-900"
           rows="4"
         ></textarea>
       </div>
       <div class="flex justify-end gap-2">
-        <button 
-          @click="closeEditModal" 
+        <button
+          @click="closeEditModal"
           class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300"
         >
           Annuler
         </button>
-        <button 
+        <button
           @keyup.enter="submitEditMessage"
-          @click="submitEditMessage" 
+          @click="submitEditMessage"
           class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
         >
           Sauvegarder
@@ -146,9 +162,9 @@ const messages = computed(() => {
 });
 
 const emits = defineEmits<{
-  'message-sent': [],
-  'update-message': [],
-  'refresh-conversations': []
+  'message-sent': [];
+  'update-message': [];
+  'refresh-conversations': [];
 }>();
 
 watch(
@@ -169,7 +185,7 @@ const getConversationName = () => {
   if (reactiveConversation.name) {
     return reactiveConversation.name;
   }
-  
+
   if (reactiveConversation.users?.length === 2) {
     return reactiveConversation.users
       ?.filter(user => user.email !== userStore.email)
@@ -215,8 +231,11 @@ const checkIfUsersAreOnline = () => {
 };
 
 onMounted(() => {
-  document.addEventListener('click', (event) => {
-    if (activeMenu.value && !(event.target as Element)?.closest?.('.message-container')) {
+  document.addEventListener('click', event => {
+    if (
+      activeMenu.value &&
+      !(event.target as Element)?.closest?.('.message-container')
+    ) {
       activeMenu.value = null;
     }
   });
@@ -251,7 +270,9 @@ const deleteMessage = async (message: Message) => {
     });
 
     if (reactiveConversation.messages) {
-      const index = reactiveConversation.messages.findIndex(m => m.id === message.id);
+      const index = reactiveConversation.messages.findIndex(
+        m => m.id === message.id,
+      );
       if (index !== -1) {
         reactiveConversation.messages.splice(index, 1);
       }
@@ -269,7 +290,6 @@ const deleteMessage = async (message: Message) => {
   }
 };
 
-
 const editMessage = async (message: Message, newMessageContent: string) => {
   try {
     await useAuthFetch(`conversation/message/edit/${message.id}`, {
@@ -283,7 +303,9 @@ const editMessage = async (message: Message, newMessageContent: string) => {
     });
 
     if (reactiveConversation.messages) {
-      const index = reactiveConversation.messages.findIndex(m => m.id === message.id);
+      const index = reactiveConversation.messages.findIndex(
+        m => m.id === message.id,
+      );
       if (index !== -1) {
         reactiveConversation.messages[index].content = newMessageContent;
       }
@@ -327,7 +349,7 @@ const sendMessage = async () => {
   }
 };
 
-watch(webSocketData.value, (newData) => {
+watch(webSocketData.value, newData => {
   if (newData.type === 'refreshConversations') {
     emits('refresh-conversations');
   }
@@ -353,8 +375,12 @@ watch(
 
     if (!reactiveConversation.messages) return;
 
-    const existingMessageIds = new Set(reactiveConversation.messages.map(msg => msg.id));
-    const uniqueMessages = newMessages.filter(msg => !existingMessageIds.has(msg.id));
+    const existingMessageIds = new Set(
+      reactiveConversation.messages.map(msg => msg.id),
+    );
+    const uniqueMessages = newMessages.filter(
+      msg => !existingMessageIds.has(msg.id),
+    );
 
     if (uniqueMessages.length > 0) {
       reactiveConversation.messages.push(...uniqueMessages);

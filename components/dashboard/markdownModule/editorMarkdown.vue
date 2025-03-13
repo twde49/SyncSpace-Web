@@ -29,7 +29,9 @@
       class="relative w-full max-w-md p-6 bg-white rounded-lg shadow-lg dark:bg-gray-800"
       @mousedown.stop
     >
-      <div class="flex items-center justify-between border-b pb-4 dark:border-gray-600">
+      <div
+        class="flex items-center justify-between border-b pb-4 dark:border-gray-600"
+      >
         <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
           Sauvegarder fichier markdown?
         </h3>
@@ -110,14 +112,14 @@ const { $colorMode } = useNuxtApp();
 const placeholders = [
   'Écrivez votre première idée brillante ici...',
   'Une page blanche, infinie en possibilités...',
-  'Quel est votre message au monde aujourd\'hui ?',
+  "Quel est votre message au monde aujourd'hui ?",
   'Un titre, un mot, une phrase... lancez-vous !',
-  'Tout commence par un mot. Qu\'allez-vous écrire ?',
+  "Tout commence par un mot. Qu'allez-vous écrire ?",
   'Commencez à écrire, vos pensées prendront forme.',
   'Laissez vos idées couler librement ici...',
-  'Que voulez-vous raconter aujourd\'hui ?',
+  "Que voulez-vous raconter aujourd'hui ?",
   'Ajoutez une touche de créativité...',
-  'Il n\'y a pas de mauvaises idées, seulement des débuts prometteurs.',
+  "Il n'y a pas de mauvaises idées, seulement des débuts prometteurs.",
 ];
 
 const footer: Footers[] = [];
@@ -126,9 +128,7 @@ const content = ref<string>(contentNote);
 const showModal = ref(false);
 const title = ref(titleNote);
 const { $toast } = useNuxtApp();
-const emit = defineEmits(
-  ['openMarkdownCenter'],
-);
+const emit = defineEmits(['openMarkdownCenter']);
 
 const getRandomPlaceholder = () => {
   const randomIndex = Math.floor(Math.random() * placeholders.length);
@@ -152,29 +152,24 @@ const closeModal = () => {
 };
 
 const saveTitle = async () => {
-
   if (noteId) {
     return await updateExistingNote();
   }
   return await addNewNote();
 };
 
-
 const addNewNote = async () => {
   try {
-
-    const response = await useAuthFetch('note/save',
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          title: title.value,
-          content: content.value,
-        }),
+    const response = await useAuthFetch('note/save', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
       },
-    );
+      body: JSON.stringify({
+        title: title.value,
+        content: content.value,
+      }),
+    });
 
     if (response.status.value === 'success') {
       $toast.success('Votre note a bien été sauvegardée');
@@ -183,30 +178,25 @@ const addNewNote = async () => {
       placeholder.value = getRandomPlaceholder();
       closeModal();
     } else {
-      $toast.error('Quelque chose n\'a pas marché');
+      $toast.error("Quelque chose n'a pas marché");
     }
-
-  } catch (error: any) {
-    $toast.error(error.message);
+  } catch (error: unknown) {
+    $toast.error((error as Error).message);
   }
 };
-
 
 const updateExistingNote = async () => {
   try {
-
-    const response = await useAuthFetch(`note/save/${noteId}`,
-      {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          title: title.value,
-          content: content.value,
-        }),
+    const response = await useAuthFetch(`note/save/${noteId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
       },
-    );
+      body: JSON.stringify({
+        title: title.value,
+        content: content.value,
+      }),
+    });
 
     if (response.status.value === 'success') {
       $toast.success('Votre note a bien été sauvegardée');
@@ -215,22 +205,26 @@ const updateExistingNote = async () => {
       placeholder.value = getRandomPlaceholder();
       closeModal();
     } else {
-      $toast.error('Quelque chose n\'a pas marché');
+      $toast.error("Quelque chose n'a pas marché");
     }
-
-  } catch (error: any) {
-    $toast.error(error.message);
+  } catch (error: unknown) {
+    $toast.error((error as Error).message);
   }
 };
 
+watch(
+  () => titleNote,
+  newTitle => {
+    title.value = newTitle;
+  },
+);
 
-watch(() => titleNote, (newTitle) => {
-  title.value = newTitle;
-});
-
-watch(() => contentNote, (newContent) => {
-  content.value = newContent;
-});
+watch(
+  () => contentNote,
+  newContent => {
+    content.value = newContent;
+  },
+);
 </script>
 
 <style scoped>

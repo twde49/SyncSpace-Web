@@ -2,19 +2,20 @@ export default defineNuxtPlugin(() => {
   return {
     provide: {
       generatePassword: (options: {
-        length: number,
-        uppercase?: boolean,
-        lowercase?: boolean,
-        numbers?: boolean,
-        symbols?: boolean,
-        easyToRead?: boolean,
-        easyToSay?: boolean
+        length: number;
+        uppercase?: boolean;
+        lowercase?: boolean;
+        numbers?: boolean;
+        symbols?: boolean;
+        easyToRead?: boolean;
+        easyToSay?: boolean;
       }): string => {
         const upper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
         const lower = 'abcdefghijklmnopqrstuvwxyz';
         const nums = '0123456789';
         const syms = '!@#$%^&*()_+[]{}|;:,.<>?';
-        const readable = 'abcdefghjkmnpqrstuvwxyzABCDEFGHJKMNPQRSTUVWXYZ23456789';
+        const readable =
+          'abcdefghjkmnpqrstuvwxyzABCDEFGHJKMNPQRSTUVWXYZ23456789';
         const sayable = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
         let characters = '';
@@ -36,7 +37,7 @@ export default defineNuxtPlugin(() => {
           password += characters[Math.floor(Math.random() * characters.length)];
         }
         return password;
-      }
-    }
+      },
+    },
   };
 });

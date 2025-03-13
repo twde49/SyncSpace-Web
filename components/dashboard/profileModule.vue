@@ -39,7 +39,9 @@
             ●
           </span>
         </li>
-        <button @click="logout" type="submit" class="logout-btn w-full">Logout</button>
+        <button @click="logout" type="submit" class="logout-btn w-full">
+          Logout
+        </button>
       </ul>
     </div>
   </div>
@@ -108,7 +110,7 @@ const closeDrawer = () => {
       ease: 'power2.inOut',
       onComplete: () => {
         closed.value = true;
-      }
+      },
     });
   }
 };
@@ -129,10 +131,10 @@ const getInitialCurrentUser = () => {
 };
 
 const logout = () => {
-  isOffline(userStore.email,userStore.token);
+  isOffline(userStore.email, userStore.token);
   userStore.logout();
   route.push('/');
-}
+};
 
 watch(closed, value => {
   if (value === true) {
@@ -153,11 +155,10 @@ watch(componentMounted, mounted => {
   }
 });
 
-
-watch(webSocketData.value,async (newData) => {
+watch(webSocketData.value, async newData => {
   if (newData.type === 'checkUser') {
     userStore.setSocketId(newData.socketId.id);
-    isOnline(userStore.email,userStore.token);
+    isOnline(userStore.email, userStore.token);
   }
 });
 

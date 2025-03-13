@@ -8,19 +8,33 @@
       />
     </div>
     <div class="details h-full flex flex-col justify-center ml-4 mr-8">
-      <span class="normalFont text-lg font-semibold text-gray-800">{{ musicPlayer.musicName }}</span>
-      <span class="normalFont text-sm text-gray-600">{{ musicPlayer.artist }}</span>
+      <span class="normalFont text-lg font-semibold text-gray-800">
+        {{ musicPlayer.musicName }}
+      </span>
+      <span class="normalFont text-sm text-gray-600">
+        {{ musicPlayer.artist }}
+      </span>
     </div>
     <div class="commands flex flex-row items-center">
-      <div class="mainButtons flex h-full justify-center items-center space-x-4">
+      <div
+        class="mainButtons flex h-full justify-center items-center space-x-4"
+      >
         <Icon name="mi:previous" class="musicControls" size="200%" />
-        <span class="playButton flex justify-center items-center p-2.5 bg-primary rounded-full hover:bg-primary-light transition duration-300">
+        <span
+          class="playButton flex justify-center items-center p-2.5 bg-primary rounded-full hover:bg-primary-light transition duration-300"
+        >
           <Icon name="solar:play-bold" style="color: var(--color-white)" />
         </span>
         <Icon name="mi:next" class="musicControls" size="200%" />
-        <Icon class="ml-2.5 likeButton hover:text-red-500 transition duration-300" name="solar:heart-bold" size="200%" />
+        <Icon
+          class="ml-2.5 likeButton hover:text-red-500 transition duration-300"
+          name="solar:heart-bold"
+          size="200%"
+        />
       </div>
-      <div class="currentMusicProgress ml-6 flex flex-row justify-center items-center space-x-4">
+      <div
+        class="currentMusicProgress ml-6 flex flex-row justify-center items-center space-x-4"
+      >
         <input
           type="range"
           class="progress"
@@ -32,7 +46,10 @@
       </div>
       <VolumeControl />
       <div class="threeDotsMenu ml-6 flex flex-row justify-center items-center">
-        <Icon name="entypo:dots-three-vertical" class="threedots hover:text-gray-600 transition duration-300" />
+        <Icon
+          name="entypo:dots-three-vertical"
+          class="threedots hover:text-gray-600 transition duration-300"
+        />
       </div>
     </div>
   </div>

@@ -4,22 +4,58 @@
     <div class="registration-container mt-8">
       <form class="registration-form" @submit.prevent="registerUser">
         <h2 class="megaFont textColorWhite">Inscrivez-vous à SyncSpace</h2>
-        <p class="normalFont textColorWhite mt-1">Déjà un compte? <a href="/login" class="textColorTritary">Connectez-vous</a></p>
+        <p class="normalFont textColorWhite mt-1">
+          Déjà un compte?
+          <a href="/login" class="textColorTritary">Connectez-vous</a>
+        </p>
         <div class="mb-3 mt-12 flex flex-row justify-between">
-          <input v-model="firstName" type="text" placeholder="Prénom" class="form-input max-w textColorBlack" />
-          <input v-model="lastName" type="text" placeholder="Nom" class="form-input max-w" />
+          <input
+            v-model="firstName"
+            type="text"
+            placeholder="Prénom"
+            class="form-input max-w textColorBlack"
+          />
+          <input
+            v-model="lastName"
+            type="text"
+            placeholder="Nom"
+            class="form-input max-w"
+          />
         </div>
         <div class="form-group mb-3">
-          <input v-model="email" type="email" placeholder="Email" class="form-input textColorBlack" />
+          <input
+            v-model="email"
+            type="email"
+            placeholder="Email"
+            class="form-input textColorBlack"
+          />
         </div>
         <div class="form-group mb-3">
-          <input v-model="password" type="password" placeholder="Mot de passe" class="form-input textColorBlack" />
+          <input
+            v-model="password"
+            type="password"
+            placeholder="Mot de passe"
+            class="form-input textColorBlack"
+          />
         </div>
         <div class="form-group terms mb-6">
-          <input type="checkbox" v-model="acceptTerms" id="terms" class="checkboxStyle" />
-          <label class="textColorWhite normalFont ml-4" for="terms">J’accepte les termes et les conditions d’utilisation de SyncSpace.</label>
+          <input
+            type="checkbox"
+            v-model="acceptTerms"
+            id="terms"
+            class="checkboxStyle"
+          />
+          <label class="textColorWhite normalFont ml-4" for="terms">
+            J’accepte les termes et les conditions d’utilisation de SyncSpace.
+          </label>
         </div>
-        <button :disabled="checkCompletedForm()" type="submit" class="create-account-btn w-full">Créer Compte</button>
+        <button
+          :disabled="checkCompletedForm()"
+          type="submit"
+          class="create-account-btn w-full"
+        >
+          Créer Compte
+        </button>
         <div class="divider textColorWhite">Ou</div>
         <div class="divider-section">
           <span class="divider-line"></span>
@@ -27,11 +63,17 @@
           <span class="divider-line"></span>
         </div>
         <div class="social-login textColorWhite">
-          <button :disabled="true" class="google-login-btn flex items-center justify-center space-x-2">
+          <button
+            :disabled="true"
+            class="google-login-btn flex items-center justify-center space-x-2"
+          >
             <Icon name="ri:google-fill" size="150%" />
             <span>Google</span>
           </button>
-          <button :disabled="true" class="apple-login-btn flex items-center justify-center space-x-2">
+          <button
+            :disabled="true"
+            class="apple-login-btn flex items-center justify-center space-x-2"
+          >
             <Icon name="ri:apple-fill" size="150%" />
             <span>Apple</span>
           </button>
@@ -42,28 +84,34 @@
 </template>
 
 <script setup lang="ts">
-import Navbar from '~/components/notLogged/Navbar.vue'
-import { useRouter } from 'vue-router'
-import { ref } from 'vue'
+import Navbar from '~/components/notLogged/Navbar.vue';
+import { useRouter } from 'vue-router';
+import { ref } from 'vue';
 import { toast } from 'vue3-toastify';
 import 'vue3-toastify/dist/index.css';
-const acceptTerms = ref(false)
-const firstName = ref('')
-const lastName = ref('')
-const email = ref('')
-const password = ref('')
-const route = useRouter()
+const acceptTerms = ref(false);
+const firstName = ref('');
+const lastName = ref('');
+const email = ref('');
+const password = ref('');
+const route = useRouter();
 
 const checkCompletedForm = () => {
-  return acceptTerms.value === false || firstName.value === '' || lastName.value === '' || email.value === '' || password.value === ''
-}
+  return (
+    acceptTerms.value === false ||
+    firstName.value === '' ||
+    lastName.value === '' ||
+    email.value === '' ||
+    password.value === ''
+  );
+};
 
 const registerUser = async () => {
   try {
     if (!checkCompletedForm()) {
       const response = await fetch('https://localhost:8000/api/register', {
         method: 'POST',
-        headers: { 
+        headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
@@ -77,18 +125,17 @@ const registerUser = async () => {
       if (!response.ok) {
         throw new Error(`Error: ${response.status} ${response.statusText}`);
       }
-      
+
       toast.success('Votre compte a été créé avec succès', {
         onClose: () => {
           route.push('/login');
-        }
+        },
       });
     }
   } catch (error) {
     console.error(error);
   }
 };
-
 </script>
 
 <style scoped>
@@ -126,9 +173,9 @@ const registerUser = async () => {
 }
 
 .terms {
-    flex-direction: row;
-    display: flex;
-    align-items: center;
+  flex-direction: row;
+  display: flex;
+  align-items: center;
 }
 
 .create-account-btn {
@@ -181,25 +228,25 @@ const registerUser = async () => {
 }
 
 .max-w {
-    width: 48%;
+  width: 48%;
 }
 
 .checkboxStyle {
-    appearance: none;
-    border: none;
-    border-radius: 5px;
-    width: 30px;
-    height: 30px;
-    background-color: #e0e0e0;
-    cursor: pointer;
+  appearance: none;
+  border: none;
+  border-radius: 5px;
+  width: 30px;
+  height: 30px;
+  background-color: #e0e0e0;
+  cursor: pointer;
 }
 
 .checkboxStyle:checked {
-    background-color: #ff7f50;
+  background-color: #ff7f50;
 }
 
 .checkboxStyle:hover {
-    background-color: #ffc299;
+  background-color: #ffc299;
 }
 
 .divider-section {

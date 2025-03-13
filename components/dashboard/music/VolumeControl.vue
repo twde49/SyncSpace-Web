@@ -19,7 +19,7 @@
 
 <script>
 export default {
-  name: "VolumeControl",
+  name: 'VolumeControl',
   data() {
     return {
       volume: 10,

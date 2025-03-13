@@ -81,7 +81,7 @@
               >
                 <div class="py-1">
                   <button
-                  class="menuItem flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    class="menuItem flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                     @click="previewFile(file)"
                   >
                     <Icon name="heroicons:eye" class="mr-2" size="16" />

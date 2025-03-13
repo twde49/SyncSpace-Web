@@ -7,7 +7,7 @@ export default defineNuxtPlugin(nuxtApp => {
     limit: 2,
     newestOnTop: true,
     position: 'top-center',
-    transition: 'slide'
+    transition: 'slide',
   });
 
   return {

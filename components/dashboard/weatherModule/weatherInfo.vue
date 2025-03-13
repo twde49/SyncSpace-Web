@@ -1,5 +1,9 @@
 <template>
-  <div class="weather-container" ref="weatherContainer" :class="{'weather-visible': isWeatherDataLoaded}">
+  <div
+    class="weather-container"
+    ref="weatherContainer"
+    :class="{ 'weather-visible': isWeatherDataLoaded }"
+  >
     <div class="temperature">
       <span class="temp-value" ref="tempValue">{{ displayedTemperature }}</span>
       <span class="temp-unit">°C</span>
@@ -14,13 +18,13 @@
 import { fetchWeatherApi } from 'openmeteo';
 import { ref, onMounted, computed, watch } from 'vue';
 import gsap from 'gsap';
-import { 
-  Sun, 
-  Cloud, 
-  CloudRain, 
-  CloudSnow, 
-  CloudLightning, 
-  Thermometer 
+import {
+  Sun,
+  Cloud,
+  CloudRain,
+  CloudSnow,
+  CloudLightning,
+  Thermometer,
 } from 'lucide-vue-next';
 
 interface WeatherData {
@@ -52,28 +56,31 @@ const weatherIcon = computed(() => {
   return CloudLightning;
 });
 
-watch(() => weatherData.value?.current?.temperature2m, (newTemp) => {
-  if (newTemp !== null && newTemp !== undefined) {
-    const targetTemp = Math.round(newTemp);
+watch(
+  () => weatherData.value?.current?.temperature2m,
+  newTemp => {
+    if (newTemp !== null && newTemp !== undefined) {
+      const targetTemp = Math.round(newTemp);
 
-    if (tempValue.value && previousTemp.value !== targetTemp) {
-      gsap.to(displayedTemperature, {
-        duration: 1.5,
-        value: targetTemp,
-        onUpdate: function() {
-          displayedTemperature.value = Math.round(this.targets()[0].value);
-        },
-        ease: "power2.out"
-      });
+      if (tempValue.value && previousTemp.value !== targetTemp) {
+        gsap.to(displayedTemperature, {
+          duration: 1.5,
+          value: targetTemp,
+          onUpdate: function () {
+            displayedTemperature.value = Math.round(this.targets()[0].value);
+          },
+          ease: 'power2.out',
+        });
 
-      previousTemp.value = targetTemp;
-    } else {
-      // First time setting the temperature
-      displayedTemperature.value = targetTemp;
-      previousTemp.value = targetTemp;
+        previousTemp.value = targetTemp;
+      } else {
+        // First time setting the temperature
+        displayedTemperature.value = targetTemp;
+        previousTemp.value = targetTemp;
+      }
     }
-  }
-});
+  },
+);
 
 const animateWeatherDisplay = () => {
   if (!weatherContainer.value) return;
@@ -88,7 +95,7 @@ const animateWeatherDisplay = () => {
     opacity: 0,
     x: -10,
     duration: 0.8,
-    ease: "back.out"
+    ease: 'back.out',
   });
 
   gsap.from(tempUnit, {
@@ -96,7 +103,7 @@ const animateWeatherDisplay = () => {
     x: -5,
     duration: 0.5,
     delay: 0.2,
-    ease: "power1.out"
+    ease: 'power1.out',
   });
 
   gsap.from(icon, {
@@ -104,7 +111,7 @@ const animateWeatherDisplay = () => {
     scale: 0.5,
     duration: 0.7,
     delay: 0.3,
-    ease: "elastic.out(1, 0.5)"
+    ease: 'elastic.out(1, 0.5)',
   });
 };
 
@@ -114,7 +121,7 @@ const getLocationFromIP = async () => {
     const data = await response.json();
     return {
       latitude: data.latitude,
-      longitude: data.longitude
+      longitude: data.longitude,
     };
   } catch (error) {
     console.error('Error fetching location from IP:', error);
@@ -132,7 +139,9 @@ const fetchWeatherData = async () => {
     longitude = location.longitude;
     console.log(`Using IP-based location: ${latitude}, ${longitude}`);
   } catch (error: unknown) {
-    console.warn(`Using default location. Error: ${error instanceof Error ? error.message : String(error)}`);
+    console.warn(
+      `Using default location. Error: ${error instanceof Error ? error.message : String(error)}`,
+    );
   }
 
   const params = {
@@ -193,7 +202,9 @@ onMounted(() => {
   justify-content: space-between;
   opacity: 0;
   transform: translateY(-20px);
-  transition: opacity 0.5s ease, transform 0.5s ease;
+  transition:
+    opacity 0.5s ease,
+    transform 0.5s ease;
 }
 
 .weather-visible {
@@ -229,8 +240,13 @@ onMounted(() => {
 }
 
 @keyframes temperature-pulse {
-  0%, 100% { opacity: 0.7; }
-  50% { opacity: 1; }
+  0%,
+  100% {
+    opacity: 0.7;
+  }
+  50% {
+    opacity: 1;
+  }
 }
 
 .temp-loading {

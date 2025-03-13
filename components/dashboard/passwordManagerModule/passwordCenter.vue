@@ -140,7 +140,7 @@ import type { PasswordItem } from '~/types/PasswordItem';
 import useAuthFetch from '~/composables/useAuthFetch';
 import * as cryptoUtils from '~/utils/cryptoUtils';
 import { useUserStore } from '~/stores/userStore';
-import { useMasterPasswordStore } from "@/stores/masterPassword";
+import { useMasterPasswordStore } from '@/stores/masterPassword';
 
 const userStore = useUserStore();
 const { $toast } = useNuxtApp();
@@ -183,54 +183,61 @@ const createMasterPassword = async () => {
 
 const verifyMasterPassword = async () => {
   if (!masterPassword.value) {
-    $toast.error("Veuillez entrer votre mot de passe maître.");
+    $toast.error('Veuillez entrer votre mot de passe maître.');
     return;
   }
 
   const success = await masterPasswordStore.authenticate(masterPassword.value);
 
   if (success) {
-    encryptionKey.value = await cryptoUtils.deriveKey(masterPassword.value) as CryptoKey;
+    encryptionKey.value = (await cryptoUtils.deriveKey(
+      masterPassword.value,
+    )) as CryptoKey;
     isMasterPasswordActive.value = true;
-    $toast.success("Coffre déverrouillé !");
+    $toast.success('Coffre déverrouillé !');
     await fetchPasswords();
   } else {
     isMasterPasswordActive.value = false;
-    $toast.error("Mot de passe incorrect.");
+    $toast.error('Mot de passe incorrect.');
   }
 };
 
 const fetchPasswords = async () => {
   if (!masterPassword.value) {
-    $toast.error("Veuillez entrer votre mot de passe maître.", { position: "top-center" });
+    $toast.error('Veuillez entrer votre mot de passe maître.', {
+      position: 'top-center',
+    });
     return;
   }
 
-  encryptionKey.value = await cryptoUtils.deriveKey(masterPassword.value) as CryptoKey;
+  encryptionKey.value = (await cryptoUtils.deriveKey(
+    masterPassword.value,
+  )) as CryptoKey;
 
-  const res = await useAuthFetch("passwords/list");
+  const res = await useAuthFetch('passwords/list');
   const encryptedPasswords = res.data.value as PasswordItem[];
 
   passwords.value = await Promise.all(
     encryptedPasswords.map(async (password: PasswordItem) => {
       const decryptedPwd = await cryptoUtils.decryptData(
-        password.passwordEncrypted, 
-        password.iv, 
-        encryptionKey.value as CryptoKey
+        password.passwordEncrypted,
+        password.iv,
+        encryptionKey.value as CryptoKey,
       );
 
       return {
         ...password,
-        decryptedPassword: decryptedPwd
+        decryptedPassword: decryptedPwd,
       };
-    })
+    }),
   );
 };
 
-
 const openPassword = (chosenPassword: PasswordItem | undefined) => {
   if (!isMasterPasswordActive.value) {
-    $toast.error("Votre session de mot de passe maître a expiré. Veuillez vous authentifier à nouveau.");
+    $toast.error(
+      'Votre session de mot de passe maître a expiré. Veuillez vous authentifier à nouveau.',
+    );
     encryptionKey.value = null;
     return;
   }
@@ -241,7 +248,9 @@ const openPassword = (chosenPassword: PasswordItem | undefined) => {
 
 const confirmDelete = (id: number) => {
   if (!isMasterPasswordActive.value) {
-    $toast.error("Votre session de mot de passe maître a expiré. Veuillez vous authentifier à nouveau.");
+    $toast.error(
+      'Votre session de mot de passe maître a expiré. Veuillez vous authentifier à nouveau.',
+    );
     encryptionKey.value = null;
     return;
   }
@@ -255,7 +264,9 @@ const cancelDelete = () => {
 
 const deletePassword = async (id: number) => {
   if (!isMasterPasswordActive.value) {
-    $toast.error("Votre session de mot de passe maître a expiré. Veuillez vous authentifier à nouveau.");
+    $toast.error(
+      'Votre session de mot de passe maître a expiré. Veuillez vous authentifier à nouveau.',
+    );
     encryptionKey.value = null;
     return;
   }
@@ -266,14 +277,16 @@ const deletePassword = async (id: number) => {
 };
 
 const checkMasterPasswordExistence = async () => {
-  const res = await useAuthFetch("passwords/get-master-password-hash");
+  const res = await useAuthFetch('passwords/get-master-password-hash');
   if (res.data.value !== null) {
     isMasterPasswordSet.value = true;
     return;
   }
   isMasterPasswordSet.value = false;
   if (!res.data.value) {
-    $toast.error("Veuillez entrer votre mot de passe maître.", { position: "top-center" });
+    $toast.error('Veuillez entrer votre mot de passe maître.', {
+      position: 'top-center',
+    });
   }
 };
 

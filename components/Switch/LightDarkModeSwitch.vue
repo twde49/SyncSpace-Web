@@ -57,8 +57,9 @@ const toggleMode = () => {
   justify-content: center;
   align-items: center;
   font-size: 16px;
-  transition: transform 0.3s ease,
-  background-color 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    background-color 0.3s ease;
   transform: translateX(5px);
 }
 

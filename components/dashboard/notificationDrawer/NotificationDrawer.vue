@@ -9,7 +9,10 @@
       size="2rem"
       class="textColorWhite hover:animate-bell cursor-pointer"
     />
-    <div v-if="notifications.length > 0" class="absolute bottom-0 right-0 w-3 h-3 bg-red-500 rounded-full"></div>
+    <div
+      v-if="notifications.length > 0"
+      class="absolute bottom-0 right-0 w-3 h-3 bg-red-500 rounded-full"
+    ></div>
   </div>
 
   <div v-show="isNotificationDrawerOpen">
@@ -18,22 +21,25 @@
       class="fixed top-4 left-1/2 transform -translate-x-1/2 bgColorWhite border border-gray-200 rounded-lg shadow-lg p-6 min-w-[400px] max-h-[80vh] overflow-y-auto opacity-100 scale-100 z-50"
     >
       <div class="flex justify-between items-center mb-3">
-      <div class="flex flex-col">
-      <div class="text-lg font-semibold">Notifications</div>
-      <button 
-        v-if="notifications.length > 0"
-        @click="readAllNotifications" 
-        class="text-xs text-gray-500 hover:text-gray-700 transition-colors mt-1 flex items-center"
-      >
-        <Icon name="mdi:check-all" class="mr-1" size="0.8rem" />
-        Marquer toutes comme lues
-      </button>
-      </div>
+        <div class="flex flex-col">
+          <div class="text-lg font-semibold">Notifications</div>
+          <button
+            v-if="notifications.length > 0"
+            @click="readAllNotifications"
+            class="text-xs text-gray-500 hover:text-gray-700 transition-colors mt-1 flex items-center"
+          >
+            <Icon name="mdi:check-all" class="mr-1" size="0.8rem" />
+            Marquer toutes comme lues
+          </button>
+        </div>
         <div @click="toggleNotificationDrawer" class="cursor-pointer p-1">
           <Icon name="mdi:close" size="1.2rem" />
         </div>
       </div>
-      <NotificationList :notifications="notifications" @read-notification="readNotification" />
+      <NotificationList
+        :notifications="notifications"
+        @read-notification="readNotification"
+      />
     </div>
   </div>
 </template>
@@ -53,8 +59,6 @@ const userStore = useUserStore();
 const isNotificationDrawerOpen = ref(false);
 const notificationDrawer = ref(null);
 const notifications = ref<Notification[]>([]);
-
-
 
 const toggleNotificationDrawer = () => {
   isNotificationDrawerOpen.value = !isNotificationDrawerOpen.value;
@@ -77,37 +81,37 @@ const toggleNotificationDrawer = () => {
 };
 
 const fetchNotifications = async () => {
-    try {
-        const res = await useAuthFetch('notifications/all');
-        notifications.value = res.data.value as Notification[];
-    } catch (error) {
-        console.error('Error fetching notifications:', error);
-    }
+  try {
+    const res = await useAuthFetch('notifications/all');
+    notifications.value = res.data.value as Notification[];
+  } catch (error) {
+    console.error('Error fetching notifications:', error);
+  }
 };
 
 const readNotification = async (id: number) => {
-    try {
-        await useAuthFetch(`notifications/${id}/read`, {
-            method: 'PUT',
-        });
-        notifications.value = notifications.value.filter((n) => n.id !== id);
-    } catch (error) {
-        console.error('Error reading notification:', error);
-    }
+  try {
+    await useAuthFetch(`notifications/${id}/read`, {
+      method: 'PUT',
+    });
+    notifications.value = notifications.value.filter(n => n.id !== id);
+  } catch (error) {
+    console.error('Error reading notification:', error);
+  }
 };
 
 const readAllNotifications = async () => {
-    try {
-        await useAuthFetch('notifications/readAll', {
-            method: 'PUT',
-        });
-        notifications.value = [];
-    } catch (error) {
-        console.error('Error reading all notifications:', error);
-    }
+  try {
+    await useAuthFetch('notifications/readAll', {
+      method: 'PUT',
+    });
+    notifications.value = [];
+  } catch (error) {
+    console.error('Error reading all notifications:', error);
+  }
 };
 
-watch(webSocketData.value,async (newData) => {
+watch(webSocketData.value, async newData => {
   if (newData.type === 'notification') {
     if (newData.userEmail === userStore.email) {
       $toast.info(newData.notification.title);

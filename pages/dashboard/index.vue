@@ -6,31 +6,50 @@
     <MusicPlayerModule />
     <div class="fourZoneContainer">
       <div class="fourZone" ref="moduleZone">
-        <div data-swapy-slot="topLeft" class="centered" @contextmenu.prevent="showContextMenu">
+        <div
+          data-swapy-slot="topLeft"
+          class="centered"
+          @contextmenu.prevent="showContextMenu"
+        >
           <div data-swapy-item="topLeft">
             <div class="module topLeftModule">
-                <CalendarModule />
+              <CalendarModule />
             </div>
           </div>
         </div>
-        <div data-swapy-slot="topRight" class="centered" @contextmenu.prevent="showContextMenu">
+        <div
+          data-swapy-slot="topRight"
+          class="centered"
+          @contextmenu.prevent="showContextMenu"
+        >
           <div data-swapy-item="topRight">
             <div class="module topRightModule">
-                <EditorMarkdown :note-id="noteId" :title-note='noteTitle' :content-note='noteContent' @open-markdown-center="handleMarkdownCenterOpening" />
+              <EditorMarkdown
+                :note-id="noteId"
+                :title-note="noteTitle"
+                :content-note="noteContent"
+                @open-markdown-center="handleMarkdownCenterOpening"
+              />
             </div>
           </div>
         </div>
-        <div data-swapy-slot="bottomLeft" class="centered" @contextmenu.prevent="showContextMenu">
+        <div
+          data-swapy-slot="bottomLeft"
+          class="centered"
+          @contextmenu.prevent="showContextMenu"
+        >
           <div data-swapy-item="bottomLeft">
             <div class="module bottomLeftModule">
-              <PasswordManager @open-password-center="handlePasswordCenterOpening" />
+              <PasswordManager
+                @open-password-center="handlePasswordCenterOpening"
+              />
             </div>
           </div>
         </div>
         <div data-swapy-slot="bottomRight" class="centered">
           <div data-swapy-item="bottomRight">
             <div class="module bottomRightModule">
-                <DriveModule />
+              <DriveModule />
             </div>
           </div>
         </div>
@@ -38,15 +57,26 @@
     </div>
   </div>
 
-<MarkdownCenter @open-note="handleOpeningNote" @close-markdown-center="handleMarkdownCenterClosing" v-if="isMarkdownCenterOpen" />
-<PasswordCenter @close-password-center="handlePasswordCenterClosing" v-if="isPasswordCenterOpen" />
+  <MarkdownCenter
+    @open-note="handleOpeningNote"
+    @close-markdown-center="handleMarkdownCenterClosing"
+    v-if="isMarkdownCenterOpen"
+  />
+  <PasswordCenter
+    @close-password-center="handlePasswordCenterClosing"
+    v-if="isPasswordCenterOpen"
+  />
 
-<div v-if="contextMenu.show" class="custom-context-menu" :style="{ top: contextMenu.y + 'px', left: contextMenu.x + 'px' }">
-  <div class="context-menu-item" @click="handleRefresh">Refresh</div>
-  <div class="context-menu-item" @click="handleEdit">Edit</div>
-  <div class="context-menu-item" @click="handleSwapModules">Swap Modules</div>
-  <div class="context-menu-item" @click="handleSettings">Settings</div>
-</div>
+  <div
+    v-if="contextMenu.show"
+    class="custom-context-menu"
+    :style="{ top: contextMenu.y + 'px', left: contextMenu.x + 'px' }"
+  >
+    <div class="context-menu-item" @click="handleRefresh">Refresh</div>
+    <div class="context-menu-item" @click="handleEdit">Edit</div>
+    <div class="context-menu-item" @click="handleSwapModules">Swap Modules</div>
+    <div class="context-menu-item" @click="handleSettings">Settings</div>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -60,14 +90,14 @@ import MusicPlayerModule from '~/components/dashboard/music/musicPlayerModule.vu
 import EditorMarkdown from '~/components/dashboard/markdownModule/editorMarkdown.vue';
 import MarkdownCenter from '~/components/dashboard/markdownModule/markdownCenter.vue';
 import DriveModule from '~/components/dashboard/driveModule/driveModule.vue';
-import PasswordManager from '~/components/dashboard/passwordManagerModule/passwordManager.vue'
+import PasswordManager from '~/components/dashboard/passwordManagerModule/passwordManager.vue';
 import PasswordCenter from '~/components/dashboard/passwordManagerModule/passwordCenter.vue';
 import CalendarModule from '~/components/dashboard/calendarModule/calendarModule.vue';
 import NotificationDrawer from '~/components/dashboard/notificationDrawer/NotificationDrawer.vue';
 import { useRouter } from 'vue-router';
 
 const { $toast } = useNuxtApp();
-let noteId:number;
+let noteId: number;
 let noteTitle = '';
 let noteContent = '';
 
@@ -83,26 +113,26 @@ const contextMenu = ref({
   show: false,
   x: 0,
   y: 0,
-  targetModule: ''
+  targetModule: '',
 });
 
-const handleMarkdownCenterOpening = (status:boolean) =>{
+const handleMarkdownCenterOpening = (status: boolean) => {
   isMarkdownCenterOpen.value = status;
 };
 
-const handleMarkdownCenterClosing = () =>{
+const handleMarkdownCenterClosing = () => {
   isMarkdownCenterOpen.value = false;
 };
 
-const handlePasswordCenterOpening = (status:boolean) =>{
+const handlePasswordCenterOpening = (status: boolean) => {
   isPasswordCenterOpen.value = status;
 };
 
-const handlePasswordCenterClosing = () =>{
+const handlePasswordCenterClosing = () => {
   isPasswordCenterOpen.value = false;
 };
 
-const handleOpeningNote = (chosenNote :Note) => {
+const handleOpeningNote = (chosenNote: Note) => {
   noteId = chosenNote.id;
   noteTitle = chosenNote.title ?? '';
   noteContent = chosenNote.content ?? '';
@@ -135,10 +165,10 @@ const handleSettings = () => {
 
 onMounted(() => {
   if (moduleZone.value) {
-    swapy.value = createSwapy(moduleZone.value,{
-        dragOnHold: true
+    swapy.value = createSwapy(moduleZone.value, {
+      dragOnHold: true,
     });
-    
+
     swapy.value.onSwapStart(() => {
       $toast.info('Module peut être déplacé');
     });

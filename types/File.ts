@@ -1,4 +1,4 @@
-import type { User } from "./User";
+import type { User } from './User';
 
 export type File = {
   '@id': number;
@@ -14,4 +14,4 @@ export type File = {
   originalName: string | null;
   isFolder: boolean;
   parent: File | null;
-}
+};

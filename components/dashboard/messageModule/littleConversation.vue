@@ -1,5 +1,11 @@
 <template>
-  <div :class="isActive ? 'bgColorPrimary w-full conversation cursor-default': 'bgColorBlack w-full conversation cursor-pointer'">
+  <div
+    :class="
+      isActive
+        ? 'bgColorPrimary w-full conversation cursor-default'
+        : 'bgColorBlack w-full conversation cursor-pointer'
+    "
+  >
     <div class="conversation-header">
       <div
         class="w-max bgColorLight topComponentSize flex justify-center items-center"

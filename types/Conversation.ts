@@ -1,10 +1,10 @@
-import type { User } from "./User";
-import type { Message } from "./Message"
+import type { User } from './User';
+import type { Message } from './Message';
 
 export type Conversation = {
   '@id': number;
   '@type': 'Conversation';
-  id:number;
+  id: number;
   name?: string;
   type?: string;
   users?: User[];
@@ -15,4 +15,4 @@ export type Conversation = {
   messages?: Message[];
   lastActiveUser?: User;
   lastMessage: Message;
-}
+};

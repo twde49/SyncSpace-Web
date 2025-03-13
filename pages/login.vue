@@ -5,28 +5,28 @@
       <form class="registration-form" @submit.prevent="loginUser">
         <h2 class="megaFont textColorWhite">Connectez-vous à SyncSpace</h2>
         <p class="normalFont textColorWhite mt-1">
-          Pas encore de compte? 
+          Pas encore de compte?
           <a href="/register" class="textColorTritary">Inscrivez-vous</a>
         </p>
         <div class="form-group mb-3 mt-12">
-          <input 
-            v-model="email" 
-            type="email" 
-            placeholder="Email" 
-            class="form-input textColorBlack" 
+          <input
+            v-model="email"
+            type="email"
+            placeholder="Email"
+            class="form-input textColorBlack"
           />
         </div>
         <div class="form-group mb-3">
           <input
-            v-model="password" 
-            type="password" 
-            placeholder="Mot de passe" 
-            class="form-input textColorBlack" 
+            v-model="password"
+            type="password"
+            placeholder="Mot de passe"
+            class="form-input textColorBlack"
           />
         </div>
-        <button 
-          :disabled="isLoading || !isValidForm()" 
-          type="submit" 
+        <button
+          :disabled="isLoading || !isValidForm()"
+          type="submit"
           class="create-account-btn mt-6 w-full"
         >
           {{ isLoading ? 'Connexion...' : 'Se connecter' }}
@@ -38,11 +38,17 @@
           <span class="divider-line"></span>
         </div>
         <div class="social-login textColorWhite">
-          <button :disabled="true" class="google-login-btn flex items-center justify-center space-x-2">
+          <button
+            :disabled="true"
+            class="google-login-btn flex items-center justify-center space-x-2"
+          >
             <Icon name="ri:google-fill" size="150%" />
             <span>Google</span>
           </button>
-          <button :disabled="true" class="apple-login-btn flex items-center justify-center space-x-2">
+          <button
+            :disabled="true"
+            class="apple-login-btn flex items-center justify-center space-x-2"
+          >
             <Icon name="ri:apple-fill" size="150%" />
             <span>Apple</span>
           </button>
@@ -107,7 +113,6 @@ const loginUser = async () => {
 
     const data = await response.json();
 
-
     if (!data || !data.user || !data.token) {
       throw new Error('Réponse invalide du serveur.');
     }
@@ -117,7 +122,7 @@ const loginUser = async () => {
       lastName: data.user.lastName,
       email: data.user.userEmail,
       token: data.token,
-      masterPasswordSet: data.user.masterPasswordSet
+      masterPasswordSet: data.user.masterPasswordSet,
     });
 
     $toast.success('Vous avez bien été authentifié.', {

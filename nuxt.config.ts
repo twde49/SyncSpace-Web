@@ -2,7 +2,7 @@ export default defineNuxtConfig({
   devServer: {
     port: 4000,
   },
-  
+
   app: {
     head: {
       script: [
@@ -16,12 +16,13 @@ export default defineNuxtConfig({
 
   compatibilityDate: '2024-11-01',
   devtools: { enabled: true },
-  css: ['vue3-toastify/dist/index.css','~/assets/css/main.css'],
+  css: ['vue3-toastify/dist/index.css', '~/assets/css/main.css'],
 
   nuxtError: {
-    apiToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiJMQ201RW9VZTBxVm5iYzRNMm45ck0iLCJzaXRlSWQiOiJJU1VoQ2xnQUc2ZXQzNFYxNVRCSGwifQ.sA2ZUZ0HkVpJ9mubwfKxLTo2sowR0C74lP31AD8CPeI'
+    apiToken:
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiJMQ201RW9VZTBxVm5iYzRNMm45ck0iLCJzaXRlSWQiOiJJU1VoQ2xnQUc2ZXQzNFYxNVRCSGwifQ.sA2ZUZ0HkVpJ9mubwfKxLTo2sowR0C74lP31AD8CPeI',
   },
-  
+
   postcss: {
     plugins: {
       tailwindcss: {},
