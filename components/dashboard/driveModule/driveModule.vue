@@ -1,5 +1,5 @@
 <template>
-  <div 
+  <div
     class="flex flex-col h-full"
     @dragover.prevent="dragover = true"
     @dragleave.prevent="dragover = false"
@@ -83,11 +83,14 @@
         </ul>
       </div>
     </div>
-    <div 
-      class="filePart mb-1 flex-grow overflow-y-auto relative" 
+    <div
+      class="filePart mb-1 flex-grow overflow-y-auto relative"
       :class="{ 'drop-active': dragover }"
     >
-      <div v-if="dragover || !getFilesByTab || getFilesByTab.length === 0" class="drop-overlay absolute inset-0 bg-gray-800 bg-opacity-70 flex items-center justify-center z-10 rounded-lg">
+      <div
+        v-if="dragover || !getFilesByTab || getFilesByTab.length === 0"
+        class="drop-overlay absolute inset-0 bg-gray-800 bg-opacity-70 flex items-center justify-center z-10 rounded-lg"
+      >
         <div class="text-white text-center p-4">
           <div class="text-3xl mb-2">
             <i class="fas fa-upload"></i>
@@ -95,7 +98,9 @@
           <Icon name="solar:file-bold" size="48" />
           <p class="text-xl font-medium">Aucun fichier disponible</p>
           <p class="text-xl font-medium">Glissez-déposez vos fichiers ici</p>
-          <p class="text-sm opacity-80 mt-1">Le téléchargement s'effectuera dans le répertoire courant</p>
+          <p class="text-sm opacity-80 mt-1">
+            Le téléchargement s'effectuera dans le répertoire courant
+          </p>
         </div>
       </div>
       <Transition v-else name="fade" mode="out-in">
@@ -107,14 +112,14 @@
         />
       </Transition>
 
-      <input 
-        type="file" 
-        ref="fileInput" 
-        @change="handleFileSelect"  
-        class="hidden" 
+      <input
+        type="file"
+        ref="fileInput"
+        @change="handleFileSelect"
+        class="hidden"
         accept="*/*"
       />
-    </div>    
+    </div>
   </div>
 </template>
 
@@ -160,9 +165,11 @@ const fetchFiles = async () => {
 
   const allResponse = await useAuthFetch('files/all');
   allFiles.value = allResponse.data.value as File[];
-  
+
   if (currentFolder.value) {
-    const folderResponse = await useAuthFetch(`files/folder/${currentFolder.value.id}`);
+    const folderResponse = await useAuthFetch(
+      `files/folder/${currentFolder.value.id}`,
+    );
     openedFolderFiles.value = folderResponse.data.value as File[];
   }
 };
@@ -180,7 +187,9 @@ const getFilesByTab = computed(() => {
     case 'all':
       return Array.isArray(allFiles.value) ? allFiles.value : [];
     case 'openedFolderFiles':
-      return Array.isArray(openedFolderFiles.value) ? openedFolderFiles.value : [];
+      return Array.isArray(openedFolderFiles.value)
+        ? openedFolderFiles.value
+        : [];
     default:
       return [];
   }
@@ -198,7 +207,7 @@ const handleFileRemove = (fileId: string) => {
   for (const fileArray of fileArrays) {
     const index = fileArray.value.findIndex(file => file.id === Number(fileId));
     if (index !== -1) {
-      if (!changed){
+      if (!changed) {
         changed = true;
       }
       fileArray.value.splice(index, 1);
@@ -227,13 +236,13 @@ const uploadFile = async (file: globalThis.File) => {
     formData.append('file', file);
 
     const response = await useAuthFetch(
-      currentFolder.value !== null 
-        ? `files/upload/${currentFolder.value.id}` 
+      currentFolder.value !== null
+        ? `files/upload/${currentFolder.value.id}`
         : 'files/upload',
       {
         method: 'POST',
-        body: formData
-      }
+        body: formData,
+      },
     );
 
     if (response.error.value) {
@@ -270,12 +279,14 @@ onMounted(async () => {
   });
 });
 
-watch(() => activeTab.value, (newTab) => {
-  if (newTab !== 'openedFolderFiles') {
-    currentFolder.value = null;
-  }
-});
-
+watch(
+  () => activeTab.value,
+  newTab => {
+    if (newTab !== 'openedFolderFiles') {
+      currentFolder.value = null;
+    }
+  },
+);
 </script>
 
 <style scoped>

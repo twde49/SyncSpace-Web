@@ -2,6 +2,7 @@ export default defineNuxtConfig({
   devServer: {
     port: 4000,
   },
+  
   app: {
     head: {
       script: [

@@ -222,7 +222,6 @@
 <script setup lang="ts">
 import useAuthFetch from '~/composables/useAuthFetch';
 import type { File } from '~/types/File';
-import { useAutoAnimate } from '@formkit/auto-animate/vue';
 import { ref, onMounted, onUnmounted, nextTick, computed } from 'vue';
 
 const { $toast } = useNuxtApp();
@@ -230,11 +229,6 @@ const { $toast } = useNuxtApp();
 const { files } = defineProps<{
   files: File[];
 }>();
-
-const fileListRef = useAutoAnimate({
-  duration: 300,
-  easing: 'ease-in-out',
-});
 
 const activeMenu = ref<string | null>(null);
 const showDeleteModal = ref<boolean>(false);
