@@ -119,7 +119,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, nextTick, computed } from 'vue';
+import { ref, onMounted, nextTick, computed, watch } from 'vue';
 import useAuthFetch from '~/composables/useAuthFetch';
 import type { File } from '~/types/File';
 import RecentFileItem from './recentFileItem.vue';
@@ -217,7 +217,7 @@ const handleFolderOpening = async (folder: File) => {
   activeTab.value = 'openedFolderFiles';
 };
 
-const uploadFile = async (file: File) => {
+const uploadFile = async (file: globalThis.File) => {
   if (!file) return;
 
   isLoading.value = true;
@@ -225,8 +225,7 @@ const uploadFile = async (file: File) => {
   try {
     const formData = new FormData();
     formData.append('file', file);
-    
-    // Using the correct type for the response instead of any
+
     const response = await useAuthFetch(
       currentFolder.value !== null 
         ? `files/upload/${currentFolder.value.id}` 
@@ -253,7 +252,6 @@ const handleFileDrop = (event: DragEvent) => {
   dragover.value = false;
   const droppedFiles = event.dataTransfer?.files;
   if (droppedFiles && droppedFiles.length > 0) {
-    // Only process the first file
     uploadFile(droppedFiles[0]);
   }
 };
@@ -261,7 +259,6 @@ const handleFileDrop = (event: DragEvent) => {
 const handleFileSelect = (event: Event) => {
   const input = event.target as HTMLInputElement;
   if (input.files && input.files.length > 0) {
-    // Only process the first file
     uploadFile(input.files[0]);
     input.value = '';
   }

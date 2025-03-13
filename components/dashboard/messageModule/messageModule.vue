@@ -14,7 +14,7 @@
   </div>
   <div
     v-else
-    class="expanded-container z-20 bgColorLight flex justify-start items-start fixed left-[30px] top-[31px] w-[70vw] h-[80vh] transition-all"
+    class="expanded-container w-max z-20 bgColorLight flex justify-start items-start fixed left-[30px] top-[31px] h-[80vh] transition-all"
     ref="expandedContainer"
   >
     <div class="relative h-full flex flex-col w-1/5 min-w-[224px]">
@@ -71,7 +71,7 @@
         <Icon name="typcn:plus" size="24px" class="textColorWhite" />
       </button>
     </div>
-    <div v-if="activeConversation" class="flex-1 h-[98%] bg-[var(--color-black)] text-white rounded m-2 flex flex-col">
+    <div v-if="activeConversation" class="flex-1 h-[98%] w-[50vw] bg-[var(--color-black)] text-white rounded m-2 flex flex-col">
         <ActiveConversation :conversation="activeConversation" @message-sent="getConversations" @update-message="getConversations" />
     </div>
   </div>
