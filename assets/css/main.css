@@ -36,6 +36,9 @@
 	--toastify-color-dark: var(--color-black);
 	--toastify-color-info: var(--color-category-primary);
 	--toastify-color-success: var(--color-category-tritary);
+	--toastify-text-color-light: var(--color-black);
+	--toastify-text-color-dark: var(--color-white);
+	--toastify-font-family: "Josefin Sans", sans-serif;
 
 	.md-editor {
 		--md-bk-color: var(--color-white);

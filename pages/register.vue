@@ -87,7 +87,6 @@
 import Navbar from "~/components/notLogged/Navbar.vue";
 import { useRouter } from "vue-router";
 import { ref } from "vue";
-import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
 const acceptTerms = ref(false);
 const firstName = ref("");
@@ -95,6 +94,8 @@ const lastName = ref("");
 const email = ref("");
 const password = ref("");
 const route = useRouter();
+
+const { $toast } = useNuxtApp();
 
 const checkCompletedForm = () => {
 	return (
@@ -125,14 +126,10 @@ const registerUser = async () => {
 			if (!response.ok) {
 				throw new Error(`Error: ${response.status} ${response.statusText}`);
 			}
-
-			toast.success("Votre compte a été créé avec succès", {
-				onClose: () => {
-					route.push("/login");
-				},
-			});
+			route.push("/login");
 		}
 	} catch (error) {
+	    $toast.error("Une erreur est survenue lors de la création du compte");
 		console.error(error);
 	}
 };

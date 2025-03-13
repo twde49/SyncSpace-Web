@@ -124,12 +124,7 @@ const loginUser = async () => {
 			token: data.token,
 			masterPasswordSet: data.user.masterPasswordSet,
 		});
-
-		$toast.success("Vous avez bien été authentifié.", {
-			onClose: () => {
-				route.push("/dashboard");
-			},
-		});
+		route.push("/dashboard");
 	} catch (error) {
 		console.error(error);
 		$toast.error("Une erreur est survenue lors de la connexion.");

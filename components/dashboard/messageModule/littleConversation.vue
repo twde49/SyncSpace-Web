@@ -12,10 +12,10 @@
       >
         <span class="profile-name">{{ getLastActiveUserInitial() }}</span>
       </div>
-      <span class="activityPill" />
+      <span :class="['activityPill', isAllUserConnected(conversation) ? 'bgColorCategoryTritary' : 'bgColorCategoryQuaternary']" />
     </div>
     <span class="miniFont textColorWhite flex justify-center items-center ml-4">
-      {{ getLastMessage() }}
+      {{ getConversationName() }}
     </span>
     <span class="lastActivity">
       {{ getLastActivity() }}
@@ -50,8 +50,28 @@ const getLastActivity = () => {
 	}
 };
 
-const getLastMessage = () => {
-	return conversation.lastMessage?.content ?? "Pas de message";
+const getConversationName = () => {
+	if (conversation.name !== '') {
+		return conversation.name;
+	}
+	if (lastActiveUser !== null && lastActiveUser !== undefined && lastActiveUser.email !== userStore.email) {
+		return `${lastActiveUser.firstName} ${lastActiveUser.lastName}`;
+	}
+	const otherUser = conversation.users?.find(user => user.email !== userStore.email);
+
+	return otherUser?.firstName && otherUser?.lastName
+		? `${otherUser.firstName} ${otherUser.lastName}`
+		: '';
+};
+
+const isAllUserConnected = (conversation: Conversation) => {
+	const users = conversation.users;
+	if (!users) return false;
+  
+	const onlineUsers = users.filter((user) => user.isOnline);
+	if (onlineUsers.length === 0) return false;
+	if (onlineUsers.length < users.length) return false;
+	return true;
 };
 
 onMounted(() => {
@@ -110,7 +130,6 @@ onMounted(() => {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: var(--color-category-tritary);
 }
 
 .lastActivity {

@@ -14,7 +14,7 @@
   </div>
   <div
     v-else
-    class="expanded-container w-max z-20 bgColorLight flex justify-start items-start fixed left-[30px] top-[31px] h-[80vh] transition-all"
+    class="expanded-container shadow w-max z-20 bgColorLight flex justify-start items-start fixed left-[30px] top-[31px] h-[80vh] transition-all"
     ref="expandedContainer"
   >
     <div class="relative h-full flex flex-col w-1/5 min-w-[224px]">
