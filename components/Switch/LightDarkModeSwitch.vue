@@ -14,19 +14,19 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref } from "vue";
 
 const { $colorMode } = useNuxtApp();
 
 const isDark = ref(false);
 
 const toggleMode = () => {
-  isDark.value = !isDark.value;
-  if ($colorMode.preference === 'dark') {
-    $colorMode.preference = 'light';
-  } else {
-    $colorMode.preference = 'dark';
-  }
+	isDark.value = !isDark.value;
+	if ($colorMode.preference === "dark") {
+		$colorMode.preference = "light";
+	} else {
+		$colorMode.preference = "dark";
+	}
 };
 </script>
 
@@ -57,8 +57,9 @@ const toggleMode = () => {
   justify-content: center;
   align-items: center;
   font-size: 16px;
-  transition: transform 0.3s ease,
-  background-color 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    background-color 0.3s ease;
   transform: translateX(5px);
 }
 

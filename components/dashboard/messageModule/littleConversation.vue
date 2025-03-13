@@ -1,5 +1,11 @@
 <template>
-  <div :class="isActive ? 'bgColorPrimary w-full conversation cursor-default': 'bgColorBlack w-full conversation cursor-pointer'">
+  <div
+    :class="
+      isActive
+        ? 'bgColorPrimary w-full conversation cursor-default'
+        : 'bgColorBlack w-full conversation cursor-pointer'
+    "
+  >
     <div class="conversation-header">
       <div
         class="w-max bgColorLight topComponentSize flex justify-center items-center"
@@ -18,38 +24,38 @@
 </template>
 
 <script setup lang="ts">
-import type { Conversation } from '~/types/Conversation';
-import { defineProps } from 'vue';
-import { useUserStore } from '~/stores/userStore';
-import { onMounted } from 'vue';
+import type { Conversation } from "~/types/Conversation";
+import { defineProps } from "vue";
+import { useUserStore } from "~/stores/userStore";
+import { onMounted } from "vue";
 const { $timeDifference } = useNuxtApp();
 const userStore = useUserStore();
 
 const { conversation } = defineProps<{
-  conversation: Conversation;
-  isActive: boolean;
+	conversation: Conversation;
+	isActive: boolean;
 }>();
 const lastActiveUser = conversation.lastActiveUser;
 
 const getLastActiveUserInitial = () => {
-  if (lastActiveUser?.firstName && lastActiveUser?.lastName) {
-    return `${lastActiveUser.firstName[0].toUpperCase()}.${lastActiveUser.lastName[0].toUpperCase()}`;
-  }
-  return `${userStore.firstName[0].toUpperCase()}.${userStore.lastName[0].toUpperCase()}`;
+	if (lastActiveUser?.firstName && lastActiveUser?.lastName) {
+		return `${lastActiveUser.firstName[0].toUpperCase()}.${lastActiveUser.lastName[0].toUpperCase()}`;
+	}
+	return `${userStore.firstName[0].toUpperCase()}.${userStore.lastName[0].toUpperCase()}`;
 };
 
 const getLastActivity = () => {
-  if (conversation.lastActivity !== undefined) {
-    return $timeDifference(conversation.lastActivity);
-  }
+	if (conversation.lastActivity !== undefined) {
+		return $timeDifference(conversation.lastActivity);
+	}
 };
 
 const getLastMessage = () => {
-  return conversation.lastMessage?.content ?? 'Pas de message';
+	return conversation.lastMessage?.content ?? "Pas de message";
 };
 
 onMounted(() => {
-  userStore.loadUserFromCookies();
+	userStore.loadUserFromCookies();
 });
 </script>
 

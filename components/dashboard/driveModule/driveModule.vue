@@ -124,10 +124,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, nextTick, computed, watch } from 'vue';
-import useAuthFetch from '~/composables/useAuthFetch';
-import type { File } from '~/types/File';
-import RecentFileItem from './recentFileItem.vue';
+import { ref, onMounted, nextTick, computed, watch } from "vue";
+import useAuthFetch from "~/composables/useAuthFetch";
+import type { File } from "~/types/File";
+import RecentFileItem from "./recentFileItem.vue";
 
 const recentFiles = ref<File[]>([]);
 const picturesFiles = ref<File[]>([]);
@@ -136,156 +136,158 @@ const foldersFiles = ref<File[]>([]);
 const allFiles = ref<File[]>([]);
 const openedFolderFiles = ref<File[]>([]);
 
-const activeTab = ref('recent');
+const activeTab = ref("recent");
 const isLoading = ref(false);
 const dragover = ref(false);
 const fileInput = ref<HTMLInputElement | null>(null);
 const currentFolder = ref<File | null>(null);
 
 const changeTab = async (tab: string) => {
-  isLoading.value = true;
-  activeTab.value = tab;
+	isLoading.value = true;
+	activeTab.value = tab;
 
-  await nextTick();
-  isLoading.value = false;
+	await nextTick();
+	isLoading.value = false;
 };
 
 const fetchFiles = async () => {
-  const recentResponse = await useAuthFetch('files/recent');
-  recentFiles.value = recentResponse.data.value as File[];
+	const recentResponse = await useAuthFetch("files/recent");
+	recentFiles.value = recentResponse.data.value as File[];
 
-  const picturesResponse = await useAuthFetch('files/images');
-  picturesFiles.value = picturesResponse.data.value as File[];
+	const picturesResponse = await useAuthFetch("files/images");
+	picturesFiles.value = picturesResponse.data.value as File[];
 
-  const documentsResponse = await useAuthFetch('files/documents');
-  documentsFiles.value = documentsResponse.data.value as File[];
+	const documentsResponse = await useAuthFetch("files/documents");
+	documentsFiles.value = documentsResponse.data.value as File[];
 
-  const foldersResponse = await useAuthFetch('files/folders');
-  foldersFiles.value = foldersResponse.data.value as File[];
+	const foldersResponse = await useAuthFetch("files/folders");
+	foldersFiles.value = foldersResponse.data.value as File[];
 
-  const allResponse = await useAuthFetch('files/all');
-  allFiles.value = allResponse.data.value as File[];
+	const allResponse = await useAuthFetch("files/all");
+	allFiles.value = allResponse.data.value as File[];
 
-  if (currentFolder.value) {
-    const folderResponse = await useAuthFetch(
-      `files/folder/${currentFolder.value.id}`,
-    );
-    openedFolderFiles.value = folderResponse.data.value as File[];
-  }
+	if (currentFolder.value) {
+		const folderResponse = await useAuthFetch(
+			`files/folder/${currentFolder.value.id}`,
+		);
+		openedFolderFiles.value = folderResponse.data.value as File[];
+	}
 };
 
 const getFilesByTab = computed(() => {
-  switch (activeTab.value) {
-    case 'recent':
-      return Array.isArray(recentFiles.value) ? recentFiles.value : [];
-    case 'photos':
-      return Array.isArray(picturesFiles.value) ? picturesFiles.value : [];
-    case 'documents':
-      return Array.isArray(documentsFiles.value) ? documentsFiles.value : [];
-    case 'folders':
-      return Array.isArray(foldersFiles.value) ? foldersFiles.value : [];
-    case 'all':
-      return Array.isArray(allFiles.value) ? allFiles.value : [];
-    case 'openedFolderFiles':
-      return Array.isArray(openedFolderFiles.value)
-        ? openedFolderFiles.value
-        : [];
-    default:
-      return [];
-  }
+	switch (activeTab.value) {
+		case "recent":
+			return Array.isArray(recentFiles.value) ? recentFiles.value : [];
+		case "photos":
+			return Array.isArray(picturesFiles.value) ? picturesFiles.value : [];
+		case "documents":
+			return Array.isArray(documentsFiles.value) ? documentsFiles.value : [];
+		case "folders":
+			return Array.isArray(foldersFiles.value) ? foldersFiles.value : [];
+		case "all":
+			return Array.isArray(allFiles.value) ? allFiles.value : [];
+		case "openedFolderFiles":
+			return Array.isArray(openedFolderFiles.value)
+				? openedFolderFiles.value
+				: [];
+		default:
+			return [];
+	}
 });
 
 const handleFileRemove = (fileId: string) => {
-  const fileArrays = [
-    recentFiles,
-    picturesFiles,
-    documentsFiles,
-    foldersFiles,
-    allFiles,
-  ];
-  let changed = false;
-  for (const fileArray of fileArrays) {
-    const index = fileArray.value.findIndex(file => file.id === Number(fileId));
-    if (index !== -1) {
-      if (!changed) {
-        changed = true;
-      }
-      fileArray.value.splice(index, 1);
-    }
-  }
-  if (changed) {
-    fetchFiles();
-  }
+	const fileArrays = [
+		recentFiles,
+		picturesFiles,
+		documentsFiles,
+		foldersFiles,
+		allFiles,
+	];
+	let changed = false;
+	for (const fileArray of fileArrays) {
+		const index = fileArray.value.findIndex(
+			(file) => file.id === Number(fileId),
+		);
+		if (index !== -1) {
+			if (!changed) {
+				changed = true;
+			}
+			fileArray.value.splice(index, 1);
+		}
+	}
+	if (changed) {
+		fetchFiles();
+	}
 };
 
 const handleFolderOpening = async (folder: File) => {
-  const response = await useAuthFetch(`files/folder/${folder.id}`);
-  currentFolder.value = folder;
-  console.log(response.data.value as File);
-  openedFolderFiles.value = response.data.value as File[];
-  activeTab.value = 'openedFolderFiles';
+	const response = await useAuthFetch(`files/folder/${folder.id}`);
+	currentFolder.value = folder;
+	console.log(response.data.value as File);
+	openedFolderFiles.value = response.data.value as File[];
+	activeTab.value = "openedFolderFiles";
 };
 
 const uploadFile = async (file: globalThis.File) => {
-  if (!file) return;
+	if (!file) return;
 
-  isLoading.value = true;
+	isLoading.value = true;
 
-  try {
-    const formData = new FormData();
-    formData.append('file', file);
+	try {
+		const formData = new FormData();
+		formData.append("file", file);
 
-    const response = await useAuthFetch(
-      currentFolder.value !== null
-        ? `files/upload/${currentFolder.value.id}`
-        : 'files/upload',
-      {
-        method: 'POST',
-        body: formData,
-      },
-    );
+		const response = await useAuthFetch(
+			currentFolder.value !== null
+				? `files/upload/${currentFolder.value.id}`
+				: "files/upload",
+			{
+				method: "POST",
+				body: formData,
+			},
+		);
 
-    if (response.error.value) {
-      console.error('Upload error:', response.error.value);
-    } else {
-      await fetchFiles();
-    }
-  } catch (error) {
-    console.error('Error during file upload:', error);
-  } finally {
-    isLoading.value = false;
-  }
+		if (response.error.value) {
+			console.error("Upload error:", response.error.value);
+		} else {
+			await fetchFiles();
+		}
+	} catch (error) {
+		console.error("Error during file upload:", error);
+	} finally {
+		isLoading.value = false;
+	}
 };
 
 const handleFileDrop = (event: DragEvent) => {
-  dragover.value = false;
-  const droppedFiles = event.dataTransfer?.files;
-  if (droppedFiles && droppedFiles.length > 0) {
-    uploadFile(droppedFiles[0]);
-  }
+	dragover.value = false;
+	const droppedFiles = event.dataTransfer?.files;
+	if (droppedFiles && droppedFiles.length > 0) {
+		uploadFile(droppedFiles[0]);
+	}
 };
 
 const handleFileSelect = (event: Event) => {
-  const input = event.target as HTMLInputElement;
-  if (input.files && input.files.length > 0) {
-    uploadFile(input.files[0]);
-    input.value = '';
-  }
+	const input = event.target as HTMLInputElement;
+	if (input.files && input.files.length > 0) {
+		uploadFile(input.files[0]);
+		input.value = "";
+	}
 };
 
 onMounted(async () => {
-  await nextTick(async () => {
-    await fetchFiles();
-  });
+	await nextTick(async () => {
+		await fetchFiles();
+	});
 });
 
 watch(
-  () => activeTab.value,
-  newTab => {
-    if (newTab !== 'openedFolderFiles') {
-      currentFolder.value = null;
-    }
-  },
+	() => activeTab.value,
+	(newTab) => {
+		if (newTab !== "openedFolderFiles") {
+			currentFolder.value = null;
+		}
+	},
 );
 </script>
 

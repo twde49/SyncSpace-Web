@@ -39,26 +39,28 @@
             ●
           </span>
         </li>
-        <button @click="logout" type="submit" class="logout-btn w-full">Logout</button>
+        <button @click="logout" type="submit" class="logout-btn w-full">
+          Logout
+        </button>
       </ul>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUpdated, watch } from 'vue';
-import { useRouter } from 'vue-router';
-import { gsap } from 'gsap';
-import { Draggable } from 'gsap/Draggable';
-import { useUserStore } from '~/stores/userStore';
-import WeatherInfo from './weatherModule/weatherInfo.vue';
-import { useWebSocket } from '#imports';
+import { ref, onMounted, onUpdated, watch } from "vue";
+import { useRouter } from "vue-router";
+import { gsap } from "gsap";
+import { Draggable } from "gsap/Draggable";
+import { useUserStore } from "~/stores/userStore";
+import WeatherInfo from "./weatherModule/weatherInfo.vue";
+import { useWebSocket } from "#imports";
 
 const { connect, webSocketData, isOnline, isOffline } = useWebSocket();
 
 gsap.registerPlugin(Draggable);
 
-const initialUser = ref('');
+const initialUser = ref("");
 const componentMounted = ref(false);
 const route = useRouter();
 const userStore = useUserStore();
@@ -67,104 +69,103 @@ const drawerContainer = ref(null);
 const drawer = ref(null);
 const closedButton = ref(null);
 const menuItems = [
-  'Lecteur de musique',
-  'Éditeur Markdown',
-  'Drive',
-  'Calendrier',
-  'Chat/Utilisateurs',
-  'Gestionnaire de mot de passe',
+	"Lecteur de musique",
+	"Éditeur Markdown",
+	"Drive",
+	"Calendrier",
+	"Chat/Utilisateurs",
+	"Gestionnaire de mot de passe",
 ];
 
 let draggableInstance: Draggable[] | null = null;
 
 const applyDraggable = () => {
-  if (draggableInstance) {
-    for (const instance of draggableInstance) {
-      instance.kill();
-    }
-    draggableInstance = null;
-  }
+	if (draggableInstance) {
+		for (const instance of draggableInstance) {
+			instance.kill();
+		}
+		draggableInstance = null;
+	}
 
-  draggableInstance = Draggable.create('#profileMenuClosed', {
-    type: 'rotation',
-    inertia: true,
-    throwResistance: 1000,
-    snap: value => Math.round(value / 15) * 15,
-    zIndexBoost: false,
-  });
+	draggableInstance = Draggable.create("#profileMenuClosed", {
+		type: "rotation",
+		inertia: true,
+		throwResistance: 1000,
+		snap: (value) => Math.round(value / 15) * 15,
+		zIndexBoost: false,
+	});
 };
 
 const closeDrawer = () => {
-  if (drawer.value && drawerContainer.value) {
-    gsap.to(drawer.value, {
-      duration: 0.5,
-      x: '100%',
-      ease: 'power2.inOut',
-    });
+	if (drawer.value && drawerContainer.value) {
+		gsap.to(drawer.value, {
+			duration: 0.5,
+			x: "100%",
+			ease: "power2.inOut",
+		});
 
-    gsap.to(drawerContainer.value, {
-      duration: 0.5,
-      opacity: 0,
-      ease: 'power2.inOut',
-      onComplete: () => {
-        closed.value = true;
-      }
-    });
-  }
+		gsap.to(drawerContainer.value, {
+			duration: 0.5,
+			opacity: 0,
+			ease: "power2.inOut",
+			onComplete: () => {
+				closed.value = true;
+			},
+		});
+	}
 };
 
 const openClose = () => {
-  if (closed.value) {
-    closed.value = false;
-  } else {
-    closeDrawer();
-  }
+	if (closed.value) {
+		closed.value = false;
+	} else {
+		closeDrawer();
+	}
 };
 
 const getInitialCurrentUser = () => {
-  if (!userStore.currentUser()) {
-    route.push('/');
-  }
-  return `${userStore.firstName[0].toUpperCase()}.${userStore.lastName[0].toUpperCase()}`;
+	if (!userStore.currentUser()) {
+		route.push("/");
+	}
+	return `${userStore.firstName[0].toUpperCase()}.${userStore.lastName[0].toUpperCase()}`;
 };
 
 const logout = () => {
-  isOffline(userStore.email,userStore.token);
-  userStore.logout();
-  route.push('/');
-}
+	isOffline(userStore.email, userStore.token);
+	userStore.logout();
+	route.push("/");
+};
 
-watch(closed, value => {
-  if (value === true) {
-    applyDraggable();
-  }
+watch(closed, (value) => {
+	if (value === true) {
+		applyDraggable();
+	}
 });
 
 onMounted(() => {
-  applyDraggable();
-  userStore.loadUserFromCookies();
-  componentMounted.value = true;
-  connect();
+	applyDraggable();
+	userStore.loadUserFromCookies();
+	componentMounted.value = true;
+	connect();
 });
 
-watch(componentMounted, mounted => {
-  if (mounted) {
-    initialUser.value = getInitialCurrentUser();
-  }
+watch(componentMounted, (mounted) => {
+	if (mounted) {
+		initialUser.value = getInitialCurrentUser();
+	}
 });
 
-
-watch(webSocketData.value,async (newData) => {
-  if (newData.type === 'checkUser') {
-    userStore.setSocketId(newData.socketId.id);
-    isOnline(userStore.email,userStore.token);
-  }
+watch(webSocketData.value, async (newData) => {
+	if (newData.type === "checkUser") {
+		userStore.setSocketId(newData.socketId.id);
+		isOnline(userStore.email, userStore.token);
+	}
 });
 
 onUpdated(() => {
-  if (closed.value) {
-    applyDraggable();
-  }
+	if (closed.value) {
+		applyDraggable();
+	}
 });
 </script>
 

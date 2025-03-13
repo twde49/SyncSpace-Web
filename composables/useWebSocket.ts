@@ -1,82 +1,84 @@
-import { ref } from 'vue';
-import { io } from 'socket.io-client';
-import type { Socket } from 'socket.io-client';
-import type { Notification } from '~/types/Notification';
-import type { Message } from '~/types/Message';
+import { ref } from "vue";
+import { io } from "socket.io-client";
+import type { Socket } from "socket.io-client";
+import type { Notification } from "~/types/Notification";
+import type { Message } from "~/types/Message";
 
 const webSocketData = ref<Record<string, any>>({});
 let socket: Socket | null = null;
 
 export function useWebSocket() {
-    const connect = () => {
-        if (socket) {
-            return;
-        }
+	const connect = () => {
+		if (socket) {
+			return;
+		}
 
-        socket = io('http://localhost:6969');
+		socket = io("http://localhost:6969");
 
-        socket.on('message', (message: any) => {
-            if (message.type && message.data) {
-                webSocketData.value[message.type] = message.data;
-            }
-        });
-        
-      socket.on('checkUser', (socketId: string) => {
-        webSocketData.value.type = 'checkUser';
-        webSocketData.value.socketId = socketId;
-      });
+		socket.on("message", (message: any) => {
+			if (message.type && message.data) {
+				webSocketData.value[message.type] = message.data;
+			}
+		});
 
-        socket.on('updatedMessages', (newMessages: Message[]) => {
-          webSocketData.value.type = 'updatedMessages';
-          webSocketData.value.updatedMessages = newMessages;
-        });
+		socket.on("checkUser", (socketId: string) => {
+			webSocketData.value.type = "checkUser";
+			webSocketData.value.socketId = socketId;
+		});
 
-        socket.on('disconnect', () => {
-            socket = null;
-        });
+		socket.on("updatedMessages", (newMessages: Message[]) => {
+			webSocketData.value.type = "updatedMessages";
+			webSocketData.value.updatedMessages = newMessages;
+		});
 
-        socket.on('connect_error', () => {
-            socket = null;
-        });
-        
-        socket.on('refreshConversations', () => {
-          console.log('useWebSocket refresh conversation on')
-          webSocketData.value.type = 'refreshConversations';
-        })
-        
-        
-        socket.on('refreshCalendar', ()=>{
-          webSocketData.value.type = 'refreshCalendar';
-        })
+		socket.on("disconnect", () => {
+			socket = null;
+		});
 
-        socket.on('getNotification', (notification: Notification, userEmail: string) => {
-          webSocketData.value.type = 'notification';
-          webSocketData.value.notification = notification;
-          webSocketData.value.userEmail = userEmail;
-        });
-    };
+		socket.on("connect_error", () => {
+			socket = null;
+		});
 
-    const send = (data: any) => {
-        if (!socket || !socket.connected) {
-            return;
-        }
+		socket.on("refreshConversations", () => {
+			console.log("useWebSocket refresh conversation on");
+			webSocketData.value.type = "refreshConversations";
+		});
 
-        socket.emit('message', data);
-    };
-    
-    const isOnline = (userEmail: string,jwtToken:string) => {
-      socket?.emit('userOnline', userEmail,jwtToken);
-    }
-    
-    const isOffline = (userEmail: string,jwtToken:string) => {
-      socket?.emit('userOffline', userEmail,jwtToken);
-    }
+		socket.on("refreshCalendar", () => {
+			webSocketData.value.type = "refreshCalendar";
+		});
 
-    return {
-        connect,
-        send,
-        webSocketData,
-        isOnline,
-        isOffline
-    };
+		socket.on(
+			"getNotification",
+			(notification: Notification, userEmail: string) => {
+				webSocketData.value.type = "notification";
+				webSocketData.value.notification = notification;
+				webSocketData.value.userEmail = userEmail;
+			},
+		);
+	};
+
+	const send = (data: any) => {
+		if (!socket || !socket.connected) {
+			return;
+		}
+
+		socket.emit("message", data);
+	};
+
+	const isOnline = (userEmail: string, jwtToken: string) => {
+		socket?.emit("userOnline", userEmail, jwtToken);
+	};
+
+	const isOffline = (userEmail: string, jwtToken: string) => {
+		socket?.emit("userOffline", userEmail, jwtToken);
+	};
+
+	return {
+		connect,
+		send,
+		webSocketData,
+		isOnline,
+		isOffline,
+	};
 }
