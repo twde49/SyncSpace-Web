@@ -485,10 +485,10 @@ const userStore = useUserStore();
 const { $toast } = useNuxtApp();
 const { connect, webSocketData } = useWebSocket();
 
-const currentDate = ref(new Date());
-const month = computed(() => currentDate.value.getMonth());
-const year = computed(() => currentDate.value.getFullYear());
-const currentMonthName = computed(() => monthNames[month.value]);
+const currentDate = ref<Date | undefined>();
+const month = computed(() => currentDate.value?.getMonth());
+const year = computed(() => currentDate.value?.getFullYear());
+const currentMonthName = computed(() => monthNames[month.value ?? 0]);
 const hoveredDay = ref<Date | null>(null);
 
 const monthNames = [
@@ -603,16 +603,18 @@ function formatDayTooltip(day: Date): string {
 function toggleMonthDropdown(): void {
 	showMonthDropdown.value = !showMonthDropdown.value;
 }
-
 function setMonth(index: number): void {
-	console.log("setMonth", monthNames[index]);
-	const newDate = new Date(currentDate.value);
-	newDate.setMonth(index);
-	currentDate.value = newDate;
+	if (currentDate.value) {
+		const newDate = new Date(currentDate.value);
+		newDate.setMonth(index);
+		currentDate.value = newDate;
+	}
 	showMonthDropdown.value = false;
 }
 
 const visibleDays = computed(() => {
+	if (!currentDate.value) return [];
+
 	const startOfWeek = new Date(currentDate.value);
 	startOfWeek.setDate(
 		currentDate.value.getDate() - currentDate.value.getDay() + 1,
@@ -628,15 +630,19 @@ const visibleDays = computed(() => {
 });
 
 function prevWeek(): void {
-	const newDate = new Date(currentDate.value);
-	newDate.setDate(currentDate.value.getDate() - 7);
-	currentDate.value = newDate;
+	if (currentDate.value) {
+		const newDate = new Date(currentDate.value);
+		newDate.setDate(currentDate.value.getDate() - 7);
+		currentDate.value = newDate;
+	}
 }
 
 function nextWeek(): void {
-	const newDate = new Date(currentDate.value);
-	newDate.setDate(currentDate.value.getDate() + 7);
-	currentDate.value = newDate;
+	if (currentDate.value) {
+		const newDate = new Date(currentDate.value);
+		newDate.setDate(currentDate.value.getDate() + 7);
+		currentDate.value = newDate;
+	}
 }
 
 function isToday(day: Date): boolean {
@@ -723,7 +729,6 @@ function openAddEventModalForDay(day: Date | null): void {
 
 	const today = new Date(day);
 
-	// Set time to 9:00 AM for start and 10:00 AM for end
 	const startHour = 9;
 	const endHour = 10;
 
@@ -821,7 +826,6 @@ function formatEventDate(event: Event | null): string {
 
 function editEvent(event: Event | null): void {
 	if (!event) return;
-	console.log("Edit event:", event);
 }
 
 function closeAddEventModal(): void {
@@ -901,6 +905,7 @@ watch(webSocketData.value, async (data) => {
 });
 
 onMounted(async () => {
+    currentDate.value = new Date();
 	userStore.loadUserFromCookies();
 	connect();
 	await nextTick(async () => {

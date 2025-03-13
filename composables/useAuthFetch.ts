@@ -4,7 +4,7 @@
 
 export default function useAuthFetch(url: string, options: any = {}) {
 	const config = useRuntimeConfig();
-	const baseUrl = config.public.defaultUrl || "https://localhost:8000/api/";
+	const baseUrl = config.public.apiUrl;
 
 	const accessToken = useCookie<{ token: string }>("user");
 	const tokenValue = accessToken.value?.token;

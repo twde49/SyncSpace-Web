@@ -4,8 +4,82 @@
     <NotificationDrawer />
     <ProfileModule />
     <MusicPlayerModule />
-    <div class="fourZoneContainer">
-      <div class="fourZone" ref="moduleZone">
+
+    <div class="module-slider">
+      <Swiper
+        :slides-per-view="1"
+        :centered-slides="true"
+        direction="horizontal"
+        loop
+        grabCursor
+      >
+        <SwiperSlide>
+          <div
+            data-swapy-slot="topLeft"
+            class="mobile-module"
+            @contextmenu.prevent="showContextMenu"
+          >
+            <div data-swapy-item="topLeft">
+              <div class="module topLeftModule">
+                <CalendarModule />
+              </div>
+            </div>
+          </div>
+        </SwiperSlide>
+
+        <SwiperSlide>
+          <div
+            data-swapy-slot="topRight"
+            class="mobile-module"
+            @contextmenu.prevent="showContextMenu"
+          >
+            <div data-swapy-item="topRight">
+              <div class="module topRightModule">
+                <EditorMarkdown
+                  :note-id="noteId"
+                  :title-note="noteTitle"
+                  :content-note="noteContent"
+                  @open-markdown-center="handleMarkdownCenterOpening"
+                />
+              </div>
+            </div>
+          </div>
+        </SwiperSlide>
+
+        <SwiperSlide>
+          <div
+            data-swapy-slot="bottomLeft"
+            class="mobile-module"
+            @contextmenu.prevent="showContextMenu"
+          >
+            <div data-swapy-item="bottomLeft">
+              <div class="module bottomLeftModule">
+                <PasswordManager
+                  @open-password-center="handlePasswordCenterOpening"
+                />
+              </div>
+            </div>
+          </div>
+        </SwiperSlide>
+
+        <SwiperSlide>
+          <div
+            data-swapy-slot="bottomRight"
+            class="mobile-module"
+            @contextmenu.prevent="showContextMenu"
+          >
+            <div data-swapy-item="bottomRight">
+              <div class="module bottomRightModule">
+                <DriveModule />
+              </div>
+            </div>
+          </div>
+        </SwiperSlide>
+      </Swiper>
+    </div>
+
+    <div class="fourZoneContainer" ref="moduleZone">
+      <div class="fourZone">
         <div
           data-swapy-slot="topLeft"
           class="centered"
@@ -80,26 +154,29 @@
 </template>
 
 <script setup lang="ts">
-import type { Note } from "~/types/Note";
-import type { Swapy } from "swapy";
-import { createSwapy } from "swapy";
-import { onMounted, onUnmounted, ref } from "vue";
-import MessageModule from "~/components/dashboard/messageModule/messageModule.vue";
-import ProfileModule from "~/components/dashboard/profileModule.vue";
-import MusicPlayerModule from "~/components/dashboard/music/musicPlayerModule.vue";
-import EditorMarkdown from "~/components/dashboard/markdownModule/editorMarkdown.vue";
-import MarkdownCenter from "~/components/dashboard/markdownModule/markdownCenter.vue";
-import DriveModule from "~/components/dashboard/driveModule/driveModule.vue";
-import PasswordManager from "~/components/dashboard/passwordManagerModule/passwordManager.vue";
-import PasswordCenter from "~/components/dashboard/passwordManagerModule/passwordCenter.vue";
-import CalendarModule from "~/components/dashboard/calendarModule/calendarModule.vue";
-import NotificationDrawer from "~/components/dashboard/notificationDrawer/NotificationDrawer.vue";
-import { useRouter } from "vue-router";
+import type { Note } from '~/types/Note';
+import type { Swapy } from 'swapy';
+import { createSwapy } from 'swapy';
+import { onMounted, onUnmounted, ref } from 'vue';
+import MessageModule from '~/components/dashboard/messageModule/messageModule.vue';
+import ProfileModule from '~/components/dashboard/profileModule.vue';
+import MusicPlayerModule from '~/components/dashboard/music/musicPlayerModule.vue';
+import EditorMarkdown from '~/components/dashboard/markdownModule/editorMarkdown.vue';
+import MarkdownCenter from '~/components/dashboard/markdownModule/markdownCenter.vue';
+import DriveModule from '~/components/dashboard/driveModule/driveModule.vue';
+import PasswordManager from '~/components/dashboard/passwordManagerModule/passwordManager.vue';
+import PasswordCenter from '~/components/dashboard/passwordManagerModule/passwordCenter.vue';
+import CalendarModule from '~/components/dashboard/calendarModule/calendarModule.vue';
+import NotificationDrawer from '~/components/dashboard/notificationDrawer/NotificationDrawer.vue';
+import { useRouter } from 'vue-router';
+import { Swiper, SwiperSlide } from 'swiper/vue';
+import 'swiper/css';
+import 'swiper/css/pagination';
 
 const { $toast } = useNuxtApp();
 let noteId: number;
-let noteTitle = "";
-let noteContent = "";
+let noteTitle = '';
+let noteContent = '';
 
 const router = useRouter();
 
@@ -110,80 +187,80 @@ const isMarkdownCenterOpen = ref(false);
 const isPasswordCenterOpen = ref(false);
 
 const contextMenu = ref({
-	show: false,
-	x: 0,
-	y: 0,
-	targetModule: "",
+  show: false,
+  x: 0,
+  y: 0,
+  targetModule: '',
 });
 
 const handleMarkdownCenterOpening = (status: boolean) => {
-	isMarkdownCenterOpen.value = status;
+  isMarkdownCenterOpen.value = status;
 };
 
 const handleMarkdownCenterClosing = () => {
-	isMarkdownCenterOpen.value = false;
+  isMarkdownCenterOpen.value = false;
 };
 
 const handlePasswordCenterOpening = (status: boolean) => {
-	isPasswordCenterOpen.value = status;
+  isPasswordCenterOpen.value = status;
 };
 
 const handlePasswordCenterClosing = () => {
-	isPasswordCenterOpen.value = false;
+  isPasswordCenterOpen.value = false;
 };
 
 const handleOpeningNote = (chosenNote: Note) => {
-	noteId = chosenNote.id;
-	noteTitle = chosenNote.title ?? "";
-	noteContent = chosenNote.content ?? "";
+  noteId = chosenNote.id;
+  noteTitle = chosenNote.title ?? '';
+  noteContent = chosenNote.content ?? '';
 };
 
 const showContextMenu = (event: MouseEvent) => {
-	contextMenu.value.show = true;
-	contextMenu.value.x = event.clientX;
-	contextMenu.value.y = event.clientY;
+  contextMenu.value.show = true;
+  contextMenu.value.x = event.clientX;
+  contextMenu.value.y = event.clientY;
 
-	const target = event.target as HTMLElement;
-	const moduleElement = target.closest(".module");
-	if (moduleElement) {
-		if (moduleElement.classList.contains("topLeftModule")) {
-			contextMenu.value.targetModule = "topLeft";
-		} else if (moduleElement.classList.contains("topRightModule")) {
-			contextMenu.value.targetModule = "topRight";
-		} else if (moduleElement.classList.contains("bottomLeftModule")) {
-			contextMenu.value.targetModule = "bottomLeft";
-		} else if (moduleElement.classList.contains("bottomRightModule")) {
-			contextMenu.value.targetModule = "bottomRight";
-		}
-	}
+  const target = event.target as HTMLElement;
+  const moduleElement = target.closest('.module');
+  if (moduleElement) {
+    if (moduleElement.classList.contains('topLeftModule')) {
+      contextMenu.value.targetModule = 'topLeft';
+    } else if (moduleElement.classList.contains('topRightModule')) {
+      contextMenu.value.targetModule = 'topRight';
+    } else if (moduleElement.classList.contains('bottomLeftModule')) {
+      contextMenu.value.targetModule = 'bottomLeft';
+    } else if (moduleElement.classList.contains('bottomRightModule')) {
+      contextMenu.value.targetModule = 'bottomRight';
+    }
+  }
 };
 
 const handleSettings = () => {
-	router.push("/settings");
-	contextMenu.value.show = false;
+  router.push('/settings');
+  contextMenu.value.show = false;
 };
 
 onMounted(() => {
-	if (moduleZone.value) {
-		swapy.value = createSwapy(moduleZone.value, {
-			dragOnHold: true,
-		});
+  if (moduleZone.value) {
+    swapy.value = createSwapy(moduleZone.value, {
+      dragOnHold: true,
+    });
 
-		swapy.value.onSwapStart(() => {
-			$toast.info("Module peut être déplacé");
-		});
-	}
+    swapy.value.onSwapStart(() => {
+      $toast.info('Module peut être déplacé');
+    });
+  }
 
-	document.addEventListener("click", () => {
-		contextMenu.value.show = false;
-	});
+  document.addEventListener('click', () => {
+    contextMenu.value.show = false;
+  });
 });
 
 onUnmounted(() => {
-	swapy.value?.destroy();
-	document.removeEventListener("click", () => {
-		contextMenu.value.show = false;
-	});
+  swapy.value?.destroy();
+  document.removeEventListener('click', () => {
+    contextMenu.value.show = false;
+  });
 });
 </script>
 
@@ -198,6 +275,28 @@ onUnmounted(() => {
   margin-left: auto;
   margin-right: auto;
   z-index: 10;
+  display: none;
+}
+
+.module-slider {
+  width: 100%;
+  padding: 20px 0;
+  margin-top: 30vh;
+}
+
+.mobile-module {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.module {
+  width: 85vw;
+  height: 35vh;
+  background-color: var(--color-white);
+  border-radius: 5px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
 }
 
 .fourZone {
@@ -213,14 +312,6 @@ onUnmounted(() => {
   align-items: center;
 }
 
-.module {
-  width: 550px;
-  height: 300px;
-  background-color: var(--color-white);
-  border-radius: 5px;
-}
-
-/* Custom Context Menu Styles */
 .custom-context-menu {
   position: fixed;
   z-index: 1000;
@@ -240,5 +331,20 @@ onUnmounted(() => {
 
 .context-menu-item:hover {
   background-color: #f5f5f5;
+}
+
+@media (min-width: 768px) {
+  .module-slider {
+    display: none;
+  }
+
+  .fourZoneContainer {
+    display: flex;
+  }
+
+  .module {
+    width: 40vw;
+    height: 30vh;
+  }
 }
 </style>

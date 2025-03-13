@@ -124,24 +124,24 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, onMounted, ref, watch, computed, nextTick } from "vue";
-import type { Conversation } from "~/types/Conversation";
-import type { Message } from "~/types/Message";
-import { useUserStore } from "~/stores/userStore";
-import useAuthFetch from "~/composables/useAuthFetch";
-import { useWebSocket } from "~/composables/useWebSocket";
+import { reactive, onMounted, ref, watch, computed, nextTick } from 'vue';
+import type { Conversation } from '~/types/Conversation';
+import type { Message } from '~/types/Message';
+import { useUserStore } from '~/stores/userStore';
+import useAuthFetch from '~/composables/useAuthFetch';
+import { useWebSocket } from '~/composables/useWebSocket';
 
 const userStore = useUserStore();
 const { $toast } = useNuxtApp();
 const chatContainer = ref<HTMLElement | null>(null);
 
 const currentMessage = ref<string | null>(null);
-const currentAttachment = ref<string>("");
+const currentAttachment = ref<string>('');
 const activeMenu = ref<string | null>(null);
 const menuPositions = ref<{ [key: string]: number }>({});
 
 const showEditModal = ref(false);
-const editedMessageContent = ref("");
+const editedMessageContent = ref('');
 const currentEditingMessage = ref<Message | null>(null);
 
 const props = defineProps<{ conversation: Conversation }>();
@@ -149,230 +149,217 @@ const props = defineProps<{ conversation: Conversation }>();
 const reactiveConversation = reactive({ ...props.conversation });
 
 const messages = computed(() => {
-	return [...(reactiveConversation.messages || [])].reverse();
+  return [...(reactiveConversation.messages || [])].reverse();
 });
 
 const emits = defineEmits<{
-	"message-sent": [];
-	"update-message": [];
-	"refresh-conversations": [];
+  'message-sent': [];
+  'update-message': [];
+  'refresh-conversations': [];
 }>();
 
 watch(
-	() => props.conversation,
-	(newConversation) => {
-		Object.assign(reactiveConversation, newConversation);
-	},
-	{ deep: true, immediate: true },
+  () => props.conversation,
+  newConversation => {
+    Object.assign(reactiveConversation, newConversation);
+  },
+  { deep: true, immediate: true },
 );
 
 const { connect, webSocketData } = useWebSocket();
 
 const isOwnMessage = (message: Message) => {
-	return message.sender?.email === userStore.email;
+  return message.sender?.email === userStore.email;
 };
 
 const getConversationName = () => {
-	if (reactiveConversation.name) {
-		const allUsersName = reactiveConversation.users?.map((user) => `${user.firstName ?? ""} ${user.lastName ?? ""}`).join(", ");
-		return `${reactiveConversation.name} (${allUsersName})`;
-	}
+  if (reactiveConversation.name) {
+    const allUsersName = reactiveConversation.users
+      ?.map(user => `${user.firstName ?? ''} ${user.lastName ?? ''}`)
+      .join(', ');
+    return `${reactiveConversation.name} (${allUsersName})`;
+  }
 
-	if (reactiveConversation.users?.length === 2) {
-		return reactiveConversation.users
-			?.filter((user) => user.email !== userStore.email)
-			.map((user) => `${user.firstName ?? ""} ${user.lastName ?? ""}`)
-			.join(" ");
-	}
-	return reactiveConversation.users
-		?.map((user) => `${user.firstName ?? ""} ${user.lastName ?? ""}`)
-		.join(", ");
+  if (reactiveConversation.users?.length === 2) {
+    return reactiveConversation.users
+      ?.filter(user => user.email !== userStore.email)
+      .map(user => `${user.firstName ?? ''} ${user.lastName ?? ''}`)
+      .join(' ');
+  }
+  return reactiveConversation.users
+    ?.map(user => `${user.firstName ?? ''} ${user.lastName ?? ''}`)
+    .join(', ');
 };
 
 const showContextMenu = (message: Message) => {
-	if (isOwnMessage(message)) {
-		toggleMenu(String(message.id));
-	}
+  if (isOwnMessage(message)) {
+    toggleMenu(String(message.id));
+  }
 };
 
 const toggleMenu = (messageId: string) => {
-	if (activeMenu.value === messageId) {
-		activeMenu.value = null;
-	} else {
-		activeMenu.value = messageId;
-		nextTick(() => {
-			const element = document.querySelector(
-				`[data-message-id="${messageId}"]`,
-			);
-			if (element) {
-				const rect = element.getBoundingClientRect();
-				menuPositions.value[messageId] = rect.right;
-			}
-		});
-	}
+  if (activeMenu.value === messageId) {
+    activeMenu.value = null;
+  } else {
+    activeMenu.value = messageId;
+    nextTick(() => {
+      const element = document.querySelector(
+        `[data-message-id="${messageId}"]`,
+      );
+      if (element) {
+        const rect = element.getBoundingClientRect();
+        menuPositions.value[messageId] = rect.right;
+      }
+    });
+  }
 };
 
 onMounted(() => {
-	document.addEventListener("click", (event) => {
-		if (
-			activeMenu.value &&
-			!(event.target as Element)?.closest?.(".message-container")
-		) {
-			activeMenu.value = null;
-		}
-	});
+  document.addEventListener('click', event => {
+    if (
+      activeMenu.value &&
+      !(event.target as Element)?.closest?.('.message-container')
+    ) {
+      activeMenu.value = null;
+    }
+  });
 });
 
 const showEditMessageModal = (message: Message) => {
-	currentEditingMessage.value = message;
-	editedMessageContent.value = message.content ?? "";
-	showEditModal.value = true;
-	activeMenu.value = null;
+  currentEditingMessage.value = message;
+  editedMessageContent.value = message.content ?? '';
+  showEditModal.value = true;
+  activeMenu.value = null;
 };
 
 const closeEditModal = () => {
-	showEditModal.value = false;
-	currentEditingMessage.value = null;
-	editedMessageContent.value = "";
+  showEditModal.value = false;
+  currentEditingMessage.value = null;
+  editedMessageContent.value = '';
 };
 
 const submitEditMessage = async () => {
-	if (!currentEditingMessage.value || !editedMessageContent.value.trim()) {
-		return;
-	}
+  if (!currentEditingMessage.value || !editedMessageContent.value.trim()) {
+    return;
+  }
 
-	await editMessage(currentEditingMessage.value, editedMessageContent.value);
-	closeEditModal();
+  await editMessage(currentEditingMessage.value, editedMessageContent.value);
+  closeEditModal();
 };
 
 const deleteMessage = async (message: Message) => {
-	try {
-		await useAuthFetch(`conversation/message/remove/${message.id}`, {
-			method: "DELETE",
-		});
+  try {
+    await useAuthFetch(`conversation/message/remove/${message.id}`, {
+      method: 'DELETE',
+    });
 
-		if (reactiveConversation.messages) {
-			const index = reactiveConversation.messages.findIndex(
-				(m) => m.id === message.id,
-			);
-			if (index !== -1) {
-				reactiveConversation.messages.splice(index, 1);
-			}
-		}
+    if (reactiveConversation.messages) {
+      const index = reactiveConversation.messages.findIndex(
+        m => m.id === message.id,
+      );
+      if (index !== -1) {
+        reactiveConversation.messages.splice(index, 1);
+      }
+    }
 
-		$toast.success("Message deleted successfully");
-		activeMenu.value = null;
-		emits("update-message");
-	} catch (error) {
-		if (error instanceof Error) {
-			$toast.error(error.message);
-		} else {
-			$toast.error("Failed to delete message");
-		}
-	}
+    $toast.success('Message deleted successfully');
+    activeMenu.value = null;
+    emits('update-message');
+  } catch (error) {
+    if (error instanceof Error) {
+      $toast.error(error.message);
+    } else {
+      $toast.error('Failed to delete message');
+    }
+  }
 };
 
 const editMessage = async (message: Message, newMessageContent: string) => {
-	try {
-		await useAuthFetch(`conversation/message/edit/${message.id}`, {
-			method: "PUT",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify({
-				content: newMessageContent,
-			}),
-		});
+  try {
+    await useAuthFetch(`conversation/message/edit/${message.id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        content: newMessageContent,
+      }),
+    });
 
-		if (reactiveConversation.messages) {
-			const index = reactiveConversation.messages.findIndex(
-				(m) => m.id === message.id,
-			);
-			if (index !== -1) {
-				reactiveConversation.messages[index].content = newMessageContent;
-			}
-		}
+    if (reactiveConversation.messages) {
+      const index = reactiveConversation.messages.findIndex(
+        m => m.id === message.id,
+      );
+      if (index !== -1) {
+        reactiveConversation.messages[index].content = newMessageContent;
+      }
+    }
 
-		$toast.success("Message updated successfully");
-		activeMenu.value = null;
-		emits("update-message");
-	} catch (error) {
-		if (error instanceof Error) {
-			$toast.error(error.message);
-		} else {
-			$toast.error("Failed to update message");
-		}
-	}
+    $toast.success('Message updated successfully');
+    activeMenu.value = null;
+    emits('update-message');
+  } catch (error) {
+    if (error instanceof Error) {
+      $toast.error(error.message);
+    } else {
+      $toast.error('Failed to update message');
+    }
+  }
 };
 
 const sendMessage = async () => {
-	try {
-		await useAuthFetch(`conversation/${reactiveConversation.id}/message/new`, {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify({
-				content: currentMessage.value,
-				attachment: currentAttachment.value,
-			}),
-		});
+  try {
+    await useAuthFetch(`conversation/${reactiveConversation.id}/message/new`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        content: currentMessage.value,
+        attachment: currentAttachment.value,
+      }),
+    });
 
-		emits("message-sent");
-	} catch (error) {
-		if (error instanceof Error) {
-			$toast.error(error.message);
-		} else {
-			$toast.error("An unknown error occurred");
-		}
-	} finally {
-		currentMessage.value = null;
-		currentAttachment.value = "";
-	}
+    emits('message-sent');
+  } catch (error) {
+    if (error instanceof Error) {
+      $toast.error(error.message);
+    } else {
+      $toast.error('An unknown error occurred');
+    }
+  } finally {
+    currentMessage.value = null;
+    currentAttachment.value = '';
+  }
 };
 
-watch(webSocketData.value, (newData) => {
-	if (newData.type === "refreshConversations") {
-		emits("refresh-conversations");
-	}
+watch(webSocketData.value, newData => {
+  if (newData.type === 'refreshConversations') {
+    emits('refresh-conversations');
+  }
 });
 
-watch(
-	() => webSocketData.value.updatedMessages,
-	(receivedData) => {
-		let newMessages: Message[] = [];
-
-		if (typeof receivedData === "string") {
-			try {
-				newMessages = JSON.parse(receivedData) as Message[];
-			} catch (error) {
-				console.error(error);
-				return;
-			}
-		} else if (Array.isArray(receivedData)) {
-			newMessages = receivedData;
-		} else {
-			return;
-		}
-
-		if (!reactiveConversation.messages) return;
-
-		const existingMessageIds = new Set(
-			reactiveConversation.messages.map((msg) => msg.id),
-		);
-		const uniqueMessages = newMessages.filter(
-			(msg) => !existingMessageIds.has(msg.id),
-		);
-
-		if (uniqueMessages.length > 0) {
-			reactiveConversation.messages.push(...uniqueMessages);
-		}
-	},
-);
+watch(webSocketData.value, async data => {
+  if (data.type === 'newMessage') {
+    if (data.conversationId === reactiveConversation.id) {
+      if (typeof data.newMessage === 'string') {
+        try {
+          const parsedMessage = JSON.parse(data.newMessage) as Message;
+          reactiveConversation.messages.push(parsedMessage);
+        } catch (error) {
+          console.error('Failed to parse message:', error);
+        }
+      } else {
+        reactiveConversation.messages.push(data.newMessage);
+        console.log(data);
+      }
+    }
+  }
+});
 
 onMounted(() => {
-	userStore.loadUserFromCookies();
-	connect();
+  userStore.loadUserFromCookies();
+  connect();
 });
 </script>
 

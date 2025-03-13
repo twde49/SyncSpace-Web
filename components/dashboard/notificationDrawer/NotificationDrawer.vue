@@ -1,51 +1,56 @@
 <template>
-  <div
-    v-if="!isNotificationDrawerOpen"
-    @click="toggleNotificationDrawer"
-    class="w-fit fixed top-4 left-1/2 transform -translate-x-1/2"
-  >
-    <Icon
-      name="solar:bell-bold"
-      size="2rem"
-      class="textColorWhite hover:animate-bell cursor-pointer"
-    />
-    <div
-      v-if="notifications.length > 0"
-      class="absolute bottom-0 right-0 w-3 h-3 bg-red-500 rounded-full"
-    ></div>
-  </div>
+		<div
+				v-if="!isNotificationDrawerOpen"
+				@click="toggleNotificationDrawer"
+				class="w-fit fixed top-4 left-1/2 transform -translate-x-1/2"
+		>
+				<Icon
+						name="solar:bell-bold"
+						size="2rem"
+						class="textColorWhite hover:animate-bell cursor-pointer"
+				/>
+				<div
+						v-if="notifications.length > 0"
+						class="absolute bottom-0 right-0 w-3 h-3 bg-red-500 rounded-full"
+				></div>
+		</div>
 
-  <div v-show="isNotificationDrawerOpen">
-    <div
-      ref="notificationDrawer"
-      class="fixed top-4 left-1/2 transform -translate-x-1/2 bgColorWhite border border-gray-200 rounded-lg shadow-lg p-6 min-w-[400px] max-h-[80vh] overflow-y-auto opacity-100 scale-100 z-50"
-    >
-      <div class="flex justify-between items-center mb-3">
-        <div class="flex flex-col">
-          <div class="text-lg font-semibold">Notifications</div>
-          <button
-            v-if="notifications.length > 0"
-            @click="readAllNotifications"
-            class="text-xs text-gray-500 hover:text-gray-700 transition-colors mt-1 flex items-center"
-          >
-            <Icon name="mdi:check-all" class="mr-1" size="0.8rem" />
-            Marquer toutes comme lues
-          </button>
-        </div>
-        <div @click="toggleNotificationDrawer" class="cursor-pointer p-1">
-          <Icon name="mdi:close" size="1.2rem" />
-        </div>
-      </div>
-      <NotificationList
-        :notifications="notifications"
-        @read-notification="readNotification"
-      />
-    </div>
-  </div>
+		<div v-show="isNotificationDrawerOpen">
+				<div
+						ref="notificationDrawer"
+						class="fixed top-4 left-1/2 transform -translate-x-1/2 bgColorWhite border border-gray-200 rounded-lg shadow-lg p-6 min-w-[400px] max-h-[80vh] overflow-y-auto opacity-100 scale-100 z-50"
+						@click.stop
+				>
+						<div class="flex justify-between items-center mb-3">
+								<div class="flex flex-col">
+										<div class="text-lg font-semibold">Notifications</div>
+										<button
+												v-if="notifications.length > 0"
+												@click="readAllNotifications"
+												class="text-xs text-gray-500 hover:text-gray-700 transition-colors mt-1 flex items-center"
+										>
+												<Icon name="mdi:check-all" class="mr-1" size="0.8rem" />
+												Marquer toutes comme lues
+										</button>
+								</div>
+								<div @click="toggleNotificationDrawer" class="cursor-pointer p-1">
+										<Icon name="mdi:close" size="1.2rem" />
+								</div>
+						</div>
+						<NotificationList
+								:notifications="notifications"
+								@read-notification="readNotification"
+						/>
+				</div>
+				<div
+						class="fixed inset-0 bg-black bg-opacity-25 z-40"
+						@click="toggleNotificationDrawer"
+				></div>
+		</div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, nextTick, watch } from "vue";
+import { ref, onMounted, nextTick, watch, onBeforeUnmount } from "vue";
 import gsap from "gsap";
 import NotificationList from "./NotificationList.vue";
 import type { Notification } from "@/types/Notification";
@@ -79,6 +84,20 @@ const toggleNotificationDrawer = () => {
 		});
 	}
 };
+
+const handleEscapeKey = (event: KeyboardEvent) => {
+		if (event.key === 'Escape' && isNotificationDrawerOpen.value) {
+				toggleNotificationDrawer();
+		}
+};
+
+onMounted(() => {
+		document.addEventListener('keydown', handleEscapeKey);
+});
+
+onBeforeUnmount(() => {
+		document.removeEventListener('keydown', handleEscapeKey);
+});
 
 const fetchNotifications = async () => {
 	try {
@@ -133,29 +152,30 @@ onMounted(async () => {
 	userStore.loadUserFromCookies();
 	connect();
 });
+
 </script>
 
 <style scoped>
 .hover\:animate-bell:hover {
-  animation: bellRing 0.5s ease-in-out;
+		animation: bellRing 0.5s ease-in-out;
 }
 
 @keyframes bellRing {
-  0%,
-  100% {
-    transform: rotate(0);
-  }
-  20% {
-    transform: rotate(15deg);
-  }
-  40% {
-    transform: rotate(-15deg);
-  }
-  60% {
-    transform: rotate(7deg);
-  }
-  80% {
-    transform: rotate(-7deg);
-  }
+		0%,
+		100% {
+				transform: rotate(0);
+		}
+		20% {
+				transform: rotate(15deg);
+		}
+		40% {
+				transform: rotate(-15deg);
+		}
+		60% {
+				transform: rotate(7deg);
+		}
+		80% {
+				transform: rotate(-7deg);
+		}
 }
 </style>

@@ -417,7 +417,6 @@ const createConversation = async () => {
 };
 
 const getConversations = async () => {
-	console.log("Fetching conversations...");
 	try {
 		const response = await useAuthFetch("conversations");
 
