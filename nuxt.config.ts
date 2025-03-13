@@ -3,6 +3,13 @@ export default defineNuxtConfig({
 		port: 4000,
 	},
 
+	runtimeConfig: {
+		public: {
+			apiUrl: process.env.API_URL || "https://localhost:8000/api/",
+			webSocketUrl: process.env.WEBSOCKET_URL || "http://localhost:6969",
+		},
+	},
+
 	app: {
 		head: {
 			script: [
@@ -27,7 +34,7 @@ export default defineNuxtConfig({
 		plugins: {
 			tailwindcss: {},
 			autoprefixer: {},
-			plugins: ["~/plugins/formatDate"],
+			plugins: ["~/plugins/formatDate", '~/plugins/swiper.client'],
 		},
 	},
 

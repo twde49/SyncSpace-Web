@@ -74,7 +74,6 @@ watch(
 
 				previousTemp.value = targetTemp;
 			} else {
-				// First time setting the temperature
 				displayedTemperature.value = targetTemp;
 				previousTemp.value = targetTemp;
 			}
@@ -137,7 +136,6 @@ const fetchWeatherData = async () => {
 		const location = await getLocationFromIP();
 		latitude = location.latitude;
 		longitude = location.longitude;
-		console.log(`Using IP-based location: ${latitude}, ${longitude}`);
 	} catch (error: unknown) {
 		console.warn(
 			`Using default location. Error: ${error instanceof Error ? error.message : String(error)}`,

@@ -64,6 +64,7 @@ import { useRouter } from "vue-router";
 import { ref } from "vue";
 import { useUserStore } from "~/stores/userStore";
 import "vue3-toastify/dist/index.css";
+import { useRuntimeConfig } from "#app";
 
 const { $toast } = useNuxtApp();
 const email = ref("");
@@ -72,7 +73,7 @@ const isLoading = ref(false);
 const route = useRouter();
 const userStore = useUserStore();
 
-const API_BASE_URL = "https://localhost:8000";
+const config = useRuntimeConfig();
 
 const isValidEmail = (email: string) =>
 	/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -89,7 +90,7 @@ const loginUser = async () => {
 
 	isLoading.value = true;
 	try {
-		const response = await fetch(`${API_BASE_URL}/api/login_check`, {
+		const response = await fetch(`${config.public.apiUrl}login_check`, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",

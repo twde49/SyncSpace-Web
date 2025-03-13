@@ -3,6 +3,7 @@ import { io } from "socket.io-client";
 import type { Socket } from "socket.io-client";
 import type { Notification } from "~/types/Notification";
 import type { Message } from "~/types/Message";
+import { useRuntimeConfig } from "#app";
 
 const webSocketData = ref<Record<string, any>>({});
 let socket: Socket | null = null;
@@ -12,8 +13,8 @@ export function useWebSocket() {
 		if (socket) {
 			return;
 		}
-
-		socket = io("http://localhost:6969");
+		const config = useRuntimeConfig();
+		socket = io(config.public.webSocketUrl);
 
 		socket.on("message", (message: any) => {
 			if (message.type && message.data) {
@@ -40,7 +41,6 @@ export function useWebSocket() {
 		});
 
 		socket.on("refreshConversations", () => {
-			console.log("useWebSocket refresh conversation on");
 			webSocketData.value.type = "refreshConversations";
 		});
 

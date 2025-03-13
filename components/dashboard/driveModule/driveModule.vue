@@ -223,7 +223,6 @@ const handleFileRemove = (fileId: string) => {
 const handleFolderOpening = async (folder: File) => {
 	const response = await useAuthFetch(`files/folder/${folder.id}`);
 	currentFolder.value = folder;
-	console.log(response.data.value as File);
 	openedFolderFiles.value = response.data.value as File[];
 	activeTab.value = "openedFolderFiles";
 };

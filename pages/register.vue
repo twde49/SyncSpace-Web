@@ -87,6 +87,7 @@
 import Navbar from "~/components/notLogged/Navbar.vue";
 import { useRouter } from "vue-router";
 import { ref } from "vue";
+import { useRuntimeConfig } from "#app";
 import "vue3-toastify/dist/index.css";
 const acceptTerms = ref(false);
 const firstName = ref("");
@@ -94,6 +95,7 @@ const lastName = ref("");
 const email = ref("");
 const password = ref("");
 const route = useRouter();
+const config = useRuntimeConfig();
 
 const { $toast } = useNuxtApp();
 
@@ -110,7 +112,7 @@ const checkCompletedForm = () => {
 const registerUser = async () => {
 	try {
 		if (!checkCompletedForm()) {
-			const response = await fetch("https://localhost:8000/api/register", {
+			const response = await fetch(`${config.public.apiUrl}register`, {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
@@ -250,19 +252,19 @@ const registerUser = async () => {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 20px 0; /* Add spacing above and below */
+  margin: 20px 0;
 }
 
 .divider-line {
   flex: 1;
   height: 1px;
-  background-color: #ccc; /* Line color */
+  background-color: #ccc;
 }
 
 .divider-text {
-  padding: 0 10px; /* Space around the text */
-  font-size: 14px; /* Adjust font size as needed */
-  color: #555; /* Text color */
-  font-weight: 500; /* Optional: Adjust text weight */
+  padding: 0 10px;
+  font-size: 14px;
+  color: #555;
+  font-weight: 500;
 }
 </style>

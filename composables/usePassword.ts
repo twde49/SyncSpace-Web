@@ -2,9 +2,8 @@ import { ref } from "vue";
 import useAuthFetch from "~/composables/useAuthFetch";
 import type { PasswordItem } from "~/types/PasswordItem";
 const passwords = ref<PasswordItem[]>([]);
-const masterKey = ref<CryptoKey | null>(null); // Stores the derived encryption key
+const masterKey = ref<CryptoKey | null>(null);
 
-// 🔑 Generate a secure encryption key from the Master Password
 async function deriveKey(masterPassword: string): Promise<CryptoKey> {
 	const encoder = new TextEncoder();
 	const keyMaterial = await crypto.subtle.importKey(
@@ -29,7 +28,6 @@ async function deriveKey(masterPassword: string): Promise<CryptoKey> {
 	);
 }
 
-// 🔒 Encrypt Password (AES-256-GCM)
 async function encryptPassword(
 	password: string,
 ): Promise<{ iv: string; data: string }> {
@@ -45,12 +43,11 @@ async function encryptPassword(
 	);
 
 	return {
-		iv: btoa(String.fromCharCode(...iv)), // Convert IV to base64
-		data: btoa(String.fromCharCode(...new Uint8Array(encrypted))), // Convert encrypted password to base64
+		iv: btoa(String.fromCharCode(...iv)),
+		data: btoa(String.fromCharCode(...new Uint8Array(encrypted))),
 	};
 }
 
-// 🔓 Decrypt Password (AES-256-GCM)
 async function decryptPassword(
 	encryptedData: string,
 	iv: string,
@@ -71,13 +68,11 @@ async function decryptPassword(
 	return new TextDecoder().decode(decrypted);
 }
 
-// 🔄 Fetch passwords from backend (decryption handled in frontend)
 async function fetchPasswords() {
 	const res = await useAuthFetch("passwords/list");
 	passwords.value = res.data.value as PasswordItem[];
 }
 
-// 🆕 Store password securely
 async function storePassword(passwordData: PasswordItem) {
 	const encrypted = await encryptPassword(passwordData.password);
 
@@ -103,6 +98,6 @@ export function usePasswordManager() {
 		encryptPassword,
 		decryptPassword,
 		deriveKey,
-		masterKey, // Allow setting the encryption key globally
+		masterKey,
 	};
 }
