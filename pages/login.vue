@@ -127,7 +127,8 @@ const loginUser = async () => {
 			parameters: {
 				theme: data.user.parameters.theme,
 				modulesLayout: data.user.parameters.modulesLayout,
-				notificationsEnabled: data.user.parameters.notificationsEnabled
+				notificationsEnabled: data.user.parameters.notificationsEnabled,
+				geolocationEnabled: data.user.parameters.geolocationEnabled,
 			}
 		});
 		route.push("/dashboard");

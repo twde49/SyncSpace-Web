@@ -14,52 +14,48 @@
         grabCursor
       >
         <SwiperSlide>
-          <div
-            data-swapy-slot="topLeft"
-            class="mobile-module"
-          >
+          <div data-swapy-slot="topLeft" class="mobile-module">
             <div data-swapy-item="topLeft">
               <div class="module topLeftModule">
-                {{ getModule('topLeft') }}
+                <CalendarModule @contextmenu.prevent="showContextMenu" />
               </div>
             </div>
           </div>
         </SwiperSlide>
 
         <SwiperSlide>
-          <div
-            data-swapy-slot="topRight"
-            class="mobile-module"
-          >
+          <div data-swapy-slot="topRight" class="mobile-module">
             <div data-swapy-item="topRight">
               <div class="module topRightModule">
-                {{ getModule('topRight') }}
+                <EditorMarkdown
+                  :note-id="noteId"
+                  :title-note="noteTitle"
+                  :content-note="noteContent"
+                  @open-markdown-center="handleMarkdownCenterOpening"
+                />
               </div>
             </div>
           </div>
         </SwiperSlide>
 
         <SwiperSlide>
-          <div
-            data-swapy-slot="bottomLeft"
-            class="mobile-module"
-          >
+          <div data-swapy-slot="bottomLeft" class="mobile-module">
             <div data-swapy-item="bottomLeft">
               <div class="module bottomLeftModule">
-                {{ getModule('bottomLeft') }}
+                <PasswordManager
+                  @contextmenu.prevent="showContextMenu"
+                  @open-password-center="handlePasswordCenterOpening"
+                />
               </div>
             </div>
           </div>
         </SwiperSlide>
 
         <SwiperSlide>
-          <div
-            data-swapy-slot="bottomRight"
-            class="mobile-module"
-          >
+          <div data-swapy-slot="bottomRight" class="mobile-module">
             <div data-swapy-item="bottomRight">
               <div class="module bottomRightModule">
-                {{ getModule('bottomRight') }}
+                <DriveModule @contextmenu.prevent="showContextMenu" />
               </div>
             </div>
           </div>
@@ -76,7 +72,7 @@
         >
           <div data-swapy-item="topLeft">
             <div class="module topLeftModule">
-                {{ getModule('topLeft') }}
+              <CalendarModule @contextmenu.prevent="showContextMenu" />
             </div>
           </div>
         </div>
@@ -87,7 +83,12 @@
         >
           <div data-swapy-item="topRight">
             <div class="module topRightModule">
-                {{ getModule('topRight') }}
+              <EditorMarkdown
+                :note-id="noteId"
+                :title-note="noteTitle"
+                :content-note="noteContent"
+                @open-markdown-center="handleMarkdownCenterOpening"
+              />
             </div>
           </div>
         </div>
@@ -98,14 +99,17 @@
         >
           <div data-swapy-item="bottomLeft">
             <div class="module bottomLeftModule">
-                {{ getModule('bottomLeft') }}
+              <PasswordManager
+                @contextmenu.prevent="showContextMenu"
+                @open-password-center="handlePasswordCenterOpening"
+              />
             </div>
           </div>
         </div>
         <div data-swapy-slot="bottomRight" class="centered">
           <div data-swapy-item="bottomRight">
             <div class="module bottomRightModule">
-                {{ getModule('bottomRight') }}
+              <DriveModule @contextmenu.prevent="showContextMenu" />
             </div>
           </div>
         </div>
@@ -152,7 +156,7 @@ import CalendarModule from '~/components/dashboard/calendarModule/calendarModule
 import NotificationDrawer from '~/components/dashboard/notificationDrawer/NotificationDrawer.vue';
 import { useRouter } from 'vue-router';
 import { Swiper, SwiperSlide } from 'swiper/vue';
-import * as moduleUtils from "~/utils/modulesUtils";
+import * as moduleUtils from '~/utils/modulesUtils';
 import type { ModuleData } from '~/types/ModuleData';
 
 import 'swiper/css';
@@ -237,15 +241,10 @@ onMounted(() => {
   document.addEventListener('click', () => {
     contextMenu.value.show = false;
   });
-  
+
   layoutOrder.value = moduleUtils.getModuleFromUserStorePreference();
-  console.log(layoutOrder);
 });
 
-const getModule = (position:string) => {
-  const module = layoutOrder.value.find((item) => item.position === position);
-  return module ? module.module : null;
-};
 
 onUnmounted(() => {
   swapy.value?.destroy();

@@ -6,7 +6,7 @@ export function getModuleFromUserStorePreference() {
   const userStore = useUserStore($pinia);
 
   userStore.loadUserFromCookies();
-  const layoutOrder: ModuleData[] = [];
+  let layoutOrder: ModuleData[] = [];
   if (userStore.parameters?.modulesLayout) {
     userStore.parameters.modulesLayout.forEach((module, index) => {
       const position = index === 0 ? 'topLeft' : index === 1 ? 'topRight' : index === 2 ? 'bottomLeft' : 'bottomRight';
@@ -48,5 +48,20 @@ export function getModuleFromUserStorePreference() {
       }
     });
   }
-  return layoutOrder;
+  if (layoutOrder.length === 0) {
+    layoutOrder = [{
+      position: 'topLeft',
+        module: 'CalendarModule',
+    }, {
+      position: 'topRight',
+      module: 'MarkdownModule',
+    }, {
+      position: 'bottomLeft',
+      module: 'PasswordManagerModule',
+    }, {
+      position: 'bottomRight',
+      module: 'DriveModule',
+    }];
+  }
+  return layoutOrder 
 }

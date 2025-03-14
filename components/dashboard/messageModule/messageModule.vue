@@ -28,7 +28,7 @@
           @click="openClose"
         />
       </div>
-      <span class="text-lg font-bold w-full flex justify-center items-center">
+      <span class="text-lg textColorBlack font-bold w-full flex justify-center items-center">
         Chats
       </span>
       <div

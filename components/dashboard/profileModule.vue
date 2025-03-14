@@ -34,7 +34,7 @@
           class="flex items-center flex-col group"
         >
           <span
-            class="ml-2 text-gray-800 group-hover:scale-110 transition-transform duration-300 cursor-pointer"
+            class="ml-2 textColorBlack group-hover:scale-110 transition-transform duration-300 cursor-pointer"
           >
             {{ item }}
           </span>
@@ -100,7 +100,7 @@
               />
               <label
                 for="notifications"
-                class="inline-flex items-center justify-between w-full p-5 text-gray-900 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-500 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 dark:peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-900 hover:bg-gray-100 dark:text-white dark:bg-gray-600 dark:hover:bg-gray-500 bgColorWhite textColorBlack"
+                class="inline-flex globalRadius items-center justify-between w-full p-5 text-gray-900 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-500 hover:text-gray-900 hover:bg-gray-100 dark:text-white dark:bg-gray-600 dark:hover:bg-gray-500 bgColorWhite textColorBlack"
               >
                 <div class="block">
                   <div class="w-full text-lg font-semibold">notifications</div>
@@ -127,12 +127,40 @@
                 <div class="block">
                   <div class="w-full text-lg font-semibold">Theme</div>
                 </div>
-                <div class="flex justify-center items-center">
+                <div class="flex h-6 justify-center items-center">
                   <LightDarkModeSwitch v-model="$colorMode.preference" />
                 </div>
               </div>
             </li>
-
+            
+            <li>
+              <input
+                type="checkbox"
+                id="geolocation"
+                v-model="userStore.parameters.geolocationEnabled"
+                class="hidden peer"
+              />
+              <label
+                for="geolocation"
+                class="inline-flex globalRadius items-center justify-between w-full p-5 text-gray-900 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-500 hover:text-gray-900 hover:bg-gray-100 dark:text-white dark:bg-gray-600 dark:hover:bg-gray-500 bgColorWhite textColorBlack"
+              >
+                <div class="block">
+                  <div class="w-full text-lg font-semibold">Géolocalisation</div>
+                </div>
+                <div class="flex justify-center items-center">
+                  <label class="inline-flex globalRadius items-center mr-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      v-model="userStore.parameters.geolocationEnabled"
+                      class="sr-only peer"
+                    />
+                    <div
+                      class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:w-5 after:h-5 after:transition-all dark:border-gray-600 peer-checked:bg-[var(--color-primary)] dark:peer-checked:bg-[var(--color-primary)]"
+                    ></div>
+                  </label>
+                </div>
+              </label>
+            </li>
           </ul>
         </div>
       </div>
@@ -273,6 +301,16 @@ watch(
     useAuthFetch('settings/enable-disable-notifications', {
       method: 'POST',
       body: JSON.stringify({ notifications_enabled: newValue }),
+    });
+  },
+);
+
+watch(
+  () => userStore.parameters.geolocationEnabled,
+  newValue => {
+    useAuthFetch('settings/enable-disable-geolocation', {
+      method: 'POST',
+      body: JSON.stringify({ geolocation_enabled: newValue }),
     });
   },
 );

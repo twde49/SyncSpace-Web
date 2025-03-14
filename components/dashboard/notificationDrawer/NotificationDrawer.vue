@@ -10,7 +10,7 @@
 						class="textColorWhite hover:animate-bell cursor-pointer"
 				/>
 				<div
-						v-if="notifications.length > 0"
+						v-if="notifications && notifications.length > 0"
 						class="absolute bottom-0 right-0 w-3 h-3 bg-red-500 rounded-full"
 				></div>
 		</div>

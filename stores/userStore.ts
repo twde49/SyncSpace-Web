@@ -13,6 +13,7 @@ export const useUserStore = defineStore('user', {
       theme: '',
       modulesLayout: [] as string[],
       notificationsEnabled: true,
+      geolocationEnabled: true,
     },
   }),
   actions: {
@@ -26,6 +27,7 @@ export const useUserStore = defineStore('user', {
         theme: string;
         modulesLayout: string[];
         notificationsEnabled: boolean;
+        geolocationEnabled: boolean;
       };
     }) {
       this.firstName = data.firstName;
@@ -37,6 +39,7 @@ export const useUserStore = defineStore('user', {
         theme: data.parameters.theme,
         modulesLayout: data.parameters.modulesLayout,
         notificationsEnabled: data.parameters.notificationsEnabled,
+        geolocationEnabled: data.parameters.geolocationEnabled,
       };
       
       const cookies = new Cookies();
