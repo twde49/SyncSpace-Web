@@ -230,14 +230,14 @@ watch(
 <style scoped>
 .markdownEditor {
   width: 100%;
-  height: 75%;
+  height: 85%;
   border-radius: 5px;
   background-color: var(--color-white);
 }
 
 .showModal {
   width: 100%;
-  height: 25%;
+  height: 15%;
   padding: 5px;
   background-color: var(--color-black);
   border: 2px solid var(--color-white);
@@ -249,5 +249,16 @@ watch(
   height: 80%;
   color: var(--color-white);
   border-radius: 5px;
+}
+
+
+@media (min-width: 768px) {
+  .markdownEditor{
+      height: 75%;
+  }  
+  
+  .showModal {
+    height: 25%;
+  }
 }
 </style>

@@ -17,11 +17,10 @@
           <div
             data-swapy-slot="topLeft"
             class="mobile-module"
-            @contextmenu.prevent="showContextMenu"
           >
             <div data-swapy-item="topLeft">
               <div class="module topLeftModule">
-                <CalendarModule />
+                <CalendarModule @contextmenu.prevent="showContextMenu" />
               </div>
             </div>
           </div>
@@ -31,7 +30,6 @@
           <div
             data-swapy-slot="topRight"
             class="mobile-module"
-            @contextmenu.prevent="showContextMenu"
           >
             <div data-swapy-item="topRight">
               <div class="module topRightModule">
@@ -50,11 +48,11 @@
           <div
             data-swapy-slot="bottomLeft"
             class="mobile-module"
-            @contextmenu.prevent="showContextMenu"
           >
             <div data-swapy-item="bottomLeft">
               <div class="module bottomLeftModule">
                 <PasswordManager
+                  @contextmenu.prevent="showContextMenu"
                   @open-password-center="handlePasswordCenterOpening"
                 />
               </div>
@@ -66,11 +64,10 @@
           <div
             data-swapy-slot="bottomRight"
             class="mobile-module"
-            @contextmenu.prevent="showContextMenu"
           >
             <div data-swapy-item="bottomRight">
               <div class="module bottomRightModule">
-                <DriveModule />
+                <DriveModule @contextmenu.prevent="showContextMenu" />
               </div>
             </div>
           </div>
@@ -146,9 +143,9 @@
     class="custom-context-menu"
     :style="{ top: contextMenu.y + 'px', left: contextMenu.x + 'px' }"
   >
-    <div class="context-menu-item" @click="handleRefresh">Refresh</div>
-    <div class="context-menu-item" @click="handleEdit">Edit</div>
-    <div class="context-menu-item" @click="handleSwapModules">Swap Modules</div>
+    <div class="context-menu-item" @click="''">Refresh</div>
+    <div class="context-menu-item" @click="''">Edit</div>
+    <div class="context-menu-item" @click="''">Swap Modules</div>
     <div class="context-menu-item" @click="handleSettings">Settings</div>
   </div>
 </template>
@@ -171,7 +168,6 @@ import NotificationDrawer from '~/components/dashboard/notificationDrawer/Notifi
 import { useRouter } from 'vue-router';
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import 'swiper/css';
-import 'swiper/css/pagination';
 
 const { $toast } = useNuxtApp();
 let noteId: number;
@@ -281,7 +277,7 @@ onUnmounted(() => {
 .module-slider {
   width: 100%;
   padding: 20px 0;
-  margin-top: 30vh;
+  margin-top: 15vh;
 }
 
 .mobile-module {
@@ -291,8 +287,8 @@ onUnmounted(() => {
 }
 
 .module {
-  width: 85vw;
-  height: 35vh;
+  width: 95vw;
+  height: 70vh;
   background-color: var(--color-white);
   border-radius: 5px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -303,7 +299,7 @@ onUnmounted(() => {
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 1fr 1fr;
-  gap: 50px;
+  gap: 30px;
 }
 
 .centered {
@@ -344,7 +340,7 @@ onUnmounted(() => {
 
   .module {
     width: 40vw;
-    height: 30vh;
+    height: 32vh;
   }
 }
 </style>

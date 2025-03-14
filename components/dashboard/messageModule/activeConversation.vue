@@ -345,13 +345,16 @@ watch(webSocketData.value, async data => {
       if (typeof data.newMessage === 'string') {
         try {
           const parsedMessage = JSON.parse(data.newMessage) as Message;
-          reactiveConversation.messages.push(parsedMessage);
+          if (reactiveConversation.messages !== undefined && reactiveConversation.messages !== null) {
+            reactiveConversation.messages.push(parsedMessage);
+          }
         } catch (error) {
           console.error('Failed to parse message:', error);
         }
       } else {
-        reactiveConversation.messages.push(data.newMessage);
-        console.log(data);
+        if (reactiveConversation.messages !== undefined && reactiveConversation.messages !== null) {
+          reactiveConversation.messages.push(data.newMessage);
+        }
       }
     }
   }

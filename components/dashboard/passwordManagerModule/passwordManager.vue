@@ -1,6 +1,6 @@
 <template>
-  <div class="flex flex-col p-5 rounded max-w-[600px] mx-auto">
-    <div class="flex justify-between mb-6">
+  <div class="flex flex-col p-5 rounded h-full mx-auto">
+    <div class="flex justify-between mb-6 h-3/4">
       <div class="flex flex-col gap-4 w-1/2">
         <div
           class="flex justify-between items-center p-2.5 border border-solid border-[var(--color-black)] rounded h-1/2"
@@ -47,7 +47,7 @@
       </div>
     </div>
 
-    <div class="flex flex-col w-full gap-2.5 items-center justify-around">
+    <div class="flex flex-col w-full h-2/5 gap-2.5 items-center justify-around">
       <div class="flex flex-row w-full justify-between">
         <button
           class="bg-[#f47c60] text-white border-none rounded py-2.5 px-4 cursor-pointer text-sm w-4/5"
@@ -64,7 +64,7 @@
           </button>
           <div
             v-if="showOptionsMenu"
-            class="absolute bottom-full right-0 bg-[var(--color-black)] rounded-lg p-4 w-[350px] shadow-lg z-10 flex flex-col mb-2 border border-solid border-white/20 backdrop-blur transition-all text-[var(--color-white)]"
+            class="optionMenu absolute bottom-full right-0 bg-[var(--color-black)] rounded-lg p-4 w-[350px] shadow-lg z-10 flex flex-col mb-2 border border-solid border-white/20 backdrop-blur transition-all text-[var(--color-white)]"
           >
             <div class="grid grid-cols-2 gap-2.5 mb-2.5">
               <label class="flex items-center gap-1">
@@ -98,22 +98,6 @@
                   class="appearance-none border-none rounded w-[30px] h-[30px] bg-[#e0e0e0] cursor-pointer outline-none hover:bg-[#ffc299] checked:bg-[var(--color-primary)] checked:hover:bg-[var(--color-primary)]"
                 />
                 Symbols
-              </label>
-              <label class="flex items-center gap-1">
-                <input
-                  type="checkbox"
-                  v-model="options.easyToRead"
-                  class="appearance-none border-none rounded w-[30px] h-[30px] bg-[#e0e0e0] cursor-pointer outline-none hover:bg-[#ffc299] checked:bg-[var(--color-primary)] checked:hover:bg-[var(--color-primary)]"
-                />
-                Easy to Read
-              </label>
-              <label class="flex items-center gap-1">
-                <input
-                  type="checkbox"
-                  v-model="options.easyToSay"
-                  class="appearance-none border-none rounded w-[30px] h-[30px] bg-[#e0e0e0] cursor-pointer outline-none hover:bg-[#ffc299] checked:bg-[var(--color-primary)] checked:hover:bg-[var(--color-primary)]"
-                />
-                Easy to Say
               </label>
             </div>
             <div>
@@ -157,9 +141,7 @@ const options = ref({
   uppercase: true,
   lowercase: true,
   numbers: true,
-  symbols: false,
-  easyToRead: false,
-  easyToSay: false,
+  symbols: false
 });
 
 const openPasswordCenter = () => {
@@ -207,5 +189,15 @@ onMounted(async () => {
 
 .option-checkbox:hover:checked {
   background-color: var(--color-primary);
+}
+
+.optionMenu {
+    width: 85vw;
+}
+
+@media (min-width: 768px) {
+  .optionMenu{
+      width: 350px;
+  }  
 }
 </style>

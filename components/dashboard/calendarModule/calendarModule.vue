@@ -152,7 +152,7 @@
             </button>
           </div>
         </div>
-        <div class="p-4">
+        <div class="p-4 modalSize">
           <div class="flex flex-col gap-2.5">
             <div
               v-for="hour in 24"
@@ -289,7 +289,7 @@
             &times;
           </button>
         </div>
-        <div class="p-4">
+        <div class="p-4 modalSize">
           <form @submit.prevent="saveEvent" class="text-[var(--color-black)]">
             <div class="mb-4">
               <label for="event-title" class="block mb-1.5 font-bold">
@@ -913,3 +913,11 @@ onMounted(async () => {
 	});
 });
 </script>
+
+<style scoped>
+@media (max: 768px) {
+  .drawer {
+      width: 50vh;
+  }
+}
+</style>

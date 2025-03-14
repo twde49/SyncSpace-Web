@@ -17,7 +17,7 @@
     class="expanded-container shadow w-max z-20 bgColorLight flex justify-start items-start fixed left-[30px] top-[31px] h-[80vh] transition-all"
     ref="expandedContainer"
   >
-    <div class="relative h-full flex flex-col w-1/5 min-w-[224px]">
+    <div class="relative h-full flex flex-col w-1/5 drawer">
       <div
         class="h-max w-max bgColorLight topComponentSize flex justify-center items-center cursor-pointer fixed-icon"
       >
@@ -397,6 +397,10 @@ const createConversation = async () => {
 				name: conversationName.value,
 			},
 		});
+		
+		if (response.status.value === 'error'){
+		  $toast.error("Cette conversation existe déjà")
+		}
 
 		if (
 			response.data.value &&
@@ -542,5 +546,15 @@ onMounted(() => {
 .conversationSlider::-webkit-scrollbar-thumb {
   background-color: rgba(0, 0, 0, 0.3);
   border-radius: 3px;
+}
+
+.drawer{
+    width: 150px;
+}
+
+@media (min-width: 768px) {
+    .drawer {
+        width: 224px;
+    } 
 }
 </style>

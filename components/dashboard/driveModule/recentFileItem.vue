@@ -1,9 +1,9 @@
 <template>
-  <div class="allItems flex flex-col mx-4">
+  <div class="allItems h-full flex flex-col mx-4">
     <div class="recentFiles h-full w-full">
       <div
         v-if="files.length > 0"
-        class="filesContainer overflow-y-auto scroll-behavior: smooth;"
+        class="filesContainer h-full overflow-y-auto scroll-behavior: smooth;"
         ref="fileListRef"
       >
         <div v-for="file in files" :key="file.id">
@@ -77,7 +77,7 @@
               <div
                 v-if="activeMenu === String(file.id)"
                 class="actionMenu absolute right-0 w-48 bg-white rounded-md shadow-lg z-50"
-                style="top: 0; right: 30px"
+                :style="[isLastFile(file) ? { bottom: '0', right: '30px' } : { top: '0', right: '30px' }]"
               >
                 <div class="py-1">
                   <button
@@ -404,6 +404,13 @@ const getFileSize = (size: number) => {
 	return `${bytes.toFixed(2)} ${units[i]}`;
 };
 
+const isLastFile = (file: File) => {
+    if (files.length > 2){
+      return files[files.length - 1].id === file.id || files[files.length - 2].id === file.id;
+    }
+    return false;
+};
+
 const isImage = (file: File) => {
 	if (!file) return false;
 	const imageExtensions = [
@@ -497,7 +504,13 @@ const isImage = (file: File) => {
 
 .modal-container {
   transition: all 0.3s ease;
-  max-height: 90vh;
+  max-height: 65vh;
   overflow-y: auto;
+}
+
+@media (min-width: 768px) {
+    .modal-container {
+        max-height: 90vh;
+    } 
 }
 </style>
