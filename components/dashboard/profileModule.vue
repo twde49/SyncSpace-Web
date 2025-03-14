@@ -223,7 +223,7 @@ onUpdated(() => {
 }
 
 .drawer {
-  width: 40vw;
+  width: 70vw;
   height: 100vh;
   background-color: var(--color-white);
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
@@ -305,5 +305,11 @@ onUpdated(() => {
 
 .logout-btn:hover {
   background-color: #ff5722;
+}
+
+@media (min-width: 768px) {
+  .drawer {
+      width: 40vw;
+  }  
 }
 </style>

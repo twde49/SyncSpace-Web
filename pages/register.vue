@@ -2,46 +2,54 @@
   <div>
     <Navbar />
     <div class="registration-container mt-8">
-      <form class="registration-form" @submit.prevent="registerUser">
+      <Form
+        class="registration-form"
+        :validation-schema="schema"
+        @submit="registerUser"
+      >
         <h2 class="megaFont textColorWhite">Inscrivez-vous à SyncSpace</h2>
         <p class="normalFont textColorWhite mt-1">
           Déjà un compte?
           <a href="/login" class="textColorTritary">Connectez-vous</a>
         </p>
         <div class="mb-3 mt-12 flex flex-row justify-between">
-          <input
-            v-model="firstName"
+          <Field
+            name="firstName"
             type="text"
             placeholder="Prénom"
             class="form-input max-w textColorBlack"
           />
-          <input
-            v-model="lastName"
+          <Field
+            name="lastName"
             type="text"
             placeholder="Nom"
             class="form-input max-w"
           />
         </div>
+        <ErrorMessage class="textColorCategoryQuaternary" name="firstName" />
+        <ErrorMessage class="textColorCategoryQuaternary" name="lastName" />
         <div class="form-group mb-3">
-          <input
-            v-model="email"
+          <Field
+            name="email"
             type="email"
             placeholder="Email"
             class="form-input textColorBlack"
           />
+          <ErrorMessage class="textColorCategoryQuaternary" name="email" />
         </div>
         <div class="form-group mb-3">
-          <input
-            v-model="password"
+          <Field
+            name="password"
             type="password"
             placeholder="Mot de passe"
             class="form-input textColorBlack"
           />
+          <ErrorMessage class="textColorCategoryQuaternary" name="password" />
         </div>
         <div class="form-group terms mb-6">
-          <input
+          <Field
+            name="acceptTerms"
             type="checkbox"
-            v-model="acceptTerms"
             id="terms"
             class="checkboxStyle"
           />
@@ -49,11 +57,7 @@
             J’accepte les termes et les conditions d’utilisation de SyncSpace.
           </label>
         </div>
-        <button
-          :disabled="checkCompletedForm()"
-          type="submit"
-          class="create-account-btn w-full"
-        >
+        <button type="submit" class="create-account-btn w-full">
           Créer Compte
         </button>
         <div class="divider textColorWhite">Ou</div>
@@ -78,62 +82,66 @@
             <span>Apple</span>
           </button>
         </div>
-      </form>
+      </Form>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import Navbar from "~/components/notLogged/Navbar.vue";
-import { useRouter } from "vue-router";
-import { ref } from "vue";
-import { useRuntimeConfig } from "#app";
-import "vue3-toastify/dist/index.css";
-const acceptTerms = ref(false);
-const firstName = ref("");
-const lastName = ref("");
-const email = ref("");
-const password = ref("");
+import Navbar from '~/components/notLogged/Navbar.vue';
+import { useRouter } from 'vue-router';
+import { useRuntimeConfig } from '#app';
+import { Form, Field, ErrorMessage } from 'vee-validate';
+import * as yup from 'yup';
+import 'vue3-toastify/dist/index.css';
+
 const route = useRouter();
 const config = useRuntimeConfig();
-
 const { $toast } = useNuxtApp();
 
-const checkCompletedForm = () => {
-	return (
-		acceptTerms.value === false ||
-		firstName.value === "" ||
-		lastName.value === "" ||
-		email.value === "" ||
-		password.value === ""
-	);
-};
+const schema = yup.object({
+  firstName: yup.string().required('Prénom requis'),
+  lastName: yup.string().required('Nom requis'),
+  email: yup.string().email('Email invalide').required('Email requis'),
+  password: yup.string()
+      .min(8, 'Le mot de passe doit contenir au moins 8 caractères')
+      .matches(/[a-z]/, 'Le mot de passe doit contenir au moins une lettre minuscule')
+      .matches(/[A-Z]/, 'Le mot de passe doit contenir au moins une lettre majuscule')
+      .matches(/[0-9]/, 'Le mot de passe doit contenir au moins un chiffre')
+      .matches(/[\W_]/, 'Le mot de passe doit contenir au moins un caractère spécial')
+      .required('Mot de passe requis'),
+  acceptTerms: yup.boolean().oneOf([true], 'Vous devez accepter les termes'),
+});
 
-const registerUser = async () => {
-	try {
-		if (!checkCompletedForm()) {
-			const response = await fetch(`${config.public.apiUrl}register`, {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify({
-					firstName: firstName.value,
-					lastName: lastName.value,
-					email: email.value,
-					password: password.value,
-				}),
-			});
+const registerUser = async (values: {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  acceptTerms: boolean;
+}) => {
+  try {
+    const response = await fetch(`${config.public.apiUrl}register`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        firstName: values.firstName,
+        lastName: values.lastName,
+        email: values.email,
+        password: values.password,
+      }),
+    });
 
-			if (!response.ok) {
-				throw new Error(`Error: ${response.status} ${response.statusText}`);
-			}
-			route.push("/login");
-		}
-	} catch (error) {
-	    $toast.error("Une erreur est survenue lors de la création du compte");
-		console.error(error);
-	}
+    if (!response.ok) {
+      throw new Error(`Error: ${response.status} ${response.statusText}`);
+    }
+    route.push('/login');
+  } catch (error) {
+    $toast.error('Une erreur est survenue lors de la création du compte');
+    console.error(error);
+  }
 };
 </script>
 
@@ -267,4 +275,9 @@ const registerUser = async () => {
   color: #555;
   font-weight: 500;
 }
+
+ErrorMessage {
+  color: var(--color-quaternary);
+}
+
 </style>
