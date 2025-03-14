@@ -59,7 +59,7 @@
           >
             <div data-swapy-item="bottomRight">
               <div class="module bottomRightModule">
-                {{ getModule('bottomRight') }}
+                    {{ getModule('topRight') }}
               </div>
             </div>
           </div>
@@ -76,7 +76,7 @@
         >
           <div data-swapy-item="topLeft">
             <div class="module topLeftModule">
-                {{ getModule('topLeft') }}
+              <CalendarModule />
             </div>
           </div>
         </div>
@@ -87,7 +87,12 @@
         >
           <div data-swapy-item="topRight">
             <div class="module topRightModule">
-                {{ getModule('topRight') }}
+              <EditorMarkdown
+                :note-id="noteId"
+                :title-note="noteTitle"
+                :content-note="noteContent"
+                @open-markdown-center="handleMarkdownCenterOpening"
+              />
             </div>
           </div>
         </div>
@@ -98,14 +103,16 @@
         >
           <div data-swapy-item="bottomLeft">
             <div class="module bottomLeftModule">
-                {{ getModule('bottomLeft') }}
+              <PasswordManager
+                @open-password-center="handlePasswordCenterOpening"
+              />
             </div>
           </div>
         </div>
         <div data-swapy-slot="bottomRight" class="centered">
           <div data-swapy-item="bottomRight">
             <div class="module bottomRightModule">
-                {{ getModule('bottomRight') }}
+              <DriveModule />
             </div>
           </div>
         </div>
