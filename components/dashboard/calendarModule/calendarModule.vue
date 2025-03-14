@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full px-4 h-[90%]">
+  <div class="w-full px-4 h-full">
     <div class="flex justify-between items-center text-lg mb-8">
       <div
         class="relative flex justify-center items-center megaFont textColorSecondary"

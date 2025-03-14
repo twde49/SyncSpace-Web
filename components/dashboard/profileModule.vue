@@ -3,9 +3,10 @@
     id="profileMenuClosed"
     class="h-max w-max bgColorLight topComponentSize flex justify-center items-center cursor-pointer marged-right"
     v-if="closed"
+    @click="openClose"
     ref="closedButton"
   >
-    <span @click="openClose" class="profile-name">{{ initialUser }}</span>
+    <span class="profile-name">{{ initialUser }}</span>
   </div>
   <div
     v-else
@@ -137,12 +138,12 @@ const logout = () => {
 
 watch(closed, (value) => {
 	if (value === true) {
-		// applyDraggable();
+		applyDraggable();
 	}
 });
 
 onMounted(() => {
-	// applyDraggable();
+	applyDraggable();
 	userStore.loadUserFromCookies();
 	componentMounted.value = true;
 	connect();
@@ -163,7 +164,7 @@ watch(webSocketData.value, async (newData) => {
 
 onUpdated(() => {
 	if (closed.value) {
-		// applyDraggable();
+		applyDraggable();
 	}
 });
 </script>
@@ -223,7 +224,7 @@ onUpdated(() => {
 
 .drawer {
   width: 70vw;
-  height: 90vh;
+  height: 100vh;
   background-color: var(--color-white);
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
   display: flex;
@@ -309,7 +310,6 @@ onUpdated(() => {
 @media (min-width: 768px) {
   .drawer {
       width: 40vw;
-      height: 100vh;
   }  
 }
 </style>

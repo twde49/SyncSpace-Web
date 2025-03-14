@@ -288,7 +288,7 @@ onUnmounted(() => {
 
 .module {
   width: 95vw;
-  height: 65vh;
+  height: 70vh;
   background-color: var(--color-white);
   border-radius: 5px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
