@@ -124,6 +124,11 @@ const loginUser = async () => {
 			email: data.user.userEmail,
 			token: data.token,
 			masterPasswordSet: data.user.masterPasswordSet,
+			parameters: {
+				theme: data.user.parameters.theme,
+				modulesLayout: data.user.parameters.modulesLayout,
+				notificationsEnabled: data.user.parameters.notificationsEnabled
+			}
 		});
 		route.push("/dashboard");
 	} catch (error) {

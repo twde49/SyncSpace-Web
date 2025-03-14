@@ -14,7 +14,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, watch } from "vue";
+import { useUserStore } from "~/stores/userStore";
+import useAuthFetch from "~/composables/useAuthFetch";
+
+const userStore = useUserStore();
 
 const { $colorMode } = useNuxtApp();
 
@@ -28,6 +32,15 @@ const toggleMode = () => {
 		$colorMode.preference = "dark";
 	}
 };
+
+watch(() => $colorMode.preference, (newValue) => {
+  if(userStore.currentUser() !== null){
+    useAuthFetch('settings/update-theme-preference', {
+      method: 'POST',
+      body: JSON.stringify({ theme: newValue })
+    });
+  }
+});
 </script>
 
 <style scoped>

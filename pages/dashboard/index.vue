@@ -20,7 +20,7 @@
           >
             <div data-swapy-item="topLeft">
               <div class="module topLeftModule">
-                <CalendarModule @contextmenu.prevent="showContextMenu" />
+                {{ getModule('topLeft') }}
               </div>
             </div>
           </div>
@@ -33,12 +33,7 @@
           >
             <div data-swapy-item="topRight">
               <div class="module topRightModule">
-                <EditorMarkdown
-                  :note-id="noteId"
-                  :title-note="noteTitle"
-                  :content-note="noteContent"
-                  @open-markdown-center="handleMarkdownCenterOpening"
-                />
+                {{ getModule('topRight') }}
               </div>
             </div>
           </div>
@@ -51,10 +46,7 @@
           >
             <div data-swapy-item="bottomLeft">
               <div class="module bottomLeftModule">
-                <PasswordManager
-                  @contextmenu.prevent="showContextMenu"
-                  @open-password-center="handlePasswordCenterOpening"
-                />
+                {{ getModule('bottomLeft') }}
               </div>
             </div>
           </div>
@@ -67,7 +59,7 @@
           >
             <div data-swapy-item="bottomRight">
               <div class="module bottomRightModule">
-                <DriveModule @contextmenu.prevent="showContextMenu" />
+                {{ getModule('bottomRight') }}
               </div>
             </div>
           </div>
@@ -84,7 +76,7 @@
         >
           <div data-swapy-item="topLeft">
             <div class="module topLeftModule">
-              <CalendarModule />
+                {{ getModule('topLeft') }}
             </div>
           </div>
         </div>
@@ -95,12 +87,7 @@
         >
           <div data-swapy-item="topRight">
             <div class="module topRightModule">
-              <EditorMarkdown
-                :note-id="noteId"
-                :title-note="noteTitle"
-                :content-note="noteContent"
-                @open-markdown-center="handleMarkdownCenterOpening"
-              />
+                {{ getModule('topRight') }}
             </div>
           </div>
         </div>
@@ -111,16 +98,14 @@
         >
           <div data-swapy-item="bottomLeft">
             <div class="module bottomLeftModule">
-              <PasswordManager
-                @open-password-center="handlePasswordCenterOpening"
-              />
+                {{ getModule('bottomLeft') }}
             </div>
           </div>
         </div>
         <div data-swapy-slot="bottomRight" class="centered">
           <div data-swapy-item="bottomRight">
             <div class="module bottomRightModule">
-              <DriveModule />
+                {{ getModule('bottomRight') }}
             </div>
           </div>
         </div>
@@ -167,15 +152,17 @@ import CalendarModule from '~/components/dashboard/calendarModule/calendarModule
 import NotificationDrawer from '~/components/dashboard/notificationDrawer/NotificationDrawer.vue';
 import { useRouter } from 'vue-router';
 import { Swiper, SwiperSlide } from 'swiper/vue';
-import 'swiper/css';
+import * as moduleUtils from "~/utils/modulesUtils";
+import type { ModuleData } from '~/types/ModuleData';
 
+import 'swiper/css';
 const { $toast } = useNuxtApp();
 let noteId: number;
 let noteTitle = '';
 let noteContent = '';
 
 const router = useRouter();
-
+const layoutOrder = ref<ModuleData[]>([]);
 const swapy = ref<Swapy | null>(null);
 const moduleZone = ref<HTMLElement | null>(null);
 
@@ -250,7 +237,15 @@ onMounted(() => {
   document.addEventListener('click', () => {
     contextMenu.value.show = false;
   });
+  
+  layoutOrder.value = moduleUtils.getModuleFromUserStorePreference();
+  console.log(layoutOrder);
 });
+
+const getModule = (position:string) => {
+  const module = layoutOrder.value.find((item) => item.position === position);
+  return module ? module.module : null;
+};
 
 onUnmounted(() => {
   swapy.value?.destroy();
