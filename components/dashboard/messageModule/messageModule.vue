@@ -78,7 +78,7 @@
     </div>
     <div
       v-if="activeConversation"
-      class="flex-1 h-[98%] w-[50vw] bg-[var(--color-black)] text-white rounded m-2 flex flex-col"
+      class="flex-1 h-[98%] w-[50vw] bg-[var(--color-black)] textColorWhite rounded m-2 flex flex-col"
     >
       <ActiveConversation
         :conversation="activeConversation"
@@ -98,9 +98,9 @@
       <div
         class="p-4 flex justify-between items-center border-b border-gray-200"
       >
-        <h3 class="m-0 text-xl">Créer une conversation</h3>
+        <h3 class="m-0 text-xl textColorBlack">Créer une conversation</h3>
         <button
-          class="bg-transparent border-0 cursor-pointer text-gray-500"
+          class="bg-transparent border-0 cursor-pointer textColorBlack"
           @click="closeNewConvModal"
         >
           <Icon name="mdi:close" size="1.5em" />
@@ -116,7 +116,7 @@
         />
         <label
           for="convName"
-          class="absolute left-5 top-4 text-gray-500 text-sm transition-all duration-300 peer-focus:text-xs peer-focus:top-0 peer-focus:text-blue-500 peer-placeholder-shown:top-4 peer-placeholder-shown:text-base peer-not-placeholder-shown:text-xs peer-not-placeholder-shown:top-0"
+          class="absolute left-5 top-4 textColorBlack text-sm transition-all duration-300 peer-focus:text-xs peer-focus:top-0 peer-focus:text-blue-500 peer-placeholder-shown:top-4 peer-placeholder-shown:text-base peer-not-placeholder-shown:text-xs peer-not-placeholder-shown:top-0"
         >
           Nom de la conversation
         </label>
@@ -159,12 +159,12 @@
           Pas d'utilisateurs trouvés
         </div>
         <div class="mt-5" v-if="selectedUsers.length > 0">
-          <h4 class="mt-0 mb-2.5">Utilisateurs sélectionnés</h4>
+          <h4 class="mt-0 mb-2.5 textColorBlack">Utilisateurs sélectionnés</h4>
           <div class="flex flex-wrap gap-2">
             <div
               v-for="user in selectedUsers"
               :key="user.id"
-              class="flex items-center bg-[var(--color-primary)] px-2.5 py-1.5 rounded-full text-sm"
+              class="flex items-center textColorBlack bg-[var(--color-primary)] px-2.5 py-1.5 rounded-full text-sm"
             >
               <span>{{ user.email }}</span>
               <button
@@ -186,7 +186,8 @@
         </button>
         <button
           @click="createConversation"
-          class="px-4 py-2 border-0 bg-[var(--color-black)] text-white rounded cursor-pointer disabled:bg-gray-300 disabled:cursor-not-allowed"
+          :class="selectedUsers.length === 0 ? 'bg-gray-300' : 'bgColorPrimary'"
+          class="px-4 py-2 border-0 textColorBlack rounded cursor-pointer disabled:bg-gray-300 disabled:cursor-not-allowed"
           :disabled="selectedUsers.length === 0"
         >
           Créer une conversation
@@ -227,7 +228,7 @@
           Annuler
         </button>
         <button
-          class="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg cursor-pointer"
+          class="bg-red-500 hover:bg-red-600 textColorWhite font-semibold py-2 px-4 rounded-lg cursor-pointer"
           @click="removeConversation"
         >
           Supprimer
@@ -483,8 +484,26 @@ const cancelDelete = () => {
 	conversationToDelete.value = null;
 };
 
-watch(closed, (value) => {
-	return value ? applyDraggable() : () => {};
+const handleClickOutside = (event: MouseEvent) => {
+  if (
+    expandedContainer.value &&
+    !expandedContainer.value.contains(event.target as Node)
+  ) {
+    if (!closed.value) {
+      openClose();
+    }
+  }
+};
+
+watch(closed, (isClosed) => {
+  if (isClosed) {
+    applyDraggable();
+    document.removeEventListener("click", handleClickOutside);
+  } else {
+    setTimeout(() => {
+      document.addEventListener("click", handleClickOutside);
+    }, 0);
+  }
 });
 
 onMounted(async () => {
@@ -507,16 +526,7 @@ onUpdated(() => {
 	}
 });
 
-onMounted(() => {
-	document.addEventListener("click", (event) => {
-		if (
-			activeMenu.value &&
-			!(event.target as Element)?.closest?.(".message-container")
-		) {
-			activeMenu.value = null;
-		}
-	});
-});
+
 </script>
 
 <style scoped>

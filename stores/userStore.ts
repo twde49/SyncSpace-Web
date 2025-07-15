@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import Cookies from 'universal-cookie';
+import type { Track } from '~/types/Track';
 
 export const useUserStore = defineStore('user', {
   state: () => ({
@@ -8,6 +9,7 @@ export const useUserStore = defineStore('user', {
     email: '',
     token: '',
     masterPasswordSet: false,
+    currentTrack: null as Track | null,
     socketId: '',
     parameters: {
       theme: '',
@@ -23,6 +25,7 @@ export const useUserStore = defineStore('user', {
       email: string;
       token: string;
       masterPasswordSet: boolean;
+      currentTrack: Track;
       parameters: {
         theme: string;
         modulesLayout: string[];
@@ -41,7 +44,8 @@ export const useUserStore = defineStore('user', {
         notificationsEnabled: data.parameters.notificationsEnabled,
         geolocationEnabled: data.parameters.geolocationEnabled,
       };
-      
+      this.currentTrack = data.currentTrack ?? null
+
       const cookies = new Cookies();
       cookies.set('user', JSON.stringify(data), {
         path: '/',
@@ -54,6 +58,10 @@ export const useUserStore = defineStore('user', {
     setSocketId(socketId: string) {
       this.socketId = socketId;
     },
+    setCurrentTrack(trackData: Track) {
+      this.currentTrack = trackData;
+    },
+    
     currentUser() {
       if (
         this.token === '' ||
@@ -72,6 +80,7 @@ export const useUserStore = defineStore('user', {
         theme: this.parameters.theme,
         modulesLayout: this.parameters.modulesLayout,
         notificationsEnabled: this.parameters.notificationsEnabled,
+        currentTrack: this.currentTrack,
       };
     },
     loadUserFromCookies() {
@@ -88,6 +97,7 @@ export const useUserStore = defineStore('user', {
           this.parameters.theme = userData.parameters.theme;
           this.parameters.modulesLayout = userData.parameters.modulesLayout;
           this.parameters.notificationsEnabled = userData.parameters.notificationsEnabled;
+          this.currentTrack = userData.currentTrack || null;
         } catch (e) {
           console.error('Failed to parse user data from cookies:', e);
         }
@@ -102,9 +112,11 @@ export const useUserStore = defineStore('user', {
       this.parameters.theme = '';
       this.parameters.modulesLayout = [];
       this.parameters.notificationsEnabled = false;
+      this.currentTrack = null;
 
       const cookies = new Cookies();
       cookies.remove('user', { path: '/' });
     },
+
   },
 });

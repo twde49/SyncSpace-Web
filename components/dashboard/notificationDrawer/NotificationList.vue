@@ -40,7 +40,7 @@
   </div>
   <div v-else class="flex flex-col gap-2 max-h-32 scrollable">
     <div>
-      <p class="text-gray-600 my-2">Pas de notifications</p>
+      <p class="textColorBlack my-2">Pas de notifications</p>
     </div>
   </div>
 </template>

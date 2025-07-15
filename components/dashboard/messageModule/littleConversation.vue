@@ -8,7 +8,7 @@
   >
     <div class="conversation-header">
       <div
-        class="w-max bgColorLight topComponentSize flex justify-center items-center"
+        class="w-max bgColorWhite topComponentSize flex justify-center items-center"
       >
         <span class="profile-name">{{ getLastActiveUserInitial() }}</span>
       </div>

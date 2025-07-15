@@ -11,7 +11,6 @@ export default defineNuxtPlugin(nuxtApp => {
     transition: 'slide',
   });
 
-  // Function to check if notifications are enabled
   const canShowToast = () => {
     const userStore = useUserStore();
     return userStore.parameters?.notificationsEnabled !== false;

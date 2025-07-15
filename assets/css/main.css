@@ -138,6 +138,10 @@ body {
 	color: var(--color-white) !important;
 }
 
+.textColorWhiteFull {
+	color: #f7f3ed;
+}
+
 .textColorBlack {
 	color: var(--color-black) !important;
 }

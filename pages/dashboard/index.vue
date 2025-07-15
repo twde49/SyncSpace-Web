@@ -9,9 +9,10 @@
       <Swiper
         :slides-per-view="1"
         :centered-slides="true"
-        direction="horizontal"
+        direction="vertical"
         loop
         grabCursor
+        @swiper="onSwiperInitialized"
       >
         <SwiperSlide>
           <div data-swapy-slot="topLeft" class="mobile-module">
@@ -55,7 +56,7 @@
           <div data-swapy-slot="bottomRight" class="mobile-module">
             <div data-swapy-item="bottomRight">
               <div class="module bottomRightModule">
-                <DriveModule @contextmenu.prevent="showContextMenu" />
+                <DriveModule />
               </div>
             </div>
           </div>
@@ -68,7 +69,6 @@
         <div
           data-swapy-slot="topLeft"
           class="centered"
-          @contextmenu.prevent="showContextMenu"
         >
           <div data-swapy-item="topLeft">
             <div class="module topLeftModule">
@@ -109,7 +109,7 @@
         <div data-swapy-slot="bottomRight" class="centered">
           <div data-swapy-item="bottomRight">
             <div class="module bottomRightModule">
-              <DriveModule @contextmenu.prevent="showContextMenu" />
+              <DriveModule />
             </div>
           </div>
         </div>
@@ -146,7 +146,7 @@ import { createSwapy } from 'swapy';
 import { onMounted, onUnmounted, ref } from 'vue';
 import MessageModule from '~/components/dashboard/messageModule/messageModule.vue';
 import ProfileModule from '~/components/dashboard/profileModule.vue';
-import MusicPlayerModule from '~/components/dashboard/music/musicPlayerModule.vue';
+import MusicPlayerModule from '~/components/dashboard/musicModule/MusicPlayerModule.vue';
 import EditorMarkdown from '~/components/dashboard/markdownModule/editorMarkdown.vue';
 import MarkdownCenter from '~/components/dashboard/markdownModule/markdownCenter.vue';
 import DriveModule from '~/components/dashboard/driveModule/driveModule.vue';
@@ -252,6 +252,13 @@ onUnmounted(() => {
     contextMenu.value.show = false;
   });
 });
+
+const swiperInstance = ref(null);
+
+const onSwiperInitialized = (swiper) => {
+  swiperInstance.value = swiper;
+  nextTick(() => swiper.update());
+};
 </script>
 
 <style scoped>
@@ -272,7 +279,9 @@ onUnmounted(() => {
   width: 100%;
   padding: 20px 0;
   margin-top: 15vh;
+  height: 70vh;
 }
+
 
 .mobile-module {
   display: flex;

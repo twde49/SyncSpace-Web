@@ -2,7 +2,7 @@
   <div
     class="header flex items-center justify-between border-b p-4 pb-2 mb-4 z-20"
   >
-    <h2 class="text-white miniFont font-bold">{{ getConversationName() }}</h2>
+    <h2 class="textColorWhite miniFont font-bold">{{ getConversationName() }}</h2>
   </div>
 
   <div
@@ -100,7 +100,7 @@
         <button
           @keyup.enter="submitEditMessage"
           @click="submitEditMessage"
-          class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+          class="px-4 py-2 bg-blue-600 textColorWhite rounded-md hover:bg-blue-700"
         >
           Sauvegarder
         </button>

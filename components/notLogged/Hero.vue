@@ -112,6 +112,7 @@ onMounted(() => {
   margin-left: auto;
   margin-right: auto;
   white-space: pre-wrap;
+  height: 20vh;
 }
 
 .subtitle {

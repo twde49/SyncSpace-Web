@@ -10,13 +10,13 @@
         <div
           class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600 border-gray-200"
         >
-          <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+          <h3 class="text-lg font-semibold text-gray-900 dark:textColorWhite">
             Saved Passwords
           </h3>
           <button
             @click="closeModal"
             type="button"
-            class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm h-8 w-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+            class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm h-8 w-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:textColorWhite"
             data-modal-toggle="password-modal"
           >
             <svg
@@ -82,7 +82,7 @@
               />
               <label
                 :for="String(password.id)"
-                class="inline-flex items-center justify-between w-full p-5 text-gray-900 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-500 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 dark:peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-900 hover:bg-gray-100 dark:text-white dark:bg-gray-600 dark:hover:bg-gray-500"
+                class="inline-flex items-center justify-between w-full p-5 text-gray-900 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-500 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 dark:peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-900 hover:bg-gray-100 dark:textColorWhite dark:bg-gray-600 dark:hover:bg-gray-500"
               >
                 <div class="block">
                   <div class="w-full text-lg font-semibold">
@@ -113,7 +113,7 @@
                 </button>
                 <button
                   @click="deletePassword(password.id)"
-                  class="bg-red-600 text-white rounded-lg px-4 py-2"
+                  class="bg-red-600 textColorWhite rounded-lg px-4 py-2"
                 >
                   Supprimer
                 </button>

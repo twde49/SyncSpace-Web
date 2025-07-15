@@ -10,13 +10,13 @@
         <div
           class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600 border-gray-200"
         >
-          <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+          <h3 class="text-lg font-semibold textColorBlack dark:textColorWhite">
             Ouvrir note
           </h3>
           <button
             @click="closeModal"
             type="button"
-            class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm h-8 w-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+            class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm h-8 w-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:textColorWhite"
             data-modal-toggle="select-modal"
           >
             <svg
@@ -51,10 +51,10 @@
               />
               <label
                 for="new-note"
-                class="inline-flex items-center justify-between w-full p-5 text-gray-900 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-500 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 dark:peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-900 hover:bg-gray-100 dark:text-white dark:bg-gray-600 dark:hover:bg-gray-500"
+                class="inline-flex items-center justify-between w-full p-5 text-gray-900 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-500 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 dark:peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-900 hover:bg-gray-100 dark:textColorWhite dark:bg-gray-600 dark:hover:bg-gray-500"
               >
                 <div class="block">
-                  <div class="w-full text-lg font-semibold">Nouvelle note</div>
+                  <div class="w-full text-lg textColorBlack font-semibold">Nouvelle note</div>
                 </div>
                 <div>
                   <Icon
@@ -66,7 +66,7 @@
               </label>
             </li>
             <hr class="my-4 border-gray-300 dark:border-gray-600" />
-            <li v-for="note in notes" :key="note.id">
+            <li v-if="notes.length !== 0" v-for="note in notes" :key="note.id">
               <input
                 type="radio"
                 :id="String(note.id)"
@@ -78,7 +78,7 @@
               />
               <label
                 :for="String(note.id)"
-                class="inline-flex items-center justify-between w-full p-5 text-gray-900 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-500 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 dark:peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-900 hover:bg-gray-100 dark:text-white dark:bg-gray-600 dark:hover:bg-gray-500"
+                class="inline-flex items-center justify-between w-full p-5 text-gray-900 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-500 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 dark:peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-900 hover:bg-gray-100 dark:textColorWhite dark:bg-gray-600 dark:hover:bg-gray-500"
               >
                 <div class="block">
                   <div
@@ -107,7 +107,7 @@
                     </button>
                     <button
                       @click.stop="deleteNote(note.id)"
-                      class="bg-red-600 text-white rounded-lg px-4 py-2"
+                      class="bg-red-600 textColorWhite rounded-lg px-4 py-2"
                     >
                       Supprimer
                     </button>
@@ -121,6 +121,13 @@
                   @click.stop="confirmDelete(note.id)"
                 />
               </label>
+            </li>
+            <li v-else>
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center">
+                    <span class="ml-2">Aucune note disponible</span>
+                  </div>
+                </div>
             </li>
           </ul>
           <button

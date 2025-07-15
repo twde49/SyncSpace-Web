@@ -42,7 +42,7 @@
               <li>
                 <a
                   href="#"
-                  class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                  class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:textColorWhite"
                 >
                   Lecteur de musique
                 </a>
@@ -50,7 +50,7 @@
               <li>
                 <a
                   href="#"
-                  class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                  class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:textColorWhite"
                 >
                   Éditeur Markdown
                 </a>
@@ -58,7 +58,7 @@
               <li>
                 <a
                   href="#"
-                  class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                  class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:textColorWhite"
                 >
                   Drive
                 </a>
@@ -66,7 +66,7 @@
               <li>
                 <a
                   href="#"
-                  class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                  class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:textColorWhite"
                 >
                   Calendrier
                 </a>
@@ -74,7 +74,7 @@
               <li>
                 <a
                   href="#"
-                  class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                  class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:textColorWhite"
                 >
                   Chat/Utilisateurs
                 </a>
@@ -82,7 +82,7 @@
               <li>
                 <a
                   href="#"
-                  class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                  class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:textColorWhite"
                 >
                   Gestionnaire de mot de passe
                 </a>

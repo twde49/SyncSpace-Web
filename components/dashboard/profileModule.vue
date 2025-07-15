@@ -63,13 +63,13 @@
         <div
           class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600 border-gray-200"
         >
-          <h3 class="text-lg font-semibold textColorWhite dark:text-white">
+          <h3 class="text-lg font-semibold textColorWhite dark:textColorWhite">
             Paramètres
           </h3>
           <button
             @click="closeParamModal"
             type="button"
-            class="text-gray-400 globalRadius bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm h-8 w-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+            class="text-gray-400 globalRadius bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm h-8 w-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:textColorWhite"
           >
             <svg
               class="w-3 h-3"
@@ -100,7 +100,7 @@
               />
               <label
                 for="notifications"
-                class="inline-flex globalRadius items-center justify-between w-full p-5 text-gray-900 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-500 hover:text-gray-900 hover:bg-gray-100 dark:text-white dark:bg-gray-600 dark:hover:bg-gray-500 bgColorWhite textColorBlack"
+                class="inline-flex globalRadius items-center justify-between w-full p-5 text-gray-900 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-500 hover:text-gray-900 hover:bg-gray-100 dark:textColorWhite dark:bg-gray-600 dark:hover:bg-gray-500 bgColorWhite textColorBlack"
               >
                 <div class="block">
                   <div class="w-full text-lg font-semibold">notifications</div>
@@ -122,7 +122,7 @@
 
             <li>
               <div
-                class="inline-flex globalRadius items-center justify-between w-full p-5 text-gray-900 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-500 hover:text-gray-900 hover:bg-gray-100 dark:text-white dark:bg-gray-600 dark:hover:bg-gray-500 bgColorWhite textColorBlack"
+                class="inline-flex globalRadius items-center justify-between w-full p-5 text-gray-900 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-500 hover:text-gray-900 hover:bg-gray-100 dark:textColorWhite dark:bg-gray-600 dark:hover:bg-gray-500 bgColorWhite textColorBlack"
               >
                 <div class="block">
                   <div class="w-full text-lg font-semibold">Theme</div>
@@ -142,7 +142,7 @@
               />
               <label
                 for="geolocation"
-                class="inline-flex globalRadius items-center justify-between w-full p-5 text-gray-900 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-500 hover:text-gray-900 hover:bg-gray-100 dark:text-white dark:bg-gray-600 dark:hover:bg-gray-500 bgColorWhite textColorBlack"
+                class="inline-flex globalRadius items-center justify-between w-full p-5 text-gray-900 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-500 hover:text-gray-900 hover:bg-gray-100 dark:textColorWhite dark:bg-gray-600 dark:hover:bg-gray-500 bgColorWhite textColorBlack"
               >
                 <div class="block">
                   <div class="w-full text-lg font-semibold">Géolocalisation</div>

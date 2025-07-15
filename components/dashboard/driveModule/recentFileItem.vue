@@ -8,13 +8,12 @@
       >
         <div v-for="file in files" :key="file.id">
           <div
-            @dblclick.prevent="previewFile(file)"
-            @contextmenu.prevent="showFileActions(file)"
+            @contextmenu.prevent="toggleMenu(String(file.id))"
             :class="
               file.isFolder ? 'bgColorPrimary cursor-pointer' : 'bgColorBlack'
             "
             class="fileItem globalRadius flex items-center p-2 my-2 rounded-lg w-full"
-            @click="openFolder(file)"
+            @click="file.isFolder ? openFolder(file) : previewFile(file)"
             :data-file-id="file.id"
           >
             <div class="fileIcon mr-4">
@@ -152,7 +151,7 @@
             Annuler
           </button>
           <button
-            class="bgColorCategoryQuaternary removeButton text-white font-semibold py-2 px-4 rounded-lg"
+            class="bgColorCategoryQuaternary removeButton textColorWhite font-semibold py-2 px-4 rounded-lg"
             @click="confirmDelete"
           >
             Supprimer
@@ -249,10 +248,6 @@ const toggleMenu = (fileId: string) => {
 			}
 		});
 	}
-};
-
-const showFileActions = (file: File) => {
-	toggleMenu(String(file.id));
 };
 
 const closeMenuOnOutsideClick = (event: MouseEvent) => {

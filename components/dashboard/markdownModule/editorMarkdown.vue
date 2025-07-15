@@ -32,12 +32,12 @@
       <div
         class="flex items-center justify-between border-b pb-4 dark:border-gray-600"
       >
-        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+        <h3 class="text-lg font-semibold text-gray-900 dark:textColorWhite">
           Sauvegarder fichier markdown?
         </h3>
         <button
           @click="closeModal"
-          class="text-gray-400 hover:bg-gray-200 hover:text-gray-900 p-2 rounded-full dark:hover:bg-gray-600 dark:hover:text-white"
+          class="text-gray-400 hover:bg-gray-200 hover:text-gray-900 p-2 rounded-full dark:hover:bg-gray-600 dark:hover:textColorWhite"
         >
           <svg
             class="w-4 h-4"
@@ -62,7 +62,7 @@
         <div>
           <label
             for="title"
-            class="block text-sm font-medium text-gray-700 dark:text-white"
+            class="block text-sm font-medium text-gray-700 dark:textColorWhite"
           >
             Nom du fichier
           </label>
@@ -71,7 +71,7 @@
             id="title"
             v-model="title"
             required
-            class="w-full p-2 text-sm border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+            class="w-full p-2 text-sm border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:textColorWhite"
           />
         </div>
 
@@ -79,13 +79,13 @@
           <button
             @click="closeModal"
             type="button"
-            class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 focus:ring-4 focus:ring-gray-300 dark:bg-gray-600 dark:text-white dark:hover:bg-gray-500 dark:focus:ring-gray-500"
+            class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 focus:ring-4 focus:ring-gray-300 dark:bg-gray-600 dark:textColorWhite dark:hover:bg-gray-500 dark:focus:ring-gray-500"
           >
             Annuler
           </button>
           <button
             type="submit"
-            class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 dark:bg-blue-500 dark:hover:bg-blue-600 dark:focus:ring-blue-600"
+            class="px-4 py-2 text-sm font-medium textColorWhite bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 dark:bg-blue-500 dark:hover:bg-blue-600 dark:focus:ring-blue-600"
           >
             Enregistrer
           </button>

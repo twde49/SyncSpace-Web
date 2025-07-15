@@ -6,11 +6,11 @@
           class="flex justify-between items-center p-2.5 border border-solid border-[var(--color-black)] rounded h-1/2"
         >
           <div
-            class="stat-text miniFont whitespace-nowrap overflow-hidden text-ellipsis"
+            class="stat-text miniFont whitespace-nowrap overflow-hidden text-ellipsis textColorBlack"
           >
             Mots de passe
           </div>
-          <div class="text-lg font-bold flex items-center gap-1">
+          <div class="text-lg font-bold flex items-center gap-1 textColorBlack">
             {{ passwordCount }}
             <Icon name="solar:key-bold" size="20px" />
           </div>
@@ -35,7 +35,7 @@
         class="flex-1 flex items-center justify-center bg-[var(--color-black)] rounded p-4 ml-2 cursor-pointer"
       >
         <div
-          class="text-center flex flex-col items-center gap-2.5 text-[var(--color-white)]"
+          class="text-center flex flex-col items-center gap-2.5 textColorWhite"
         >
           <span class="normalFontItalic">Ouvrir mon Coffre</span>
           <Icon
@@ -50,21 +50,21 @@
     <div class="flex flex-col w-full h-2/5 gap-2.5 items-center justify-around">
       <div class="flex flex-row w-full justify-between">
         <button
-          class="bg-[#f47c60] text-white border-none rounded py-2.5 px-4 cursor-pointer text-sm w-4/5"
+          class="bg-[#f47c60] textColorWhite border-none rounded py-2.5 px-4 cursor-pointer text-sm w-4/5"
           @click="generatePassword"
         >
           Générer mot de passe
         </button>
         <div class="relative">
           <button
-            class="bgColorBlack bg-[#f47c60] text-white border-none rounded py-2.5 px-4 cursor-pointer text-sm w-full"
+            class="bgColorBlack bg-[#f47c60] textColorWhite border-none rounded py-2.5 px-4 cursor-pointer text-sm w-full"
             @click="toggleOptionsMenu"
           >
             Options
           </button>
           <div
             v-if="showOptionsMenu"
-            class="optionMenu absolute bottom-full right-0 bg-[var(--color-black)] rounded-lg p-4 w-[350px] shadow-lg z-10 flex flex-col mb-2 border border-solid border-white/20 backdrop-blur transition-all text-[var(--color-white)]"
+            class="optionMenu absolute bottom-full right-0 bg-[var(--color-black)] rounded-lg p-4 w-[350px] shadow-lg z-10 flex flex-col mb-2 border border-solid border-white/20 backdrop-blur transition-all textColorWhite"
           >
             <div class="grid grid-cols-2 gap-2.5 mb-2.5">
               <label class="flex items-center gap-1">
@@ -105,7 +105,7 @@
                 Length:
                 <input
                   type="number"
-                  class="textColorBlack text-center rounded"
+                  class="textColorWhite text-center rounded"
                   v-model="options.length"
                   min="1"
                 />
@@ -117,7 +117,7 @@
       <input
         v-model="generatedPassword"
         type="text"
-        class="flex-1 p-2.5 border border-dashed border-[#333] rounded text-sm text-[#555] w-full text-center outline-none"
+        class="flex-1 p-2.5 border border-dashed border-[#333] rounded text-sm textColorBlack w-full text-center outline-none"
         placeholder="mot de passe généré ici"
         @dblclick="copyToClipboard"
       />

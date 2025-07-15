@@ -23,7 +23,7 @@
 				>
 						<div class="flex justify-between items-center mb-3">
 								<div class="flex flex-col">
-										<div class="text-lg font-semibold">Notifications</div>
+										<div class="text-lg textColorBlack font-semibold">Notifications</div>
 										<button
 												v-if="notifications.length > 0"
 												@click="readAllNotifications"
@@ -34,7 +34,7 @@
 										</button>
 								</div>
 								<div @click="toggleNotificationDrawer" class="cursor-pointer p-1">
-										<Icon name="mdi:close" size="1.2rem" />
+										<Icon name="mdi:close" size="1.2rem" class="textColorBlack" />
 								</div>
 						</div>
 						<NotificationList
