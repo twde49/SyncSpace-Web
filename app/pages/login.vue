@@ -101,6 +101,13 @@ const loginUser = async () => {
 			}),
 		});
 
+		const data = await response.json();
+		
+		if(data.user.message == 'User not validated'){
+		  route.push(`/verificationCode/${data.user.userId}`);
+          return;
+		}
+
 		if (!response.ok) {
 			if (response.status === 401) {
 				$toast.error("Identifiants incorrects. Veuillez réessayer.");
@@ -112,7 +119,6 @@ const loginUser = async () => {
 			return;
 		}
 
-		const data = await response.json();
 
 		if (!data || !data.user || !data.token) {
 			throw new Error("Réponse invalide du serveur.");
@@ -129,7 +135,8 @@ const loginUser = async () => {
 				modulesLayout: data.user.parameters.modulesLayout,
 				notificationsEnabled: data.user.parameters.notificationsEnabled,
 				geolocationEnabled: data.user.parameters.geolocationEnabled,
-			}
+			},
+			currentTrack: data.user.currentTrack,
 		});
 		route.push("/dashboard");
 	} catch (error) {

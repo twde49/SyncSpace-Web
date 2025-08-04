@@ -137,7 +137,10 @@ const registerUser = async (values: {
     if (!response.ok) {
       throw new Error(`Error: ${response.status} ${response.statusText}`);
     }
-    route.push('/login');
+
+    const responseData = await response.json();
+    console.log(responseData);
+    route.push(`/verificationCode/${responseData.userId}`);
   } catch (error) {
     $toast.error('Une erreur est survenue lors de la création du compte');
     console.error(error);

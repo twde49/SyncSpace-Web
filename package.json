@@ -22,7 +22,7 @@
 		"flowbite": "^2.5.2",
 		"gsap": "^3.13.0",
 		"md-editor-v3": "^5.6.0",
-		"nuxt": "^3.17.4",
+		"nuxt": "^4.0.0-rc",
 		"nuxt-error": "^0.0.1",
 		"openmeteo": "^1.2.0",
 		"pinia": "^2.3.1",

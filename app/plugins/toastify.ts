@@ -1,4 +1,4 @@
-import { useUserStore } from '@/stores/userStore'; // Adjust the path to your store
+import { useUserStore } from '@/stores/userStore';
 import Vue3Toastify, { toast as originalToast } from 'vue3-toastify';
 import 'vue3-toastify/dist/index.css';
 
