@@ -18,18 +18,18 @@ const injectedYoutubePlayer = inject<Ref<any | null>>('youtubePlayerRef');
 
 const loadYouTubeAPI = () =>
   new Promise<void>((resolve) => {
-    // @ts-ignore
+    // @ts-expect-error window.YT is defined
     if (window?.YT && window?.YT?.Player) resolve()
     else {
       const tag = document.createElement('script')
       tag.src = 'https://www.youtube.com/iframe_api'
-      document.body.appendChild(tag)
-      ;(window as any).onYouTubeIframeAPIReady = () => resolve()
+      document.body.appendChild(tag);
+      (window as any).onYouTubeIframeAPIReady = () => resolve()
     }
   })
 
 const initPlayer = () => {
-  // @ts-ignore
+  // @ts-expect-error Yt is defined
   player.value = new YT.Player(playerId, {
     height: '0',
     width: '0',

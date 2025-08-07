@@ -4,7 +4,6 @@
 @tailwind utilities;
 
 :root {
-	overflow-y: hidden;
 	--color-white: #f7f3ed;
 	--color-black: #54494b;
 	--color-primary: #f78764;
@@ -144,6 +143,10 @@ body {
 
 .textColorBlack {
 	color: var(--color-black) !important;
+}
+
+.textColorBlackFull {
+	color: #54494b
 }
 
 .textColorPrimary {

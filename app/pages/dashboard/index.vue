@@ -174,176 +174,176 @@ const isMarkdownCenterOpen = ref(false);
 const isPasswordCenterOpen = ref(false);
 
 const contextMenu = ref({
-  show: false,
-  x: 0,
-  y: 0,
-  targetModule: '',
+    show: false,
+    x: 0,
+    y: 0,
+    targetModule: '',
 });
 
 const handleMarkdownCenterOpening = (status: boolean) => {
-  isMarkdownCenterOpen.value = status;
+    isMarkdownCenterOpen.value = status;
 };
 
 const handleMarkdownCenterClosing = () => {
-  isMarkdownCenterOpen.value = false;
+    isMarkdownCenterOpen.value = false;
 };
 
 const handlePasswordCenterOpening = (status: boolean) => {
-  isPasswordCenterOpen.value = status;
+    isPasswordCenterOpen.value = status;
 };
 
 const handlePasswordCenterClosing = () => {
-  isPasswordCenterOpen.value = false;
+    isPasswordCenterOpen.value = false;
 };
 
 const handleOpeningNote = (chosenNote: Note) => {
-  noteId = chosenNote.id;
-  noteTitle = chosenNote.title ?? '';
-  noteContent = chosenNote.content ?? '';
+    noteId = chosenNote.id;
+    noteTitle = chosenNote.title ?? '';
+    noteContent = chosenNote.content ?? '';
 };
 
 const showContextMenu = (event: MouseEvent) => {
-  contextMenu.value.show = true;
-  contextMenu.value.x = event.clientX;
-  contextMenu.value.y = event.clientY;
+    contextMenu.value.show = true;
+    contextMenu.value.x = event.clientX;
+    contextMenu.value.y = event.clientY;
 
-  const target = event.target as HTMLElement;
-  const moduleElement = target.closest('.module');
-  if (moduleElement) {
-    if (moduleElement.classList.contains('topLeftModule')) {
-      contextMenu.value.targetModule = 'topLeft';
-    } else if (moduleElement.classList.contains('topRightModule')) {
-      contextMenu.value.targetModule = 'topRight';
-    } else if (moduleElement.classList.contains('bottomLeftModule')) {
-      contextMenu.value.targetModule = 'bottomLeft';
-    } else if (moduleElement.classList.contains('bottomRightModule')) {
-      contextMenu.value.targetModule = 'bottomRight';
+    const target = event.target as HTMLElement;
+    const moduleElement = target.closest('.module');
+    if (moduleElement) {
+        if (moduleElement.classList.contains('topLeftModule')) {
+            contextMenu.value.targetModule = 'topLeft';
+        } else if (moduleElement.classList.contains('topRightModule')) {
+            contextMenu.value.targetModule = 'topRight';
+        } else if (moduleElement.classList.contains('bottomLeftModule')) {
+            contextMenu.value.targetModule = 'bottomLeft';
+        } else if (moduleElement.classList.contains('bottomRightModule')) {
+            contextMenu.value.targetModule = 'bottomRight';
+        }
     }
-  }
 };
 
 const handleSettings = () => {
-  router.push('/settings');
-  contextMenu.value.show = false;
+    router.push('/settings');
+    contextMenu.value.show = false;
 };
 
 onMounted(() => {
-  if (moduleZone.value) {
-    swapy.value = createSwapy(moduleZone.value, {
-      dragOnHold: true,
+    if (moduleZone.value) {
+        swapy.value = createSwapy(moduleZone.value, {
+            dragOnHold: true,
+        });
+
+        swapy.value.onSwapStart(() => {
+            $toast.info('Module peut être déplacé');
+        });
+    }
+
+    document.addEventListener('click', () => {
+        contextMenu.value.show = false;
     });
 
-    swapy.value.onSwapStart(() => {
-      $toast.info('Module peut être déplacé');
-    });
-  }
-
-  document.addEventListener('click', () => {
-    contextMenu.value.show = false;
-  });
-
-  layoutOrder.value = moduleUtils.getModuleFromUserStorePreference();
+    layoutOrder.value = moduleUtils.getModuleFromUserStorePreference();
 });
 
 
 onUnmounted(() => {
-  swapy.value?.destroy();
-  document.removeEventListener('click', () => {
-    contextMenu.value.show = false;
-  });
+    swapy.value?.destroy();
+    document.removeEventListener('click', () => {
+        contextMenu.value.show = false;
+    });
 });
 
 const swiperInstance = ref(null);
 
 const onSwiperInitialized = (swiper) => {
-  swiperInstance.value = swiper;
-  nextTick(() => swiper.update());
+    swiperInstance.value = swiper;
+    nextTick(() => swiper.update());
 };
 </script>
 
 <style scoped>
 .fourZoneContainer {
-  margin-top: 15vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 70vh;
-  width: 80vw;
-  margin-left: auto;
-  margin-right: auto;
-  z-index: 10;
-  display: none;
+    margin-top: 15vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 70vh;
+    width: 80vw;
+    margin-left: auto;
+    margin-right: auto;
+    z-index: 10;
+    display: none;
 }
 
 .module-slider {
-  width: 100%;
-  padding: 20px 0;
-  margin-top: 15vh;
-  height: 70vh;
+    width: 100%;
+    padding: 20px 0;
+    margin-top: 15vh;
+    height: 70vh;
 }
 
 
 .mobile-module {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .module {
-  width: 95vw;
-  height: 70vh;
-  background-color: var(--color-white);
-  border-radius: 5px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
+    width: 95vw;
+    height: 70vh;
+    background-color: var(--color-white);
+    border-radius: 5px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
 }
 
 .fourZone {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1fr 1fr;
-  gap: 30px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 30px;
 }
 
 .centered {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .custom-context-menu {
-  position: fixed;
-  z-index: 1000;
-  background-color: white;
-  border-radius: 4px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  padding: 8px 0;
-  min-width: 160px;
+    position: fixed;
+    z-index: 1000;
+    background-color: white;
+    border-radius: 4px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 8px 0;
+    min-width: 160px;
 }
 
 .context-menu-item {
-  padding: 8px 16px;
-  cursor: pointer;
-  font-size: 14px;
-  transition: background-color 0.2s;
+    padding: 8px 16px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.2s;
 }
 
 .context-menu-item:hover {
-  background-color: #f5f5f5;
+    background-color: #f5f5f5;
 }
 
 @media (min-width: 768px) {
-  .module-slider {
-    display: none;
-  }
+    .module-slider {
+        display: none;
+    }
 
-  .fourZoneContainer {
-    display: flex;
-  }
+    .fourZoneContainer {
+        display: flex;
+    }
 
-  .module {
-    width: 40vw;
-    height: 32vh;
-  }
+    .module {
+        width: 40vw;
+        height: 32vh;
+    }
 }
 </style>

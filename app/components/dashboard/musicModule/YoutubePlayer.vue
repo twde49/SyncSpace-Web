@@ -2,9 +2,9 @@
   <div class="youtube-player">
     <iframe
       v-if="youtubeId"
-      :src="`https://www.youtube.com/embed/${youtubeId}?enablejsapi=1&controls=1`"
+      :src="`https://www.youtube.com/embed/${youtubeId}?enablejsapi=1&controls=1&autoplay=0`"
       frameborder="0"
-      allow="autoplay; encrypted-media"
+      allow="encrypted-media"
       allowfullscreen
     ></iframe>
   </div>

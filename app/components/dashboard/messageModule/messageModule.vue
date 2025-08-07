@@ -71,7 +71,8 @@
       </div>
       <button
         @click="openNewConvModal"
-        class="sticky bottom-[10px] mx-auto my-[10px] w-[90%] flex justify-center items-center h-[40px] rounded bg-[var(--color-black)]"
+        ref="newConvButton"
+        class="sticky bottom-[10px] mx-auto my-[10px] w-[90%] flex justify-center items-center h-[40px] rounded bg-[var(--color-black)] new-conv-button"
       >
         <Icon name="typcn:plus" size="24px" class="textColorWhite" />
       </button>
@@ -88,12 +89,16 @@
     </div>
   </div>
 
+  <!-- Modal with animation -->
   <div
-    v-if="showNewConvModal"
-    class="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-50"
+    v-if="showNewConvModal || isModalAnimating"
+    class="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-50 modal-backdrop"
+    :class="{ 'backdrop-visible': showNewConvModal }"
   >
     <div
-      class="w-[90%] max-w-[500px] rounded-lg overflow-hidden flex flex-col max-h-[80vh] bgColorLight"
+      ref="modalContent"
+      class="w-[90%] max-w-[500px] rounded-lg overflow-hidden flex flex-col max-h-[80vh] bgColorLight modal-content"
+      :class="{ 'modal-visible': showNewConvModal }"
     >
       <div
         class="p-4 flex justify-between items-center border-b border-gray-200"
@@ -256,11 +261,14 @@ const { $toast } = useNuxtApp();
 const closed = ref(true);
 const expandedContainer = ref(null);
 const closedButton = ref(null);
+const newConvButton = ref(null);
+const modalContent = ref(null);
 let draggableInstance: Draggable[] | null = null;
 const conversations = ref<Conversation[] | null>(null);
 const userStore = useUserStore();
 
 const showNewConvModal = ref(false);
+const isModalAnimating = ref(false);
 const searchQuery = ref("");
 const searchResults = ref<User[]>([]);
 const selectedUsers = ref<User[]>([]);
@@ -323,15 +331,71 @@ const openClose = async () => {
 	}
 };
 
-const openNewConvModal = () => {
-	showNewConvModal.value = true;
+const openNewConvModal = async () => {
+	if (!newConvButton.value) return;
+	
+	// Get button position
+	const buttonRect = newConvButton.value.getBoundingClientRect();
+	const buttonCenterX = buttonRect.left + buttonRect.width / 2;
+	const buttonCenterY = buttonRect.top + buttonRect.height / 2;
+	
+	// Start animation state
+	isModalAnimating.value = true;
+	
+	await nextTick();
+	
+	if (modalContent.value) {
+		// Set initial state - modal positioned at button location and scaled down
+		gsap.set(modalContent.value, {
+			x: buttonCenterX - window.innerWidth / 2,
+			y: buttonCenterY - window.innerHeight / 2,
+			scale: 0.1,
+			opacity: 0,
+		});
+		
+		// Show modal
+		showNewConvModal.value = true;
+		
+		// Animate modal from button to center
+		gsap.to(modalContent.value, {
+			x: 0,
+			y: 0,
+			scale: 1,
+			opacity: 1,
+			duration: 0.4,
+			ease: "back.out(1.7)",
+		});
+	}
+	
 	searchQuery.value = "";
 	searchResults.value = [];
 	selectedUsers.value = [];
 };
 
-const closeNewConvModal = () => {
+const closeNewConvModal = async () => {
+	if (!modalContent.value || !newConvButton.value) {
+		showNewConvModal.value = false;
+		isModalAnimating.value = false;
+		return;
+	}
+	
+	// Get button position for closing animation
+	const buttonRect = newConvButton.value.getBoundingClientRect();
+	const buttonCenterX = buttonRect.left + buttonRect.width / 2;
+	const buttonCenterY = buttonRect.top + buttonRect.height / 2;
+	
+	// Animate modal back to button
+	await gsap.to(modalContent.value, {
+		x: buttonCenterX - window.innerWidth / 2,
+		y: buttonCenterY - window.innerHeight / 2,
+		scale: 0.1,
+		opacity: 0,
+		duration: 0.3,
+		ease: "back.in(1.7)",
+	});
+	
 	showNewConvModal.value = false;
+	isModalAnimating.value = false;
 };
 
 const searchUsers = async () => {
@@ -413,7 +477,7 @@ const createConversation = async () => {
 				.content;
 			activeConversation.value = newConversation;
 			conversationName.value = "";
-			closeNewConvModal();
+			await closeNewConvModal();
 		}
 	} catch (error: unknown) {
 		const err = error as Error;
@@ -498,10 +562,10 @@ const handleClickOutside = (event: MouseEvent) => {
 watch(closed, (isClosed) => {
   if (isClosed) {
     applyDraggable();
-    document.removeEventListener("click", handleClickOutside);
+   // document.removeEventListener("click", handleClickOutside);
   } else {
     setTimeout(() => {
-      document.addEventListener("click", handleClickOutside);
+      //  document.addEventListener("click", handleClickOutside);
     }, 0);
   }
 });
@@ -525,8 +589,6 @@ onUpdated(() => {
 		applyDraggable();
 	}
 });
-
-
 </script>
 
 <style scoped>
@@ -566,5 +628,37 @@ onUpdated(() => {
     .drawer {
         width: 224px;
     } 
+}
+
+/* Modal animation styles */
+.modal-backdrop {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.modal-backdrop.backdrop-visible {
+  opacity: 1;
+}
+
+.modal-content {
+  transform: scale(0.1);
+  opacity: 0;
+}
+
+.modal-content.modal-visible {
+  transform: scale(1);
+  opacity: 1;
+}
+
+.new-conv-button {
+  transition: transform 0.2s ease;
+}
+
+.new-conv-button:hover {
+  transform: scale(1.05);
+}
+
+.new-conv-button:active {
+  transform: scale(0.95);
 }
 </style>
