@@ -255,19 +255,19 @@ const changeTab = async (tab: string) => {
 };
 
 const fetchFiles = async () => {
-  const recentResponse = await useAuthFetch('files/recent');
+  const recentResponse = await useAuthFetch(`files/recent?${Date.now()}`);
   recentFiles.value = recentResponse.data.value as File[];
 
-  const picturesResponse = await useAuthFetch('files/images');
+  const picturesResponse = await useAuthFetch(`files/images?${Date.now()}`);
   picturesFiles.value = picturesResponse.data.value as File[];
 
-  const documentsResponse = await useAuthFetch('files/documents');
+  const documentsResponse = await useAuthFetch(`files/documents?${Date.now()}`);
   documentsFiles.value = documentsResponse.data.value as File[];
 
-  const foldersResponse = await useAuthFetch('files/folders');
+  const foldersResponse = await useAuthFetch(`files/folders?${Date.now()}`);
   foldersFiles.value = foldersResponse.data.value as File[];
 
-  const allResponse = await useAuthFetch('files/all');
+  const allResponse = await useAuthFetch(`files/all?${Date.now()}`);
   allFiles.value = allResponse.data.value as File[];
 
   if (currentFolder.value) {
@@ -350,13 +350,12 @@ const uploadFile = async (file: globalThis.File) => {
 
     if (response.error.value) {
       console.error('Upload error:', response.error.value);
-    } else {
-      await fetchFiles();
-    }
+    }    
   } catch (error) {
     console.error('Error during file upload:', error);
   } finally {
     isLoading.value = false;
+    await fetchFiles();
   }
 };
 

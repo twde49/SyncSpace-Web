@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import useAuthFetch from "@/composables/useAuthFetch";
+import { hashPasswordPBKDF2 } from "@/utils/cryptoUtils";
 
 export const useMasterPasswordStore = defineStore("masterPassword", {
 	state: () => ({

@@ -31,7 +31,7 @@
             </svg>
           </button>
         </div>
-        <p class="text-gray-600 my-2">{{ notification.content }}</p>
+        <p class="text-gray-600 my-2">{{ getDisplayedContent(notification.content) }}</p>
         <div v-if="notification.createdAt" class="text-sm text-gray-500 mt-2">
           {{ $formatDate(notification.createdAt, 'HH:mm dd/MM') }}
         </div>
@@ -50,4 +50,29 @@ import type { Notification } from "~/types/Notification";
 
 const { notifications } = defineProps<{ notifications: Notification[] }>();
 defineEmits(["readNotification"]);
+
+const audioExtensions = ['.mp3', '.wav', '.ogg', '.m4a', '.flac', '.aac', '.wma'];
+const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.svg'];
+const videoExtensions = ['.mp4', '.webm', '.ogg', '.avi', '.mkv'];
+
+const getDisplayedContent = (content: string | undefined) => {
+  if (!content) return '';
+  const lowerContent = content.toLowerCase();
+  for (const ext of audioExtensions) {
+    if (lowerContent.includes(ext)) {
+      return 'audio';
+    }
+  }
+  for (const ext of imageExtensions) {
+    if (lowerContent.includes(ext)) {
+      return 'image';
+    }
+  }
+  for (const ext of videoExtensions) {
+    if (lowerContent.includes(ext)) {
+      return 'video';
+    }
+  }
+  return content;
+};
 </script>

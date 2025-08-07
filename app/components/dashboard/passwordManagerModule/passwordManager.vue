@@ -117,7 +117,7 @@
       <input
         v-model="generatedPassword"
         type="text"
-        class="flex-1 p-2.5 border border-dashed border-[#333] rounded text-sm textColorBlack w-full text-center outline-none"
+        class="flex-1 p-2.5 border border-dashed border-[#333] rounded text-sm textColorBlackFull w-full text-center outline-none"
         placeholder="mot de passe généré ici"
         @dblclick="copyToClipboard"
       />

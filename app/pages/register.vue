@@ -6,11 +6,12 @@
         class="registration-form"
         :validation-schema="schema"
         @submit="registerUser"
+        :initial-values="{ acceptTerms: false }"
       >
         <h2 class="megaFont textColorWhite">Inscrivez-vous à SyncSpace</h2>
         <p class="normalFont textColorWhite mt-1">
           Déjà un compte?
-          <a href="/login" class="textColorTritary">Connectez-vous</a>
+          <RouterLink to="/login" class="textColorTritary">Connectez-vous</RouterLink>
         </p>
         <div class="mb-3 mt-12 flex flex-row justify-between">
           <Field
@@ -69,17 +70,10 @@
         <div class="social-login textColorWhite">
           <button
             :disabled="true"
-            class="google-login-btn flex items-center justify-center space-x-2"
+            class="google-login-btn flex items-center justify-center space-x-2 w-full"
           >
             <Icon name="ri:google-fill" size="150%" />
             <span>Google</span>
-          </button>
-          <button
-            :disabled="true"
-            class="apple-login-btn flex items-center justify-center space-x-2"
-          >
-            <Icon name="ri:apple-fill" size="150%" />
-            <span>Apple</span>
           </button>
         </div>
       </Form>
@@ -216,22 +210,19 @@ const registerUser = async (values: {
 
 .social-login {
   display: flex;
-  justify-content: space-between;
 }
 
-.google-login-btn,
-.apple-login-btn {
+.google-login-btn {
   padding: 10px;
   border-radius: 5px;
   cursor: pointer;
   font-size: 14px;
-  width: 48%;
+  width: 100%; /* Changed from 48% to 100% */
   text-align: center;
   border: 1px solid var(--color-white);
 }
 
-.google-login-btn:disabled,
-.apple-login-btn:disabled {
+.google-login-btn:disabled {
   background-color: #e0e0e0;
   cursor: not-allowed;
   border: 1px solid #ccc;

@@ -1,16 +1,13 @@
 <template>
   <nav class="nav mt-6 flex flex-row justify-around mx-auto">
     <div class="w-max flex items-center">
-      <h1 class="logo"><a href="/">SyncSpace</a></h1>
+      <h1 class="logo"><div @click="navigateTo('/')" class="cursor-pointer">SyncSpace</div></h1>
     </div>
     <div class="navbar flex justify-around items-center w-60vw">
       <div class="dropdown flex items-center">
-        <div class="nav-item flex items-center dropdown">
+        <div class="nav-item flex items-center dropdown relative" ref="dropdownRef">
           <a
-            id="dropdownDefaultButton"
-            data-dropdown-offset-distance="35"
-            data-dropdown-offset-skidding="5"
-            data-dropdown-toggle="dropdown"
+            @click="toggleDropdown"
             class="flex items-center cursor-pointer"
           >
             Modules
@@ -31,76 +28,79 @@
             </svg>
           </a>
 
+          <!-- Conditionally render based on dropdownOpen state -->
           <div
-            id="dropdown"
-            class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700"
+            v-if="dropdownOpen"
+            class="z-10 absolute top-full mt-2 left-0 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700"
           >
             <ul
               class="py-2 text-sm text-gray-700 dark:text-gray-200"
               aria-labelledby="dropdownDefaultButton"
             >
               <li>
-                <a
-                  href="#"
-                  class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:textColorWhite"
+                <div
+                  @click="navigateTo('/modules/music-player'); dropdownOpen = false"
+                  class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:textColorWhite cursor-pointer"
                 >
                   Lecteur de musique
-                </a>
+                </div>
               </li>
               <li>
-                <a
-                  href="#"
-                  class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:textColorWhite"
+                <div
+                  @click="navigateTo('/modules/markdown-editor'); dropdownOpen = false"
+                  class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:textColorWhite cursor-pointer"
                 >
                   Éditeur Markdown
-                </a>
+                </div>
               </li>
               <li>
-                <a
-                  href="#"
-                  class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:textColorWhite"
+                <div
+                  @click="navigateTo('/modules/drive'); dropdownOpen = false"
+                  class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:textColorWhite cursor-pointer"
                 >
                   Drive
-                </a>
+                </div>
               </li>
               <li>
-                <a
-                  href="#"
-                  class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:textColorWhite"
+                <div
+                  @click="navigateTo('/modules/calendar'); dropdownOpen = false"
+                  class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:textColorWhite cursor-pointer"
                 >
                   Calendrier
-                </a>
+                </div>
               </li>
               <li>
-                <a
-                  href="#"
-                  class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:textColorWhite"
+                <div
+                  @click="navigateTo('/modules/chat-users'); dropdownOpen = false"
+                  class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:textColorWhite cursor-pointer"
                 >
                   Chat/Utilisateurs
-                </a>
+                </div>
               </li>
               <li>
-                <a
-                  href="#"
-                  class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:textColorWhite"
+                <div
+                  @click="navigateTo('/modules/password-manager'); dropdownOpen = false"
+                  class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:textColorWhite cursor-pointer"
                 >
                   Gestionnaire de mot de passe
-                </a>
+                </div>
               </li>
             </ul>
           </div>
         </div>
       </div>
-      <a href="/about" class="nav-item flex items-center">A propos</a>
-      <a href="/contact" class="nav-item flex items-center">Contact</a>
-      <a
-        href="https://github.com/twde49/SyncSpace-Web"
+      <div @click="navigateTo('/about')" class="nav-item flex items-center cursor-pointer">A propos</div>
+      <div @click="navigateTo('/contact')" class="nav-item flex items-center cursor-pointer">Contact</div>
+      <NuxtLink
+        to="https://github.com/twde49/SyncSpace-Web"
         class="nav-item flex items-center"
+        target="_blank"
+        rel="noopener noreferrer"
       >
         <Icon name="uil:github" class="github-logo" />
-      </a>
-      <button class="login-button flex items-center">
-        <a href="/login">Login</a>
+      </NuxtLink>
+      <button class="login-button flex items-center" @click="navigateTo('/login')">
+        Login
       </button>
     </div>
     <div class="dark-light-switcher flex items-center">
@@ -110,7 +110,29 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue'; // Import ref for reactive state
+import { onClickOutside } from '@vueuse/core'; // Import onClickOutside for closing dropdown
 import LightDarkModeSwitch from "~/components/Switch/LightDarkModeSwitch.vue";
+import { useRouter } from '#app'; // Nuxt 3's useRouter composable
+
+const router = useRouter();
+
+const navigateTo = (path: string) => {
+  router.push(path);
+};
+
+// Dropdown logic
+const dropdownOpen = ref(false); // Reactive state for dropdown visibility
+const dropdownRef = ref(null); // Template ref for the dropdown container to detect outside clicks
+
+const toggleDropdown = () => {
+  dropdownOpen.value = !dropdownOpen.value;
+};
+
+// Close dropdown when clicking outside the dropdownRef element
+onClickOutside(dropdownRef, () => {
+  dropdownOpen.value = false;
+});
 </script>
 
 <style scoped>
