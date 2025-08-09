@@ -6,7 +6,7 @@
                 <div
                     class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600 border-gray-200">
                     <h3 class="text-lg font-semibold text-gray-900 dark:textColorWhite">
-                        Saved Passwords
+                        Mots de passes
                     </h3>
                     <button @click="closeModal" type="button"
                         class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm h-8 w-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:textColorWhite"
@@ -16,7 +16,7 @@
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
                         </svg>
-                        <span class="sr-only">Close modal</span>
+                        <span class="sr-only">Fermer</span>
                     </button>
                 </div>
                 <div class="p-4 md:p-5">
@@ -183,7 +183,7 @@
                                     Annuler
                                 </button>
                                 <button @click="confirmMasterPasswordCreation" :disabled="!canConfirmCreation"
-                                class="flex-1 textColorWhite bgColorCategoryPrimary font-medium rounded-lg text-sm px-5 py-2.5 text-center disabled:bg-gray-400 disabled:cursor-not-allowed transition-transform hover:scale-105">
+                                class="flex-1 textColorWhite bgColorPrimary font-medium rounded-lg text-sm px-5 py-2.5 text-center disabled:bg-gray-400 disabled:cursor-not-allowed transition-transform hover:scale-105">
                                     Créer le coffre
                                 </button>
                             </div>

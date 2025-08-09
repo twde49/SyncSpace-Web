@@ -98,7 +98,7 @@
   <!-- Modal with animation -->
   <div
     v-if="showNewConvModal || isModalAnimating"
-    class="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-50 modal-backdrop"
+    class="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z9999 modal-backdrop"
     :class="{ 'backdrop-visible': showNewConvModal }"
   >
     <div
@@ -682,5 +682,9 @@ onUpdated(() => {
 
 .new-conv-button:active {
   transform: scale(0.95);
+}
+
+.z9999 {
+    z-index: 9999;
 }
 </style>
