@@ -1,142 +1,110 @@
 <template>
-  <div class="max-size">
-    <MessageModule />
-    <NotificationDrawer />
-    <ProfileModule />
-    <MusicPlayerModule />
+    <div class="max-size">
+        <MessageModule />
+        <NotificationDrawer />
+        <ProfileModule />
+        <MusicPlayerModule />
 
-    <div class="module-slider">
-      <Swiper
-        :slides-per-view="1"
-        :centered-slides="true"
-        direction="vertical"
-        loop
-        grabCursor
-        @swiper="onSwiperInitialized"
-      >
-        <SwiperSlide>
-          <div data-swapy-slot="topLeft" class="mobile-module">
-            <div data-swapy-item="topLeft">
-              <div class="module topLeftModule">
-                <CalendarModule @contextmenu.prevent="showContextMenu" />
-              </div>
-            </div>
-          </div>
-        </SwiperSlide>
+        <div class="module-slider">
+            <Swiper :slides-per-view="1" :centered-slides="true" direction="vertical" loop grabCursor
+                @swiper="onSwiperInitialized">
+                <SwiperSlide>
+                    <div data-swapy-slot="topLeft" class="mobile-module">
+                        <div data-swapy-item="topLeft">
+                            <div class="module topLeftModule">
+                                <CalendarModule @contextmenu.prevent="showContextMenu" />
+                            </div>
+                        </div>
+                    </div>
+                </SwiperSlide>
 
-        <SwiperSlide>
-          <div data-swapy-slot="topRight" class="mobile-module">
-            <div data-swapy-item="topRight">
-              <div class="module topRightModule">
-                <EditorMarkdown
-                  :note-id="noteId"
-                  :title-note="noteTitle"
-                  :content-note="noteContent"
-                  @open-markdown-center="handleMarkdownCenterOpening"
-                />
-              </div>
-            </div>
-          </div>
-        </SwiperSlide>
+                <SwiperSlide>
+                    <div data-swapy-slot="topRight" class="mobile-module">
+                        <div data-swapy-item="topRight">
+                            <div class="module topRightModule">
+                                <EditorMarkdown :note-id="noteId" :title-note="noteTitle" :content-note="noteContent"
+                                    @open-markdown-center="handleMarkdownCenterOpening" />
+                            </div>
+                        </div>
+                    </div>
+                </SwiperSlide>
 
-        <SwiperSlide>
-          <div data-swapy-slot="bottomLeft" class="mobile-module">
-            <div data-swapy-item="bottomLeft">
-              <div class="module bottomLeftModule">
-                <PasswordManager
-                  @contextmenu.prevent="showContextMenu"
-                  @open-password-center="handlePasswordCenterOpening"
-                />
-              </div>
-            </div>
-          </div>
-        </SwiperSlide>
+                <SwiperSlide>
+                    <div data-swapy-slot="bottomLeft" class="mobile-module">
+                        <div data-swapy-item="bottomLeft">
+                            <div class="module bottomLeftModule">
+                                <PasswordManager @contextmenu.prevent="showContextMenu"
+                                    @open-password-center="handlePasswordCenterOpening"
+                                    :refresh-counter='refreshCounter'
+                                    />
+                            </div>
+                        </div>
+                    </div>
+                </SwiperSlide>
 
-        <SwiperSlide>
-          <div data-swapy-slot="bottomRight" class="mobile-module">
-            <div data-swapy-item="bottomRight">
-              <div class="module bottomRightModule">
-                <DriveModule />
-              </div>
+                <SwiperSlide>
+                    <div data-swapy-slot="bottomRight" class="mobile-module">
+                        <div data-swapy-item="bottomRight">
+                            <div class="module bottomRightModule">
+                                <DriveModule />
+                            </div>
+                        </div>
+                    </div>
+                </SwiperSlide>
+            </Swiper>
+        </div>
+
+        <div class="fourZoneContainer" ref="moduleZone">
+            <div class="fourZone">
+                <div data-swapy-slot="topLeft" class="centered">
+                    <div data-swapy-item="topLeft">
+                        <div class="module topLeftModule">
+                            <CalendarModule @contextmenu.prevent="showContextMenu" />
+                        </div>
+                    </div>
+                </div>
+                <div data-swapy-slot="topRight" class="centered" @contextmenu.prevent="showContextMenu">
+                    <div data-swapy-item="topRight">
+                        <div class="module topRightModule">
+                            <EditorMarkdown :note-id="noteId" :title-note="noteTitle" :content-note="noteContent"
+                                @open-markdown-center="handleMarkdownCenterOpening" />
+                        </div>
+                    </div>
+                </div>
+                <div data-swapy-slot="bottomLeft" class="centered" @contextmenu.prevent="showContextMenu">
+                    <div data-swapy-item="bottomLeft">
+                        <div class="module bottomLeftModule">
+                            <PasswordManager @contextmenu.prevent="showContextMenu"
+                                @open-password-center="handlePasswordCenterOpening"
+                                :refresh-counter='refreshCounter'
+                                />
+                        </div>
+                    </div>
+                </div>
+                <div data-swapy-slot="bottomRight" class="centered">
+                    <div data-swapy-item="bottomRight">
+                        <div class="module bottomRightModule">
+                            <DriveModule />
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
-        </SwiperSlide>
-      </Swiper>
+        </div>
     </div>
 
-    <div class="fourZoneContainer" ref="moduleZone">
-      <div class="fourZone">
-        <div
-          data-swapy-slot="topLeft"
-          class="centered"
-        >
-          <div data-swapy-item="topLeft">
-            <div class="module topLeftModule">
-              <CalendarModule @contextmenu.prevent="showContextMenu" />
-            </div>
-          </div>
-        </div>
-        <div
-          data-swapy-slot="topRight"
-          class="centered"
-          @contextmenu.prevent="showContextMenu"
-        >
-          <div data-swapy-item="topRight">
-            <div class="module topRightModule">
-              <EditorMarkdown
-                :note-id="noteId"
-                :title-note="noteTitle"
-                :content-note="noteContent"
-                @open-markdown-center="handleMarkdownCenterOpening"
-              />
-            </div>
-          </div>
-        </div>
-        <div
-          data-swapy-slot="bottomLeft"
-          class="centered"
-          @contextmenu.prevent="showContextMenu"
-        >
-          <div data-swapy-item="bottomLeft">
-            <div class="module bottomLeftModule">
-              <PasswordManager
-                @contextmenu.prevent="showContextMenu"
-                @open-password-center="handlePasswordCenterOpening"
-              />
-            </div>
-          </div>
-        </div>
-        <div data-swapy-slot="bottomRight" class="centered">
-          <div data-swapy-item="bottomRight">
-            <div class="module bottomRightModule">
-              <DriveModule />
-            </div>
-          </div>
-        </div>
-      </div>
+    <MarkdownCenter @open-note="handleOpeningNote" @close-markdown-center="handleMarkdownCenterClosing"
+        v-if="isMarkdownCenterOpen" />
+        
+    <PasswordCenter @close-password-center="handlePasswordCenterClosing" v-if="isPasswordCenterOpen"
+        @refresh-counter="handleRefreshCounter" />
+
+    <div v-if="contextMenu.show" class="custom-context-menu"
+        :style="{ top: contextMenu.y + 'px', left: contextMenu.x + 'px' }">
+        <div class="context-menu-item" @click="''">Refresh</div>
+        <div class="context-menu-item" @click="''">Edit</div>
+        <div class="context-menu-item" @click="''">Swap Modules</div>
+        <div class="context-menu-item" @click="handleSettings">Settings</div>
     </div>
-  </div>
-
-  <MarkdownCenter
-    @open-note="handleOpeningNote"
-    @close-markdown-center="handleMarkdownCenterClosing"
-    v-if="isMarkdownCenterOpen"
-  />
-  <PasswordCenter
-    @close-password-center="handlePasswordCenterClosing"
-    v-if="isPasswordCenterOpen"
-  />
-
-  <div
-    v-if="contextMenu.show"
-    class="custom-context-menu"
-    :style="{ top: contextMenu.y + 'px', left: contextMenu.x + 'px' }"
-  >
-    <div class="context-menu-item" @click="''">Refresh</div>
-    <div class="context-menu-item" @click="''">Edit</div>
-    <div class="context-menu-item" @click="''">Swap Modules</div>
-    <div class="context-menu-item" @click="handleSettings">Settings</div>
-  </div>
 </template>
 
 <script setup lang="ts">
@@ -164,6 +132,7 @@ const { $toast } = useNuxtApp();
 let noteId: number;
 let noteTitle = '';
 let noteContent = '';
+const refreshCounter = ref(false);
 
 const router = useRouter();
 const layoutOrder = ref<ModuleData[]>([]);
@@ -179,6 +148,10 @@ const contextMenu = ref({
     y: 0,
     targetModule: '',
 });
+
+const handleRefreshCounter = (value: boolean) => {
+    refreshCounter.value = value;
+};
 
 const handleMarkdownCenterOpening = (status: boolean) => {
     isMarkdownCenterOpen.value = status;

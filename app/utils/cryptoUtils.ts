@@ -18,7 +18,7 @@ export async function deriveKey(masterPassword: string): Promise<CryptoKey> {
 		keyMaterial,
 		{ name: "AES-GCM", length: 256 },
 		false,
-		["decrypt"],
+		["encrypt", "decrypt"],
 	);
 }
 

@@ -28,10 +28,10 @@
             <div class="message-bubble bgColorWhite">
                 <!-- Image Message -->
                 <div v-if="isImageMessage(message.content)" class="image-message">
-                    <img :src="baseUrlWithoutApi + message.content" 
+                    <img :src="message.content?.includes('.gif') ? message.content : baseUrlWithoutApi + message.content" 
                          alt="Shared image" 
                          class="message-image" 
-                         @click="openImageModal(baseUrlWithoutApi + message.content)" />
+                         @click="openImageModal(message.content?.includes('.gif') ? message.content : baseUrlWithoutApi + message.content)" />
                 </div>
                 <!-- Audio Player pour les fichiers audio -->
                 <div v-else-if="isAudioMessage(message.content)" class="audio-message">
@@ -161,11 +161,11 @@
 
     <!-- Modal pour afficher les images en plein écran -->
     <div v-if="showImageModal" class="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50" @click="closeImageModal">
-        <div class="relative max-w-4xl max-h-4xl p-4">
+        <div class="relative w-auto h-auto max-w-[90vw] max-h-[90vh] p-4">
             <button @click="closeImageModal" class="absolute top-2 right-2 text-white hover:text-gray-300 z-10">
                 <Icon name="heroicons:x-mark" size="32" />
             </button>
-            <img :src="selectedImage" alt="Image en plein écran" class="max-w-full max-h-full object-contain" />
+            <img :src="selectedImage" alt="Image en plein écran" class="max-w-full max-h-[75vh] object-contain" />
         </div>
     </div>
 
@@ -209,7 +209,7 @@
                         @click="selectGiphyGif(gif)"
                     >
                         <img 
-                            :src="gif.images.fixed_width_small.url" 
+                            :src="gif.images.fixed_width.url" 
                             :alt="gif.title"
                             class="w-full h-full object-cover transition-transform duration-200 group-hover:scale-105"
                             loading="lazy"
@@ -252,18 +252,18 @@
     <div class="messageInput bgColorWhite flex items-center">
         <div class="flex utilsZone items-center justify-between relative">
             <!-- Menu média animé -->
-            <div class="media-menu-container relative">
+            <div class="media-menu-container relative flex">
                 <Icon name="ph:plus-fill" 
                       size="21px" 
                       class="media textColorBlack cursor-pointer transition-transform duration-300 hover:scale-110" 
                       :class="{ 'rotate-45': showMediaMenu }"
                       @click="toggleMediaMenu" />
-                
+
                 <!-- Menu déroulant -->
                 <div v-if="showMediaMenu" 
                      class="media-menu absolute bottom-full left-0 mb-2 bg-white rounded-lg shadow-xl border overflow-hidden"
                      :class="{ 'menu-enter-active': showMediaMenu }">
-                    
+
                     <!-- Option Photo -->
                     <div class="menu-item photo-item" @click="selectMediaType('photo')">
                         <div class="menu-icon bgColorSecondary">
@@ -472,19 +472,19 @@ const closeGiphyModal = () => {
 
 const searchGiphy = async (query: string = giphySearchQuery.value) => {
     if (isLoadingGiphy.value) return;
-    
+
     try {
         isLoadingGiphy.value = true;
         giphyOffset.value = 0;
-        
-        const apiKey = 'YOUR_GIPHY_API_KEY'; // À remplacer par votre clé API Giphy
+
+        const apiKey = config.public.giphyApiKey;
         const endpoint = query 
             ? `https://api.giphy.com/v1/gifs/search?api_key=${apiKey}&q=${encodeURIComponent(query)}&limit=20&offset=0&rating=g`
             : `https://api.giphy.com/v1/gifs/trending?api_key=${apiKey}&limit=20&offset=0&rating=g`;
-        
+
         const response = await fetch(endpoint);
         const data = await response.json();
-        
+
         giphyGifs.value = data.data || [];
         hasMoreGiphy.value = data.data && data.data.length === 20;
         giphyOffset.value = 20;
@@ -503,18 +503,18 @@ const loadTrendingGifs = async () => {
 
 const loadMoreGifs = async () => {
     if (isLoadingGiphy.value || !hasMoreGiphy.value) return;
-    
+
     try {
         isLoadingGiphy.value = true;
-        
-        const apiKey = 'YOUR_GIPHY_API_KEY'; // À remplacer par votre clé API Giphy
+
+        const apiKey = config.public.giphyApiKey;
         const endpoint = giphySearchQuery.value 
             ? `https://api.giphy.com/v1/gifs/search?api_key=${apiKey}&q=${encodeURIComponent(giphySearchQuery.value)}&limit=20&offset=${giphyOffset.value}&rating=g`
             : `https://api.giphy.com/v1/gifs/trending?api_key=${apiKey}&limit=20&offset=${giphyOffset.value}&rating=g`;
-        
+
         const response = await fetch(endpoint);
         const data = await response.json();
-        
+
         if (data.data && data.data.length > 0) {
             giphyGifs.value = [...giphyGifs.value, ...data.data];
             giphyOffset.value += 20;
@@ -561,7 +561,7 @@ const sendGifMessage = async (gifUrl: string) => {
 };
 
 // Debounce pour la recherche
-let searchTimeout: NodeJS.Timeout;
+let searchTimeout: ReturnType<typeof setTimeout>;
 const debouncedSearch = (query: string) => {
     clearTimeout(searchTimeout);
     searchTimeout = setTimeout(() => {
@@ -621,32 +621,32 @@ const toggleAudioPlayback = async (messageId: string, audioUrl: string) => {
 
         audio.addEventListener('loadedmetadata', () => {
             if (audioStates.value[messageId]) {
-                audioStates.value[messageId].duration = audio.duration;
+                audioStates.value[messageId]!.duration = audio.duration;
             }
         });
 
         audio.addEventListener('timeupdate', () => {
             if (audioStates.value[messageId]) {
-                audioStates.value[messageId].currentTime = audio.currentTime;
+                audioStates.value[messageId]!.currentTime = audio.currentTime;
             }
             if (audioStates.value[messageId]) {
-                audioStates.value[messageId].progress = audio.currentTime / audio.duration;
+                audioStates.value[messageId]!.progress = audio.currentTime / audio.duration;
             }
         });
 
         audio.addEventListener('ended', () => {
             if (audioStates.value[messageId]) {
-                audioStates.value[messageId].isPlaying = false;
+                audioStates.value[messageId]!.isPlaying = false;
             }
-            audioStates.value[messageId].currentTime = 0;
-            audioStates.value[messageId].progress = 0;
+            audioStates.value[messageId]!.currentTime = 0;
+            audioStates.value[messageId]!.progress = 0;
         });
     }
 
     const audio = audioElements.value[messageId];
     const state = audioStates.value[messageId];
 
-    if (state.isPlaying) {
+    if (state?.isPlaying) {
         audio.pause();
         state.isPlaying = false;
     } else {
@@ -655,7 +655,7 @@ const toggleAudioPlayback = async (messageId: string, audioUrl: string) => {
             if (key !== messageId && audioStates.value[key]?.isPlaying) {
                 audioElements.value[key].pause();
                 if (audioStates.value[key]) {
-                    audioStates.value[key].isPlaying = false;
+                    audioStates.value[key]!.isPlaying = false;
                 }
             }
         });
@@ -724,7 +724,7 @@ const toggleMenu = (messageId: string) => {
 onMounted(() => {
     document.addEventListener('click', event => {
         const target = event.target as Element;
-        
+
         // Fermer le menu contextuel des messages
         if (
             activeMenu.value &&
@@ -818,7 +818,7 @@ const editMessage = async (message: Message, newMessageContent: string) => {
                 m => m.id === message.id,
             );
             if (index !== -1) {
-                reactiveConversation.messages[index].content = newMessageContent;
+                reactiveConversation.messages[index]!.content = newMessageContent;
             }
         }
 

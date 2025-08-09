@@ -7,7 +7,8 @@ export default defineNuxtConfig({
     public: {
       apiUrl: process.env.API_URL || 'https://localhost:8000/api/',
       webSocketUrl: process.env.WEBSOCKET_URL || 'http://localhost:6969',
-      baseUrlWithoutApi: process.env.API_URL_WITHOUT_API || 'https://localhost:8000/'
+      baseUrlWithoutApi: process.env.API_URL_WITHOUT_API || 'https://localhost:8000/',
+      giphyApiKey: process.env.GIPHY_API_KEY 
     },
   },
 

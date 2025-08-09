@@ -52,7 +52,7 @@ const { notifications } = defineProps<{ notifications: Notification[] }>();
 defineEmits(["readNotification"]);
 
 const audioExtensions = ['.mp3', '.wav', '.ogg', '.m4a', '.flac', '.aac', '.wma'];
-const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.svg'];
+const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.svg', '.webp'];
 const videoExtensions = ['.mp4', '.webm', '.ogg', '.avi', '.mkv'];
 
 const getDisplayedContent = (content: string | undefined) => {

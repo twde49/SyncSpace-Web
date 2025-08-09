@@ -68,13 +68,11 @@
           <span class="divider-line"></span>
         </div>
         <div class="social-login textColorWhite">
-          <button
-            :disabled="true"
-            class="google-login-btn flex items-center justify-center space-x-2 w-full"
-          >
+          <a :href="googleLoginUrl"
+            class="google-login-btn flex items-center justify-center space-x-2 w-full">
             <Icon name="ri:google-fill" size="150%" />
             <span>Google</span>
-          </button>
+          </a>
         </div>
       </Form>
     </div>
@@ -83,15 +81,30 @@
 
 <script setup lang="ts">
 import Navbar from '~/components/notLogged/Navbar.vue';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
+import { ref, onMounted } from "vue";
 import { useRuntimeConfig } from '#app';
-import { Form, Field, ErrorMessage } from 'vee-validate';
+import { Form, Field, ErrorMessage, type SubmissionHandler } from 'vee-validate';
 import * as yup from 'yup';
 import 'vue3-toastify/dist/index.css';
+import { useUserStore } from "~/stores/userStore";
 
-const route = useRouter();
+
+const router = useRouter();
+const route = useRoute(); // Changed from useRouter() to useRoute()
 const config = useRuntimeConfig();
 const { $toast } = useNuxtApp();
+const userStore = useUserStore(); // Added userStore
+
+const googleLoginUrl = `${config.public.apiUrl}auth/google`; // Added googleLoginUrl
+
+interface RegistrationFormValues {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  acceptTerms: boolean;
+}
 
 const schema = yup.object({
   firstName: yup.string().required('Prénom requis'),
@@ -107,13 +120,7 @@ const schema = yup.object({
   acceptTerms: yup.boolean().oneOf([true], 'Vous devez accepter les termes'),
 });
 
-const registerUser = async (values: {
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
-  acceptTerms: boolean;
-}) => {
+const registerUser: SubmissionHandler<RegistrationFormValues> = async (values) => {
   try {
     const response = await fetch(`${config.public.apiUrl}register`, {
       method: 'POST',
@@ -134,12 +141,56 @@ const registerUser = async (values: {
 
     const responseData = await response.json();
     console.log(responseData);
-    route.push(`/verificationCode/${responseData.userId}`);
+    router.push(`/verificationCode/${responseData.userId}`);
   } catch (error) {
     $toast.error('Une erreur est survenue lors de la création du compte');
     console.error(error);
   }
 };
+
+onMounted(() => {
+    // Récupère le jeton et les données de l'utilisateur des paramètres d'URL (s'ils existent)
+    const token = route.query.token as string | undefined;
+    const encodedUserData = route.query.user as string | undefined;
+    const error = route.query.error as string | undefined;
+
+    if (error) {
+        // Gérer l'erreur si le backend en a renvoyé une
+        $toast.error("Erreur lors de la connexion via Google.");
+        router.replace({ path: route.path, query: {} }); // Nettoyer l'URL
+        return;
+    }
+
+    if (token && encodedUserData) {
+        try {
+            // Décoder les données utilisateur de la Base64
+            const decodedUserData = JSON.parse(atob(encodedUserData));
+
+            // Initialiser le store de l'utilisateur avec toutes les données reçues
+            userStore.setUser({
+                firstName: decodedUserData.firstName,
+                lastName: decodedUserData.lastName,
+                email: decodedUserData.userEmail,
+                token: token,
+                masterPasswordSet: decodedUserData.masterPasswordSet,
+                parameters: {
+                    theme: decodedUserData.parameters.theme,
+                    modulesLayout: decodedUserData.parameters.modulesLayout,
+                    notificationsEnabled: decodedUserData.parameters.notificationsEnabled,
+                    geolocationEnabled: decodedUserData.parameters.geolocationEnabled,
+                },
+                currentTrack: decodedUserData.currentTrack,
+            });
+
+            $toast.success("Connexion réussie via Google !");
+            router.push("/dashboard");
+        } catch (e) {
+            console.error("Failed to parse user data from URL:", e);
+            $toast.error("Données de connexion Google invalides.");
+            router.replace({ path: route.path, query: {} }); // Nettoyer l'URL en cas d'échec
+        }
+    }
+});
 </script>
 
 <style scoped>
@@ -215,11 +266,17 @@ const registerUser = async (values: {
 .google-login-btn {
   padding: 10px;
   border-radius: 5px;
-  cursor: pointer;
   font-size: 14px;
   width: 100%; /* Changed from 48% to 100% */
   text-align: center;
   border: 1px solid var(--color-white);
+  background-color: #ffffff; /* Added for consistency with login.vue */
+  color: #3a3a3a; /* Added for consistency with login.vue */
+  transition: background-color 0.2s; /* Added for consistency with login.vue */
+}
+
+.google-login-btn:hover {
+    background-color: #f0f0f0; /* Added for consistency with login.vue */
 }
 
 .google-login-btn:disabled {

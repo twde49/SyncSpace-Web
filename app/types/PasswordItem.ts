@@ -13,5 +13,5 @@ export type PasswordItem = {
 	isFavorite?: boolean;
 	associatedTo?: User;
 	mustBeUpdated?: boolean;
-	createdAt?: string;
+	updatedAt?: string;
 };
