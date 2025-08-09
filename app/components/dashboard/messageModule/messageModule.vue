@@ -14,78 +14,84 @@
   </div>
   <div
     v-else
-    class="expanded-container shadow w-max z-20 bgColorLight flex justify-start items-start fixed left-[30px] top-[31px] h-[80vh] transition-all"
-    ref="expandedContainer"
+    class="drawer-container"
+    ref="drawerContainer"
+    @click.self="openClose"
   >
-    <div class="relative h-full flex flex-col w-1/5 drawer">
-      <div
-        class="h-max w-max bgColorLight topComponentSize flex justify-center items-center cursor-pointer fixed-icon"
-      >
-        <Icon
-          name="tabler:message-filled"
-          size="3.5em"
-          class="messageIcon expanded-icon cursor-pointer"
-          @click="openClose"
-        />
-      </div>
-      <span class="text-lg textColorBlack font-bold w-full flex justify-center items-center">
-        Chats
-      </span>
-      <div
-        class="flex flex-col items-center flex-1 overflow-y-auto w-full px-[10px] mt-3"
-      >
+    <div
+      class="drawer shadow z-20 bgColorLight flex justify-start items-start"
+      ref="drawer"
+    >
+      <div class="relative h-full flex flex-col w-1/5 drawer-content">
         <div
-          class="w-full"
-          v-for="conversation in conversations"
-          :key="conversation.id"
+          class="h-max w-max bgColorLight topComponentSize flex justify-center items-center cursor-pointer fixed-icon"
         >
-          <little-conversation
-            @contextmenu.prevent="showConversationMenu(conversation)"
-            class="mt-8 w-full"
-            :conversation="conversation"
-            :is-active="activeConversation === conversation"
-            @click="
-              activeConversation =
-                activeConversation === conversation ? null : conversation
-            "
+          <Icon
+            name="tabler:message-filled"
+            size="3.5em"
+            class="messageIcon expanded-icon cursor-pointer"
+            @click="openClose"
           />
+        </div>
+        <span class="text-lg textColorBlack font-bold w-full flex justify-center items-center">
+          Chats
+        </span>
+        <div
+          class="flex flex-col items-center flex-1 overflow-y-auto w-full px-[10px] mt-3"
+        >
+          <div
+            class="w-full"
+            v-for="conversation in conversations"
+            :key="conversation.id"
+          >
+            <little-conversation
+              @contextmenu.prevent="showConversationMenu(conversation)"
+              class="mt-8 w-full"
+              :conversation="conversation"
+              :is-active="activeConversation === conversation"
+              @click="
+                activeConversation =
+                  activeConversation === conversation ? null : conversation
+              "
+            />
 
-          <div class="relative flex">
-            <div
-              v-if="activeMenu === String(conversation.id)"
-              class="absolute right-0 w-48 bg-white rounded-md shadow-lg z-50"
-              style="top: 0; right: 30px"
-            >
-              <div class="py-1">
-                <button
-                  class="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
-                  @click="openDeleteModal(conversation)"
-                >
-                  <Icon name="heroicons:trash" class="mr-2" size="16" />
-                  Supprimer
-                </button>
+            <div class="relative flex">
+              <div
+                v-if="activeMenu === String(conversation.id)"
+                class="absolute right-0 w-48 bg-white rounded-md shadow-lg z-50"
+                style="top: 0; right: 30px"
+              >
+                <div class="py-1">
+                  <button
+                    class="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
+                    @click="openDeleteModal(conversation)"
+                  >
+                    <Icon name="heroicons:trash" class="mr-2" size="16" />
+                    Supprimer
+                  </button>
+                </div>
               </div>
             </div>
           </div>
         </div>
+        <button
+          @click="openNewConvModal"
+          ref="newConvButton"
+          class="sticky bottom-[10px] mx-auto my-[10px] w-[90%] flex justify-center items-center h-[40px] rounded bg-[var(--color-black)] new-conv-button"
+        >
+          <Icon name="typcn:plus" size="24px" class="textColorWhite" />
+        </button>
       </div>
-      <button
-        @click="openNewConvModal"
-        ref="newConvButton"
-        class="sticky bottom-[10px] mx-auto my-[10px] w-[90%] flex justify-center items-center h-[40px] rounded bg-[var(--color-black)] new-conv-button"
+      <div
+        v-if="activeConversation"
+        class="flex-1 h-[98%] w-[50vw] bg-[var(--color-black)] textColorWhite rounded m-2 flex flex-col"
       >
-        <Icon name="typcn:plus" size="24px" class="textColorWhite" />
-      </button>
-    </div>
-    <div
-      v-if="activeConversation"
-      class="flex-1 h-[98%] w-[50vw] bg-[var(--color-black)] textColorWhite rounded m-2 flex flex-col"
-    >
-      <ActiveConversation
-        :conversation="activeConversation"
-        @message-sent="getConversations"
-        @update-message="getConversations"
-      />
+        <ActiveConversation
+          :conversation="activeConversation"
+          @message-sent="getConversations"
+          @update-message="getConversations"
+        />
+      </div>
     </div>
   </div>
 
@@ -259,7 +265,8 @@ const { webSocketData } = useWebSocket();
 gsap.registerPlugin(Draggable);
 const { $toast } = useNuxtApp();
 const closed = ref(true);
-const expandedContainer = ref(null);
+const drawerContainer = ref(null);
+const drawer = ref(null);
 const closedButton = ref(null);
 const newConvButton = ref(null);
 const modalContent = ref(null);
@@ -298,36 +305,30 @@ const applyDraggable = () => {
 
 const activeConversation = ref<Conversation | null>(null);
 
-const openClose = async () => {
-	const duration = 0.5;
+const closeDrawer = () => {
+  if (drawer.value && drawerContainer.value) {
+    gsap.to(drawer.value, {
+      duration: 0.5,
+      x: '-100%',
+      ease: 'power2.inOut',
+    });
+
+    gsap.to(drawerContainer.value, {
+      duration: 0.5,
+      opacity: 0,
+      ease: 'power2.inOut',
+      onComplete: () => {
+        closed.value = true;
+      },
+    });
+  }
+};
+
+const openClose = () => {
 	if (closed.value) {
-		gsap.to(expandedContainer.value, {
-			duration,
-			width: "70vw",
-			height: "80vh",
-			ease: "power2.inOut",
-		});
-		gsap.to(closedButton.value, {
-			duration,
-			opacity: 0,
-			ease: "power2.inOut",
-		});
-		await nextTick();
 		closed.value = false;
 	} else {
-		gsap.to(expandedContainer.value, {
-			duration,
-			width: "100px",
-			height: "100px",
-			ease: "power2.inOut",
-		});
-		gsap.to(closedButton.value, {
-			duration,
-			opacity: 1,
-			ease: "power2.inOut",
-		});
-		await nextTick();
-		closed.value = true;
+		closeDrawer();
 	}
 };
 
@@ -548,25 +549,9 @@ const cancelDelete = () => {
 	conversationToDelete.value = null;
 };
 
-const handleClickOutside = (event: MouseEvent) => {
-  if (
-    expandedContainer.value &&
-    !expandedContainer.value.contains(event.target as Node)
-  ) {
-    if (!closed.value) {
-      openClose();
-    }
-  }
-};
-
 watch(closed, (isClosed) => {
   if (isClosed) {
     applyDraggable();
-   // document.removeEventListener("click", handleClickOutside);
-  } else {
-    setTimeout(() => {
-      //  document.addEventListener("click", handleClickOutside);
-    }, 0);
   }
 });
 
@@ -604,8 +589,45 @@ onUpdated(() => {
   transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.expanded-container {
-  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+.drawer-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  z-index: 999;
+  animation: fadeIn 0.5s ease;
+}
+
+.drawer {
+  width: 70vw;
+  height: 100vh;
+  background-color: var(--color-white);
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
+  display: flex;
+  animation: slideInLeft 0.5s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
 }
 
 .messageIcon {
@@ -620,12 +642,12 @@ onUpdated(() => {
   border-radius: 3px;
 }
 
-.drawer{
+.drawer-content{
     width: 150px;
 }
 
 @media (min-width: 768px) {
-    .drawer {
+    .drawer-content {
         width: 224px;
     } 
 }
