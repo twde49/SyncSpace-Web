@@ -133,7 +133,6 @@ onMounted(() => {
     const error = route.query.error as string | undefined;
 
     if (error) {
-        // Gérer l'erreur si le backend en a renvoyé une
         $toast.error("Erreur lors de la connexion via Google.");
         router.replace({ path: route.path, query: {} }); // Nettoyer l'URL
         return;

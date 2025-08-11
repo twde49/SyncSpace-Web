@@ -573,6 +573,7 @@
                                             <br />
                                             {{ getFormattedDate(password.updatedAt) }}
                                         </div>
+                                        <Icon v-if="password.mustBeUpdated" name="ph:seal-warning" size="32px" class="textColorCategoryQuaternary" />
                                     </div>
                                     <div class="flex items-center space-x-2">
                                         <Icon name="ph:copy" size="21px"
