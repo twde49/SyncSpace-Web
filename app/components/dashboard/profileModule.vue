@@ -264,6 +264,13 @@ onUpdated(() => {
         applyDraggable();
     }
 });
+
+onMounted(() => {
+    if (closed.value) {
+        applyDraggable();
+    }
+    isOnline(userStore.email, userStore.token);
+});
 </script>
 
 <style scoped>

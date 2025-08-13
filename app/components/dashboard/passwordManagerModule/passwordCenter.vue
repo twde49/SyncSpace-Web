@@ -115,7 +115,7 @@
                         <div v-if="!showVerificationModal" class="relative">
                             <input :type="showMasterPassword ? 'text' : 'password'" v-model="masterPassword"
                                 @input="validatePasswordStrength" placeholder="Mot de passe maître"
-                                class="w-full p-3 pr-10 border border-gray-300 rounded-lg dark:border-gray-600 dark:bg-gray-800 dark:text-white focus:outline-none" />
+                                class="w-full p-3 pr-10 border border-gray-300 rounded-lg dark:border-gray-600 dark:bg-gray-800 dark:text-white focus:ring-0" />
                             <button type="button" @click="showMasterPassword = !showMasterPassword"
                                 class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
                                 <Icon :name="showMasterPassword ? 'ph:eye-slash' : 'ph:eye'" size="20px" />
@@ -147,7 +147,7 @@
                                     <input :type="showMasterPasswordConfirmation ? 'text' : 'password'"
                                         v-model="masterPasswordConfirmation"
                                         placeholder="Retapez votre mot de passe maître"
-                                        class="w-full p-3 pr-10 border rounded-lg dark:border-gray-600 dark:bg-gray-800 dark:text-white focus:outline-none"
+                                        class="w-full p-3 pr-10 border rounded-lg dark:border-gray-600 dark:bg-gray-800 dark:text-white focus:ring-0"
                                         :class="passwordMatchError ? 'border-red-500' : 'border-gray-300'" />
                                     <button type="button"
                                         class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
@@ -209,7 +209,7 @@
                                     class="p-3 bgColorBlack rounded-lg textColorWhite flex justify-between items-center">
                                     <input type="text" id="new-password-url" v-model="newPasswordForm.url"
                                         placeholder="Ex: google.com"
-                                        class="w-full bg-transparent border-none focus:outline-none textColorWhite" />
+                                        class="w-full bg-transparent border-none  textColorWhite focus:ring-0" />
                                     <Icon v-if="newPasswordForm.url" @click="copyToClipboard(newPasswordForm.url)"
                                         name="ph:copy" size="20px"
                                         class="textColorPrimary hover:textColorSecondary cursor-pointer" />
@@ -224,7 +224,7 @@
                                     class="p-3 bgColorBlack rounded-lg textColorWhite flex justify-between items-center">
                                     <input type="text" id="new-password-name" v-model="newPasswordForm.name"
                                         placeholder="Ex: Mon compte Google"
-                                        class="w-full bg-transparent border-none focus:outline-none textColorWhite" />
+                                        class="w-full bg-transparent border-none  textColorWhite focus:ring-0" />
                                     <Icon v-if="newPasswordForm.name" @click="copyToClipboard(newPasswordForm.name)"
                                         name="ph:copy" size="20px"
                                         class="textColorPrimary hover:textColorSecondary cursor-pointer" />
@@ -239,7 +239,7 @@
                                     class="p-3 bgColorBlack rounded-lg textColorWhite flex justify-between items-center">
                                     <input type="email" id="new-password-email" v-model="newPasswordForm.email"
                                         placeholder="Ex: votre.email@example.com"
-                                        class="w-full bg-transparent border-none focus:outline-none textColorWhite" />
+                                        class="w-full bg-transparent border-none  textColorWhite focus:ring-0" />
                                     <Icon v-if="newPasswordForm.email" @click="copyToClipboard(newPasswordForm.email)"
                                         name="ph:copy" size="20px"
                                         class="textColorPrimary hover:textColorSecondary cursor-pointer" />
@@ -253,7 +253,7 @@
                                 <div class="relative">
                                     <input :type="showNewPassword ? 'text' : 'password'" id="new-password-value"
                                         v-model="newPasswordForm.password" placeholder="Entrez le mot de passe"
-                                        class="w-full p-3 pr-[140px] bgColorBlack rounded-lg textColorWhite focus:outline-none" />
+                                        class="w-full p-3 pr-[140px] bgColorBlack rounded-lg textColorWhite focus:ring-0" />
                                     <div class="absolute inset-y-0 right-0 pr-3 flex items-center space-x-2">
                                         <button type="button" @click="generatePasswordForNew"
                                             class="text-sm px-2 py-1 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 dark:bg-gray-600 dark:text-gray-200 dark:hover:bg-gray-500">
@@ -277,7 +277,7 @@
                                 <div class="relative p-3 bgColorBlack rounded-lg textColorWhite">
                                     <textarea id="new-password-notes" v-model="newPasswordForm.notes" rows="3"
                                         placeholder="Ajoutez des notes supplémentaires ici..."
-                                        class="w-full bg-transparent border-none focus:outline-none textColorWhite resize-y pr-8"></textarea>
+                                        class="w-full bg-transparent border-none  textColorWhite resize-y pr-8 focus:ring-0"></textarea>
                                     <Icon v-if="newPasswordForm.notes" @click="copyToClipboard(newPasswordForm.notes)"
                                         name="ph:copy" size="20px"
                                         class="absolute top-3 right-3 textColorPrimary hover:textColorSecondary cursor-pointer" />
@@ -318,7 +318,7 @@
                                     class="p-3 bgColorBlack rounded-lg textColorWhite flex justify-between items-center">
                                     <input type="text" id="edit-password-url" v-model="editPasswordForm.url"
                                         placeholder="Ex: google.com"
-                                        class="w-full bg-transparent border-none focus:outline-none textColorWhite" />
+                                        class="w-full bg-transparent border-none  textColorWhite focus:ring-0" />
                                     <Icon v-if="editPasswordForm.url" @click="copyToClipboard(editPasswordForm.url)"
                                         name="ph:copy" size="20px"
                                         class="textColorPrimary hover:textColorSecondary cursor-pointer" />
@@ -333,7 +333,7 @@
                                     class="p-3 bgColorBlack rounded-lg textColorWhite flex justify-between items-center">
                                     <input type="text" id="edit-password-name" v-model="editPasswordForm.name"
                                         placeholder="Ex: Mon compte Google"
-                                        class="w-full bg-transparent border-none focus:outline-none textColorWhite" />
+                                        class="w-full bg-transparent border-none  textColorWhite focus:ring-0" />
                                     <Icon v-if="editPasswordForm.name" @click="copyToClipboard(editPasswordForm.name)"
                                         name="ph:copy" size="20px"
                                         class="textColorPrimary hover:textColorSecondary cursor-pointer" />
@@ -348,7 +348,7 @@
                                     class="p-3 bgColorBlack rounded-lg textColorWhite flex justify-between items-center">
                                     <input type="email" id="edit-password-email" v-model="editPasswordForm.email"
                                         placeholder="Ex: votre.email@example.com"
-                                        class="w-full bg-transparent border-none focus:outline-none textColorWhite" />
+                                        class="w-full bg-transparent border-none  textColorWhite focus:ring-0" />
                                     <Icon v-if="editPasswordForm.email" @click="copyToClipboard(editPasswordForm.email)"
                                         name="ph:copy" size="20px"
                                         class="textColorPrimary hover:textColorSecondary cursor-pointer" />
@@ -362,7 +362,7 @@
                                 <div class="relative p-3 pr-[140px] bgColorBlack rounded-lg textColorWhite">
                                     <input :type="showEditPassword ? 'text' : 'password'" id="edit-password-value"
                                         v-model="editPasswordForm.password" placeholder="Entrez le mot de passe"
-                                        class="w-full bg-transparent border-none focus:outline-none textColorWhite" />
+                                        class="w-full bg-transparent border-none  textColorWhite focus:ring-0" />
                                     <div class="absolute inset-y-0 right-0 pr-3 flex items-center space-x-2">
                                         <button type="button" @click="generatePasswordForEdit"
                                             class="text-sm px-2 py-1 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 dark:bg-gray-600 dark:text-gray-200 dark:hover:bg-gray-500">
@@ -386,7 +386,7 @@
                                 <div class="relative p-3 bgColorBlack rounded-lg textColorWhite">
                                     <textarea id="edit-password-notes" v-model="editPasswordForm.notes" rows="3"
                                         placeholder="Ajoutez des notes supplémentaires ici..."
-                                        class="w-full bg-transparent border-none focus:outline-none textColorWhite resize-y pr-8"></textarea>
+                                        class="w-full bg-transparent border-none  textColorWhite resize-y pr-8 focus:ring-0"></textarea>
                                     <Icon v-if="editPasswordForm.notes" @click="copyToClipboard(editPasswordForm.notes)"
                                         name="ph:copy" size="20px"
                                         class="absolute top-3 right-3 textColorPrimary hover:textColorSecondary cursor-pointer" />
@@ -458,7 +458,7 @@
                                 <div class="relative">
                                     <input :type="showPasswordInView ? 'text' : 'password'"
                                         :value="chosenPassword?.decryptedPassword" readonly
-                                        class="w-full p-3 pr-28 border bgColorBlack rounded-lg textColorWhite focus:outline-none" />
+                                        class="w-full p-3 pr-28 border bgColorBlack rounded-lg textColorWhite focus:ring-0" />
                                     <div class="absolute inset-y-0 right-0 pr-3 flex items-center space-x-2">
                                         <Icon v-if="chosenPassword?.decryptedPassword"
                                             @click="copyToClipboard(chosenPassword.decryptedPassword)" name="ph:copy"
@@ -475,7 +475,7 @@
                                 <label class="block text-sm font-medium textColorBlack mb-1">Notes</label>
                                 <div class="relative">
                                     <textarea :value="chosenPassword.decryptedNotes" readonly rows="3"
-                                        class="w-full p-3 border bgColorBlack rounded-lg textColorWhite resize-y focus:outline-none"></textarea>
+                                        class="w-full p-3 border bgColorBlack rounded-lg textColorWhite resize-y focus:ring-0"></textarea>
                                     <Icon v-if="chosenPassword.decryptedNotes"
                                         @click="copyToClipboard(chosenPassword.decryptedNotes)" name="ph:copy"
                                         size="20px"
