@@ -69,14 +69,14 @@ async function decryptPassword(
 }
 
 async function fetchPasswords() {
-	const res = await useAuthFetch("passwords/list");
+	const res = await useAuthFetch(`passwords/list?${Date.now()}`);
 	passwords.value = res.data.value as PasswordItem[];
 }
 
 async function storePassword(passwordData: PasswordItem) {
 	const encrypted = await encryptPassword(passwordData.password);
 
-	await useAuthFetch("passwords/add", {
+	await useAuthFetch(`passwords/add?${Date.now()}`, {
 		method: "POST",
 		body: JSON.stringify({
 			url: passwordData.url,

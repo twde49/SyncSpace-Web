@@ -9,7 +9,7 @@
           @click="toggleMonthDropdown"
         >
           {{ currentMonthName.slice(0, 3) }}
-          <Icon name="solar:alt-arrow-down-line-duotone" size="1.4em" />
+          <Icon name="ph:caret-down" size="1.4em" />
         </button>
         <div
           v-if="showMonthDropdown"
@@ -32,7 +32,7 @@
           class="flex justify-center items-center textColorSecondary rounded-full"
           data-tooltip-target="tooltip-today"
         >
-          <Icon name="material-symbols:today" size="1.2em" />
+          <Icon name="ph:calendar-dot" size="1.2em" />
         </button>
         <div
           id="tooltip-today"
@@ -50,7 +50,7 @@
 
       <div class="textColorSecondary ml-2">
         <Icon
-          name="solar:add-square-bold"
+          name="ph:plus-square"
           size="1.4em"
           class="TextColorSecondary cursor-pointer"
           data-tooltip-target="tooltip-add-event"
@@ -70,14 +70,14 @@
         <button @click="prevWeek" class="text-2xl">
           <Icon
             class="bgColorSecondary"
-            name="solar:alt-arrow-left-outline"
+            name="ph:arrow-circle-left"
             size="1.2em"
           />
         </button>
         <button @click="nextWeek" class="text-2xl">
           <Icon
             class="bgColorSecondary"
-            name="solar:alt-arrow-right-outline"
+            name="ph:arrow-circle-right"
             size="1.2em"
           />
         </button>
@@ -141,7 +141,7 @@
               @click="openAddEventModalForDay(selectedDay)"
               class="mr-4 bgColorPrimary textColorWhiteFull px-3 py-1 rounded flex items-center"
             >
-              <Icon name="solar:add-line-duotone" class="mr-1" />
+              <Icon name="ph:calendar-plus" class="mr-1" />
               Ajouter
             </button>
             <button
@@ -229,7 +229,7 @@
                 backgroundColor: selectedEvent?.color || 'var(--color-primary)',
               }"
             >
-              <Icon name="material-symbols:edit-outline" class="mr-1" />
+              <Icon name="ph:pencil-simple-line" class="mr-1" />
               Modifier
             </button>
             <button
@@ -245,7 +245,7 @@
             <div>
               <h3 class="text-lg font-bold mb-2">Détails</h3>
               <div class="flex mb-2 items-center">
-                <Icon name="mdi:calendar" class="mr-2" />
+                <Icon name="ph:calendar-dots" class="mr-2" />
                 <span>
                   {{ formatEventDate(selectedEvent) }}
                 </span>
@@ -254,14 +254,14 @@
                 class="flex mb-2 items-center"
                 v-if="selectedEvent?.description"
               >
-                <Icon name="mdi:text" class="mr-2" />
+                <Icon name="ph:text-align-left" class="mr-2" />
                 <span>{{ selectedEvent?.description }}</span>
               </div>
               <div
                 class="flex mb-2 items-center"
                 v-if="selectedEvent?.isAllDay"
               >
-                <Icon name="mdi:clock-outline" class="mr-2" />
+                <Icon name="ph:clock" class="mr-2" />
                 <span>Journée entière</span>
               </div>
             </div>
@@ -440,7 +440,7 @@
                   <div
                     class="w-10 h-10 rounded-full overflow-hidden bg-gray-200 flex justify-center items-center mr-2.5"
                   >
-                    <Icon name="mdi:account" size="1.5em" />
+                    <Icon name="ph:user" size="1.5em" />
                   </div>
                   <div class="flex flex-col">
                     <span class="font-bold">{{ user.firstName }}</span>
@@ -467,7 +467,7 @@
                       @click="removeUser(user)"
                       class="bg-transparent border-0 cursor-pointer ml-1.5 flex items-center justify-center"
                     >
-                      <Icon name="mdi:close" size="0.8em" />
+                      <Icon name="ph:x-circle" size="1em" />
                     </button>
                   </div>
                 </div>
@@ -644,7 +644,7 @@
                   <div
                     class="w-10 h-10 rounded-full overflow-hidden bg-gray-200 flex justify-center items-center mr-2.5"
                   >
-                    <Icon name="mdi:account" size="1.5em" />
+                    <Icon name="ph:user" size="1.5em" />
                   </div>
                   <div class="flex flex-col">
                     <span class="font-bold">{{ user.firstName }}</span>
@@ -671,7 +671,7 @@
                       @click="removeUser(user)"
                       class="bg-transparent border-0 cursor-pointer ml-1.5 flex items-center justify-center"
                     >
-                      <Icon name="mdi:close" size="0.8em" />
+                      <Icon name="ph:x-circle" size="0.8em" />
                     </button>
                   </div>
                 </div>
@@ -780,7 +780,7 @@ const searchUsers = async (): Promise<void> => {
  isSearching.value = true;
 
  try {
-  const response = await useAuthFetch("conversation/user/search", {
+  const response = await useAuthFetch(`conversation/user/search?${Date.now()}`, {
    method: "POST",
    headers: {
     "Content-Type": "application/json",
@@ -1113,13 +1113,14 @@ async function updateEvent(): Promise<void> {
   };
 
   const response = await useAuthFetch(
-   `events/update/${editEventData.value.id}`,
+   `events/update/${editEventData.value.id}?${Date.now()}`,
    {
     method: "PUT",
     body: eventData,
    },
   );
-
+   
+  console.log(response.data.value);
   if (response.data.value) {
    await fetchEvents();
    closeEditEventModal();
@@ -1153,7 +1154,7 @@ async function saveEvent(): Promise<void> {
    isAllDay: newEvent.value.isAllDay,
   };
 
-  const response = await useAuthFetch("events/create", {
+  const response = await useAuthFetch(`events/create?${Date.now()}`, {
    method: "POST",
    body: eventData,
   });
@@ -1176,7 +1177,7 @@ async function saveEvent(): Promise<void> {
 
 const fetchEvents = async (): Promise<void> => {
  try {
-  const response = await useAuthFetch("events/all");
+  const response = await useAuthFetch(`events/all?${Date.now()}`);
   events.value = response.data.value as Event[];
   for (const event of events.value) {
    if (typeof event.startDate === "string") {

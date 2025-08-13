@@ -20,7 +20,7 @@
         <div class="parameters-icon">
           <Icon
             @click="openParamModal"
-            name="solar:settings-bold"
+            name="ph:gear-six-fill"
             size="1em"
             class="textColorBlack"
           />
@@ -298,7 +298,7 @@ watch(webSocketData.value, async newData => {
 watch(
   () => userStore.parameters.notificationsEnabled,
   newValue => {
-    useAuthFetch('settings/enable-disable-notifications', {
+    useAuthFetch(`settings/enable-disable-notifications?${Date.now()}`, {
       method: 'POST',
       body: JSON.stringify({ notifications_enabled: newValue }),
     });
@@ -308,7 +308,7 @@ watch(
 watch(
   () => userStore.parameters.geolocationEnabled,
   newValue => {
-    useAuthFetch('settings/enable-disable-geolocation', {
+    useAuthFetch(`settings/enable-disable-geolocation?${Date.now()}`, {
       method: 'POST',
       body: JSON.stringify({ geolocation_enabled: newValue }),
     });

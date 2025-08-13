@@ -1,9 +1,9 @@
 <template>
   <div class="currentVolume ml-6 flex flex-row justify-center items-center">
     <Icon
-      name="material-symbols:volume-up-rounded"
+      name="ph:speaker-simple-high-fill"
       class="volumeIcon"
-      size="200%"
+      size="150%"
     />
     <input
       class="volume-slider"

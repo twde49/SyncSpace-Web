@@ -39,7 +39,7 @@
                         <button v-if="message.content"
                             @click="toggleAudioPlayback(String(message.id), baseUrlWithoutApi + message.content)"
                             class="play-pause-btn" :class="{ 'playing': audioStates[message.id]?.isPlaying }">
-                            <Icon :name="audioStates[message.id]?.isPlaying ? 'mdi:pause' : 'mdi:play'" size="20px" />
+                            <Icon :name="audioStates[message.id]?.isPlaying ? 'ph:pause-fill' : 'ph:play-fill'" size="20px" />
                         </button>
 
                         <div class="audio-progress-container">
@@ -68,13 +68,13 @@
                     <div class="py-1">
                         <button class="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
                             @click="deleteMessage(message)">
-                            <Icon name="heroicons:trash" class="mr-2" size="16" />
+                            <Icon name="ph:trash" class="mr-2" size="16" />
                             Supprimer
                         </button>
 
                         <button class="flex items-center w-full px-4 py-2 text-sm text-blue-600 hover:bg-gray-100"
                             @click="showEditMessageModal(message)">
-                            <Icon name="heroicons:pencil-square" class="mr-2" size="16" />
+                            <Icon name="ph:pencil-simple-line" class="mr-2" size="16" />
                             Modifier
                         </button>
                     </div>
@@ -89,7 +89,7 @@
             <div class="flex justify-between items-center mb-4">
                 <h3 class="text-lg font-semibold text-gray-900">Modifier le message</h3>
                 <button @click="closeEditModal" class="text-gray-500 hover:text-gray-700">
-                    <Icon name="heroicons:x-mark" size="24" />
+                    <Icon name="ph:x-square" size="24" />
                 </button>
             </div>
             <div class="mb-4">
@@ -117,7 +117,7 @@
             <div class="flex justify-between items-center mb-4">
                 <h3 class="text-lg font-semibold text-gray-900">Aperçu de l'enregistrement</h3>
                 <button @click="cancelAudioPreview" class="text-gray-500 hover:text-gray-700">
-                    <Icon name="heroicons:x-mark" size="24" />
+                    <Icon name="ph:x-square" size="24" />
                 </button>
             </div>
 
@@ -125,7 +125,7 @@
                 <div class="custom-audio-player preview-player">
                     <button @click="togglePreviewPlayback" class="play-pause-btn"
                         :class="{ 'playing': previewAudioState.isPlaying }">
-                        <Icon :name="previewAudioState.isPlaying ? 'mdi:pause' : 'mdi:play'" size="20px" />
+                        <Icon :name="previewAudioState.isPlaying ? 'ph:pause-fill' : 'ph:play-fill'" size="20px" />
                     </button>
 
                     <div class="audio-progress-container">
@@ -163,7 +163,7 @@
     <div v-if="showImageModal" class="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50" @click="closeImageModal">
         <div class="relative w-auto h-auto max-w-[90vw] max-h-[90vh] p-4">
             <button @click="closeImageModal" class="absolute top-2 right-2 text-white hover:text-gray-300 z-10">
-                <Icon name="heroicons:x-mark" size="32" />
+                <Icon name="ph:x-square" size="32" />
             </button>
             <img :src="selectedImage" alt="Image en plein écran" class="max-w-full max-h-[75vh] object-contain" />
         </div>
@@ -176,7 +176,7 @@
             <div class="flex justify-between items-center p-4 border-b">
                 <h3 class="text-lg font-semibold text-gray-900">Choisir un GIF</h3>
                 <button @click="closeGiphyModal" class="text-gray-500 hover:text-gray-700">
-                    <Icon name="heroicons:x-mark" size="24" />
+                    <Icon name="ph:x-square" size="24" />
                 </button>
             </div>
 
@@ -190,7 +190,7 @@
                         placeholder="Rechercher des GIFs..." 
                         class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900"
                     />
-                    <Icon name="heroicons:magnifying-glass" size="20" class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                    <Icon name="ph:magnifying-glass" size="20" class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                 </div>
             </div>
 
@@ -216,7 +216,7 @@
                         />
                         <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-200 flex items-center justify-center">
                             <div class="opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-white rounded-full p-2">
-                                <Icon name="heroicons:plus" size="20" class="text-gray-700" />
+                                <Icon name="ph:plus-circle" size="20" class="text-gray-700" />
                             </div>
                         </div>
                     </div>
@@ -236,7 +236,7 @@
 
                 <!-- Message si aucun résultat -->
                 <div v-if="!isLoadingGiphy && giphyGifs.length === 0" class="text-center text-gray-500 py-8">
-                    <Icon name="heroicons:face-frown" size="48" class="mx-auto mb-2 text-gray-300" />
+                    <Icon name="ph:smiley-nervous" size="48" class="mx-auto mb-2 text-gray-300" />
                     <p>Aucun GIF trouvé</p>
                     <p class="text-sm">Essayez avec d'autres mots-clés</p>
                 </div>
@@ -261,13 +261,13 @@
 
                 <!-- Menu déroulant -->
                 <div v-if="showMediaMenu" 
-                     class="media-menu absolute bottom-full left-0 mb-2 bg-white rounded-lg shadow-xl border overflow-hidden"
+                     class="media-menu absolute bottom-full left-0 mb-2 bg-white rounded-lg shadow-xl border overflow-hidden grid grid-cols-2 gap-x-4 gap-y-2"
                      :class="{ 'menu-enter-active': showMediaMenu }">
 
                     <!-- Option Photo -->
                     <div class="menu-item photo-item" @click="selectMediaType('photo')">
                         <div class="menu-icon bgColorSecondary">
-                            <Icon name="heroicons:camera" size="18px" class="text-white" />
+                            <Icon name="ph:camera" size="18px" class="text-white" />
                         </div>
                         <div class="menu-text">
                             <span class="menu-title text-gray-900">Photo</span>
@@ -278,11 +278,66 @@
                     <!-- Option GIF -->
                     <div class="menu-item gif-item" @click="selectMediaType('gif')">
                         <div class="menu-icon bgColorCategoryPrimary">
-                            <Icon name="heroicons:gif" size="18px" class="text-white" />
+                            <Icon name="ph:gif" size="18px" class="text-white" />
                         </div>
                         <div class="menu-text">
                             <span class="menu-title text-gray-900">GIF</span>
                             <span class="menu-subtitle text-gray-500">Partager un GIF animé</span>
+                        </div>
+                    </div>
+
+                    <!-- Option Mot de passe -->
+                    <div class="menu-item password-item" @click="selectMediaType('password')">
+                        <div class="menu-icon bg-red-500">
+                            <Icon name="ph:key" size="18px" class="text-white" />
+                        </div>
+                        <div class="menu-text">
+                            <span class="menu-title text-gray-900">Mot de passe</span>
+                            <span class="menu-subtitle text-gray-500">Partager de façon sécurisée</span>
+                        </div>
+                    </div>
+
+                    <!-- Option Note -->
+                    <div class="menu-item note-item" @click="selectMediaType('note')">
+                        <div class="menu-icon bg-yellow-500">
+                            <Icon name="ph:note-pencil" size="18px" class="text-white" />
+                        </div>
+                        <div class="menu-text">
+                            <span class="menu-title text-gray-900">Note</span>
+                            <span class="menu-subtitle text-gray-500">Créer une note partagée</span>
+                        </div>
+                    </div>
+
+                    <!-- Option Événement -->
+                    <div class="menu-item event-item" @click="selectMediaType('event')">
+                        <div class="menu-icon bg-blue-500">
+                            <Icon name="ph:calendar-plus" size="18px" class="text-white" />
+                        </div>
+                        <div class="menu-text">
+                            <span class="menu-title text-gray-900">Événement</span>
+                            <span class="menu-subtitle text-gray-500">Planifier un rendez-vous</span>
+                        </div>
+                    </div>
+
+                    <!-- Option Fichier -->
+                    <div class="menu-item file-item" @click="selectMediaType('file')">
+                        <div class="menu-icon bg-gray-600">
+                            <Icon name="ph:file-arrow-up" size="18px" class="text-white" />
+                        </div>
+                        <div class="menu-text">
+                            <span class="menu-title text-gray-900">Fichier</span>
+                            <span class="menu-subtitle text-gray-500">Envoyer un document</span>
+                        </div>
+                    </div>
+
+                    <!-- Option Musique -->
+                    <div class="menu-item music-item" @click="selectMediaType('music')">
+                        <div class="menu-icon bg-green-500">
+                            <Icon name="ph:music-note" size="18px" class="text-white" />
+                        </div>
+                        <div class="menu-text">
+                            <span class="menu-title text-gray-900">Musique</span>
+                            <span class="menu-subtitle text-gray-500">Partager de l'audio</span>
                         </div>
                     </div>
                 </div>
@@ -315,7 +370,7 @@
                 </div>
 
                 <!-- Microphone normal -->
-                <Icon name="mdi:microphone" size="21px"
+                <Icon name="ph:microphone" size="21px"
                     class="media textColorBlack cursor-pointer transition-all duration-200 hover:scale-110"
                     :class="{ 'opacity-0': isRecording }" />
             </div>
@@ -437,11 +492,26 @@ const toggleMediaMenu = () => {
     showMediaMenu.value = !showMediaMenu.value;
 };
 
-const selectMediaType = (type: 'photo' | 'gif') => {
+const selectMediaType = (type: 'photo' | 'gif' | 'password' | 'note' | 'event' | 'file' | 'music') => {
     if (type === 'photo') {
         photoInput.value?.click();
     } else if (type === 'gif') {
         openGiphyModal();
+    } else if (type === 'password') {
+        console.log('Share password functionality');
+        $toast.info('Fonctionnalité de partage de mot de passe à implémenter.');
+    } else if (type === 'note') {
+        console.log('Share note functionality');
+        $toast.info('Fonctionnalité de partage de note à implémenter.');
+    } else if (type === 'event') {
+        console.log('Plan event functionality');
+        $toast.info('Fonctionnalité de planification d\'événement à implémenter.');
+    } else if (type === 'file') {
+        console.log('Share file functionality');
+        $toast.info('Fonctionnalité de partage de fichier à implémenter.');
+    } else if (type === 'music') {
+        console.log('Share music functionality');
+        $toast.info('Fonctionnalité de partage de musique à implémenter.');
     }
     showMediaMenu.value = false;
 };
@@ -776,7 +846,7 @@ const submitEditMessage = async () => {
 
 const deleteMessage = async (message: Message) => {
     try {
-        await useAuthFetch(`conversation/message/remove/${message.id}`, {
+        await useAuthFetch(`conversation/message/remove/${message.id}?${Date.now()}`, {
             method: 'DELETE',
         });
 
@@ -803,7 +873,7 @@ const deleteMessage = async (message: Message) => {
 
 const editMessage = async (message: Message, newMessageContent: string) => {
     try {
-        await useAuthFetch(`conversation/message/edit/${message.id}`, {
+        await useAuthFetch(`conversation/message/edit/${message.id}?${Date.now()}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -926,7 +996,7 @@ const toggleRecording = async () => {
             isRecording.value = true;
             isRecordingActive.value = true;
         } catch (error) {
-            $toast.error('Failed to start recording');
+            $toast.error('Erreur microphone');
             console.error(error);
         }
     }
@@ -1127,14 +1197,18 @@ const sendAudioMessage = async (audioBlob: Blob) => {
     bottom: 100%;
     left: 0;
     margin-bottom: 8px;
-    min-width: 200px;
+    min-width: 400px; /* Wider for 2 columns */
+    /* max-width: 280px; - Removed, as min-width defines new base */
     background: white;
     border-radius: 12px;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
     border: 1px solid rgba(0, 0, 0, 0.08);
-    overflow: hidden;
+    overflow: hidden; /* Keep hidden for border-radius clip */
     transform-origin: bottom left;
     animation: menuSlideUp 0.2s ease-out forwards;
+    /* max-height: 400px; - Removed for 2-row layout */
+    /* overflow-y: auto; - Removed for 2-row layout */
+    padding: 8px; /* Add some padding inside the grid container */
 }
 
 @keyframes menuSlideUp {
@@ -1154,11 +1228,11 @@ const sendAudioMessage = async (audioBlob: Blob) => {
     padding: 12px 16px;
     cursor: pointer;
     transition: all 0.2s ease;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    /* border-bottom: 1px solid rgba(0, 0, 0, 0.05); - Removed for grid layout */
 }
 
 .menu-item:last-child {
-    border-bottom: none;
+    /* border-bottom: none; - No longer needed */
 }
 
 .menu-item:hover {
@@ -1174,6 +1248,26 @@ const sendAudioMessage = async (audioBlob: Blob) => {
     background: linear-gradient(135deg, #faf5ff, #f3e8ff);
 }
 
+.password-item:hover {
+    background: linear-gradient(135deg, #fef2f2, #fee2e2);
+}
+
+.note-item:hover {
+    background: linear-gradient(135deg, #fffbeb, #fef3c7);
+}
+
+.event-item:hover {
+    background: linear-gradient(135deg, #eff6ff, #dbeafe);
+}
+
+.file-item:hover {
+    background: linear-gradient(135deg, #f9fafb, #f3f4f6);
+}
+
+.music-item:hover {
+    background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+}
+
 .menu-icon {
     display: flex;
     align-items: center;
@@ -1183,6 +1277,7 @@ const sendAudioMessage = async (audioBlob: Blob) => {
     border-radius: 8px;
     margin-right: 12px;
     transition: transform 0.2s ease;
+    flex-shrink: 0;
 }
 
 .menu-item:hover .menu-icon {
@@ -1193,6 +1288,7 @@ const sendAudioMessage = async (audioBlob: Blob) => {
     display: flex;
     flex-direction: column;
     gap: 2px;
+    flex-grow: 1;
 }
 
 .menu-title {
@@ -1204,6 +1300,7 @@ const sendAudioMessage = async (audioBlob: Blob) => {
 .menu-subtitle {
     font-size: 12px;
     color: #6b7280;
+    line-height: 1.2;
 }
 
 /* Animation de rotation pour l'icône + */
@@ -1486,7 +1583,10 @@ const sendAudioMessage = async (audioBlob: Blob) => {
     }
 
     .media-menu {
-        min-width: 180px;
+        min-width: 200px; /* Adjusted for smaller screens, single column */
+        max-width: 250px; /* Adjusted for smaller screens */
+        grid-template-columns: 1fr; /* Force single column on small screens */
+        gap: 0; /* Remove gap when single column */
     }
 
     .menu-item {
@@ -1496,6 +1596,14 @@ const sendAudioMessage = async (audioBlob: Blob) => {
     .menu-icon {
         width: 32px;
         height: 32px;
+    }
+
+    .menu-title {
+        font-size: 13px;
+    }
+
+    .menu-subtitle {
+        font-size: 11px;
     }
 
     /* Responsive pour la modal Giphy */

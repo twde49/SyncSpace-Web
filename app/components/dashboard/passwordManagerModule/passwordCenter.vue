@@ -11,12 +11,7 @@
                     <button @click="closeModal" type="button"
                         class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm h-8 w-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:textColorWhite"
                         data-modal-toggle="password-modal">
-                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                            viewBox="0 0 14 14">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
-                        </svg>
-                        <span class="sr-only">Fermer</span>
+                        <Icon name="ph:x-square" size="24" />
                     </button>
                 </div>
                 <div class="p-4 md:p-5">
@@ -607,9 +602,7 @@
                     </h3>
                     <button @click="cancelDelete" type="button"
                         class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm h-8 w-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:textColorWhite">
-                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
-                        </svg>
+                        <Icon name="ph:x-square" size="24" />
                         <span class="sr-only">Close modal</span>
                     </button>
                 </div>
@@ -807,7 +800,7 @@ const createMasterPassword = async () => {
     const passwordToAuthenticate = masterPassword.value;
 
     try {
-        await useAuthFetch("passwords/set-master-password", {
+        await useAuthFetch(`passwords/set-master-password?${Date.now()}`, {
             method: "POST",
             body: JSON.stringify({ masterPassword: passwordToAuthenticate }),
         });
@@ -882,7 +875,8 @@ const fetchPasswords = async () => {
     let res;
     try {
         res = await useAuthFetch(`passwords/list?${Date.now()}`);
-    } catch (error: any) {
+    } catch (error) {
+        console.error(error);
         $toast.error("Erreur lors de la récupération des mots de passe.");
         passwords.value = [];
         return;
@@ -1025,7 +1019,7 @@ const saveNewPassword = async () => {
             isFavorite: newPasswordForm.value.isFavorite,
         };
 
-        await useAuthFetch("passwords/add", {
+        await useAuthFetch(`passwords/add?${Date.now()}`, {
             method: "POST",
             body: JSON.stringify(payload),
         });
@@ -1119,7 +1113,7 @@ const updatePassword = async () => {
             isFavorite: editPasswordForm.value.isFavorite,
         };
 
-        await useAuthFetch(`passwords/update/${editPasswordForm.value.id}`, {
+        await useAuthFetch(`passwords/update/${editPasswordForm.value.id}?${Date.now()}`, {
             method: "PATCH", // Or PUT, depending on API design
             body: JSON.stringify(payload),
         });
@@ -1198,7 +1192,7 @@ const deletePassword = async (id: number) => {
     }
 
     try {
-        await useAuthFetch(`passwords/remove/${id}`, { method: "DELETE" });
+        await useAuthFetch(`passwords/remove/${id}?${Date.now()}`, { method: "DELETE" });
         $toast.success("Mot de passe supprimé.");
         passwordToDelete.value = null; // Clear id after successful deletion
         showDeleteConfirmationModal.value = false; // Hide the confirmation modal
@@ -1228,7 +1222,7 @@ const toggleFavorite = async (password: DisplayPasswordItem) => {
     }
 
     try {
-        await useAuthFetch(`passwords/toggle-favorite/${password.id}`, {
+        await useAuthFetch(`passwords/toggle-favorite/${password.id}?${Date.now()}`, {
             method: "PATCH",
             body: JSON.stringify({ isFavorite: !password.isFavorite }),
         });
@@ -1248,7 +1242,7 @@ const toggleFavorite = async (password: DisplayPasswordItem) => {
 
 
 const checkMasterPasswordExistence = async () => {
-    const res = await useAuthFetch("passwords/get-master-password-hash");
+    const res = await useAuthFetch(`passwords/get-master-password-hash?${Date.now()}`);
     const masterPasswordHash = res.data.value as { hash: string | null };
     if (masterPasswordHash.hash !== null) {
         isMasterPasswordSet.value = true;

@@ -5,7 +5,7 @@
 				class="w-fit fixed top-4 left-1/2 transform -translate-x-1/2"
 		>
 				<Icon
-						name="solar:bell-bold"
+						:name="notifications && notifications.length > 0 ? 'ph:bell-simple-ringing-fill' : 'ph:bell-simple-fill'"
 						size="2rem"
 						class="textColorWhite hover:animate-bell cursor-pointer"
 				/>
@@ -29,12 +29,12 @@
 												@click="readAllNotifications"
 												class="text-xs text-gray-500 hover:text-gray-700 transition-colors mt-1 flex items-center"
 										>
-												<Icon name="mdi:check-all" class="mr-1" size="0.8rem" />
+												<Icon name="ph:checks" class="mr-1" size="0.8rem" />
 												Marquer toutes comme lues
 										</button>
 								</div>
 								<div @click="toggleNotificationDrawer" class="cursor-pointer p-1">
-										<Icon name="mdi:close" size="1.2rem" class="textColorBlack" />
+										<Icon name="ph:x-square" size="1.2rem" class="textColorBlack" />
 								</div>
 						</div>
 						<NotificationList
@@ -101,7 +101,7 @@ onBeforeUnmount(() => {
 
 const fetchNotifications = async () => {
 	try {
-		const res = await useAuthFetch("notifications/all");
+		const res = await useAuthFetch(`notifications/all?${Date.now()}`);
 		notifications.value = res.data.value as Notification[];
 	} catch (error) {
 		console.error("Error fetching notifications:", error);
@@ -110,7 +110,7 @@ const fetchNotifications = async () => {
 
 const readNotification = async (id: number) => {
 	try {
-		await useAuthFetch(`notifications/${id}/read`, {
+		await useAuthFetch(`notifications/${id}/read?${Date.now()}`, {
 			method: "PUT",
 		});
 		notifications.value = notifications.value.filter((n) => n.id !== id);
@@ -121,7 +121,7 @@ const readNotification = async (id: number) => {
 
 const readAllNotifications = async () => {
 	try {
-		await useAuthFetch("notifications/readAll", {
+		await useAuthFetch(`notifications/readAll?${Date.now()}`, {
 			method: "PUT",
 		});
 		notifications.value = [];

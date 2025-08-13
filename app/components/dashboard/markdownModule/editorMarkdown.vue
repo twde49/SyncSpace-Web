@@ -165,7 +165,7 @@ const saveTitle = async () => {
 
 const addNewNote = async () => {
 	try {
-		const response = await useAuthFetch("note/save", {
+		const response = await useAuthFetch(`note/save?${Date.now()}`, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
@@ -192,7 +192,7 @@ const addNewNote = async () => {
 
 const updateExistingNote = async () => {
 	try {
-		const response = await useAuthFetch(`note/save/${noteId}`, {
+		const response = await useAuthFetch(`note/save/${noteId}?${Date.now()}`, {
 			method: "PUT",
 			headers: {
 				"Content-Type": "application/json",

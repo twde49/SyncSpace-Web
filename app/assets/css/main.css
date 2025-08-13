@@ -184,3 +184,7 @@ body {
 .globalRadius {
 	border-radius: var(--global-radius) !important;
 }
+
+.z999 {
+	z-index: 999 !important;
+}

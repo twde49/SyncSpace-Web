@@ -97,7 +97,7 @@
         target="_blank"
         rel="noopener noreferrer"
       >
-        <Icon name="uil:github" class="github-logo" />
+        <Icon name="ph:github-logo-fill" class="github-logo" />
       </NuxtLink>
       <button class="login-button flex items-center" @click="navigateTo('/login')">
         Login

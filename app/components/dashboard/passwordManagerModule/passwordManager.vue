@@ -9,7 +9,7 @@
                     </div>
                     <div class="text-lg font-bold flex items-center gap-1 textColorBlack">
                         {{ passwordCount }}
-                        <Icon name="solar:key-bold" size="20px" />
+                        <Icon name="ph:key-fill" size="20px" />
                     </div>
                 </div>
                 <div
@@ -19,7 +19,7 @@
                     </div>
                     <div class="text-lg font-bold flex items-center gap-1">
                         {{ compromisedPasswordsCount }}
-                        <Icon name="material-symbols:warning-rounded" size="20px" />
+                        <Icon name="ph:seal-warning" size="20px" />
                     </div>
                 </div>
             </div>
@@ -28,7 +28,7 @@
                 class="flex-1 flex items-center justify-center bg-[var(--color-black)] rounded p-4 ml-2 cursor-pointer">
                 <div class="text-center flex flex-col items-center gap-2.5 textColorWhite">
                     <span class="normalFontItalic">Ouvrir mon Coffre</span>
-                    <Icon name="fluent:vault-16-filled" class="textColorPrimary" size="40px" />
+                    <Icon name="ph:vault-fill" class="textColorPrimary" size="40px" />
                 </div>
             </div>
         </div>

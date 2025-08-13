@@ -6,7 +6,7 @@
     ref="closedButton"
   >
     <Icon
-      name="tabler:message-filled"
+      name="ph:chat-text-fill"
       size="3.5em"
       class="messageIcon cursor-pointer"
       @click="openClose"
@@ -27,7 +27,7 @@
           class="h-max w-max bgColorLight topComponentSize flex justify-center items-center cursor-pointer fixed-icon"
         >
           <Icon
-            name="tabler:message-filled"
+            name="ph:chat-text-fill"
             size="3.5em"
             class="messageIcon expanded-icon cursor-pointer"
             @click="openClose"
@@ -66,7 +66,7 @@
                     class="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
                     @click="openDeleteModal(conversation)"
                   >
-                    <Icon name="heroicons:trash" class="mr-2" size="16" />
+                    <Icon name="ph:trash" class="mr-2" size="16" />
                     Supprimer
                   </button>
                 </div>
@@ -79,7 +79,7 @@
           ref="newConvButton"
           class="sticky bottom-[10px] mx-auto my-[10px] w-[90%] flex justify-center items-center h-[40px] rounded bg-[var(--color-black)] new-conv-button"
         >
-          <Icon name="typcn:plus" size="24px" class="textColorWhite" />
+          <Icon name="ph:plus-bold" size="24px" class="textColorWhite" />
         </button>
       </div>
       <div
@@ -114,7 +114,7 @@
           class="bg-transparent border-0 cursor-pointer textColorBlack"
           @click="closeNewConvModal"
         >
-          <Icon name="mdi:close" size="1.5em" />
+          <Icon name="ph:x-square" size="1.5em" />
         </button>
       </div>
       <div class="relative my-4 px-5">
@@ -155,7 +155,7 @@
             <div
               class="w-10 h-10 rounded-full overflow-hidden bg-gray-200 flex justify-center items-center mr-2.5"
             >
-              <Icon name="mdi:account" size="1.5em" />
+              <Icon name="ph:user" size="1.5em" />
             </div>
             <div class="flex flex-col">
               <span class="font-bold">{{ user.firstName }}</span>
@@ -182,7 +182,7 @@
                 @click="removeUser(user)"
                 class="bg-transparent border-0 cursor-pointer ml-1.5 flex items-center justify-center"
               >
-                <Icon name="mdi:close" size="0.8em" />
+                <Icon name="ph:x-circle" size="1em" />
               </button>
             </div>
           </div>
@@ -217,7 +217,7 @@
     >
       <div class="bg-red-100 px-6 py-4 flex items-center">
         <Icon
-          name="heroicons:exclamation-triangle"
+          name="ph:warning"
           class="text-red-600 mr-2"
           size="24"
         />
@@ -408,7 +408,7 @@ const searchUsers = async () => {
 	isSearching.value = true;
 
 	try {
-		const response = await useAuthFetch("conversation/user/search", {
+		const response = await useAuthFetch(`conversation/user/search?${Date.now()}`, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
@@ -456,7 +456,7 @@ const createConversation = async () => {
 
 	try {
 		const userIds = selectedUsers.value.map((user) => user.id);
-		const response = await useAuthFetch("conversation/new", {
+		const response = await useAuthFetch(`conversation/new?${Date.now()}`, {
 			method: "POST",
 			body: {
 				userIds,
@@ -488,7 +488,7 @@ const createConversation = async () => {
 
 const getConversations = async () => {
 	try {
-		const response = await useAuthFetch("conversations");
+		const response = await useAuthFetch(`conversations?${Date.now()}`);
 
 		conversations.value = response.data.value as Conversation[];
 	} catch (error: unknown) {
@@ -501,7 +501,7 @@ const removeConversation = async () => {
 	try {
 		if (conversationToDelete.value) {
 			await useAuthFetch(
-				`conversation/remove/${conversationToDelete.value.id}`,
+				`conversation/remove/${conversationToDelete.value.id}?${Date.now()}`,
 				{
 					method: "DELETE",
 				},

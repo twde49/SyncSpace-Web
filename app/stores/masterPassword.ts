@@ -10,14 +10,14 @@ export const useMasterPasswordStore = defineStore("masterPassword", {
 
 	actions: {
 		async setMasterPassword(masterPassword: string) {
-			await useAuthFetch("passwords/set-master-password", {
+			await useAuthFetch(`passwords/set-master-password?${Date.now()}`, {
 				method: "POST",
 				body: JSON.stringify({ masterPassword }),
 			});
 		},
 
 		async authenticate(masterPassword: string) {
-			const res = await useAuthFetch("passwords/get-master-password-hash");
+			const res = await useAuthFetch(`passwords/get-master-password-hash?${Date.now()}`);
 			if (
 				!res.data.value ||
 				!res.data.value ||

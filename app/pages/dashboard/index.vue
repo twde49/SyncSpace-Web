@@ -111,7 +111,7 @@
 import type { Note } from '~/types/Note';
 import type { Swapy } from 'swapy';
 import { createSwapy } from 'swapy';
-import { onMounted, onUnmounted, ref } from 'vue';
+import { onMounted, onUnmounted, ref, nextTick } from 'vue';
 import MessageModule from '~/components/dashboard/messageModule/messageModule.vue';
 import ProfileModule from '~/components/dashboard/profileModule.vue';
 import MusicPlayerModule from '~/components/dashboard/musicModule/MusicPlayerModule.vue';

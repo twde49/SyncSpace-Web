@@ -3,10 +3,10 @@
     <div class="switch" :class="{ active: isDark }" @click="toggleMode">
       <div class="switch-icon">
         <span v-if="isDark" class="flex justify-center items-center">
-          <Icon name="ic:round-dark-mode" size="1.4em" class="icon-moon" />
+          <Icon name="ph:moon" size="1.4em" class="icon-moon" />
         </span>
         <span v-else class="flex justify-center items-center">
-          <Icon name="ic:round-wb-sunny" size="1.4em" class="icon-sun" />
+          <Icon name="ph:sun" size="1.4em" class="icon-sun" />
         </span>
       </div>
     </div>
@@ -35,7 +35,7 @@ const toggleMode = () => {
 
 watch(() => $colorMode.preference, (newValue) => {
   if(userStore.currentUser() !== null){
-    useAuthFetch('settings/update-theme-preference', {
+    useAuthFetch(`settings/update-theme-preference?${Date.now()}`, {
       method: 'POST',
       body: JSON.stringify({ theme: newValue })
     });
