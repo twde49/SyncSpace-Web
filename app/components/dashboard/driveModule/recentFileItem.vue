@@ -8,7 +8,6 @@
 
         <div class="recentFiles h-full w-full">
             <div class="filesContainer h-full overflow-y-auto scroll-behavior: smooth;" ref="fileListRef">
-                <!-- Conditionally render folder creation or file import button -->
                 <div v-if="currentTab === 'folders'" @click="openFolderCreationModal"
                     class="fileItem globalRadius flex items-center p-2 my-2 rounded-lg w-full bgColorSecondary cursor-pointer">
                     <div class="fileIcon mr-4">

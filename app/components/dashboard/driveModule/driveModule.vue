@@ -57,28 +57,11 @@
             </div>
         </div>
         <div class="mb-1 flex-grow overflow-y-auto relative" :class="{ 'drop-active': dragover }">
-            <div v-if="dragover || !getFilesByTab || getFilesByTab.length === 0"
-                class="absolute inset-0 bgColorBlack bg-opacity-70 flex items-center justify-center z999 globalRadius cursor-pointer h-full"
-                @click="fileInput?.click()">
-                <div class="textColorWhite text-center p-4">
-                    <div class="megaFont mb-2">
-                        <i class="fas fa-upload"></i>
-                    </div>
-                    <Icon name="ph:file-bold" size="48" />
-                    <p class="largeFont font-medium">Aucun fichier disponible</p>
-                    <p class="largeFont font-medium">Glissez-déposez vos fichiers ici</p>
-                    <p class="normalFont font-medium mt-2">ou cliquez pour sélectionner</p>
-                    <p class="miniFont opacity-80 mt-1">
-                        Le téléchargement s'effectuera dans le répertoire courant
-                    </p>
-                </div>
-            </div>
-            <Transition v-else name="fade" mode="out-in">
-                <RecentFileItem v-if="getFilesByTab && getFilesByTab.length > 0" :files="getFilesByTab"
-                    @file-removed="handleFileRemove" @open-folder="handleFolderOpening" :current-tab="activeTab"
-                    :current-folder="currentFolder" @fetch-files="fetchFiles()" />
+            <Transition name="fade" mode="out-in">
+                <RecentFileItem :files="getFilesByTab" @file-removed="handleFileRemove"
+                    @open-folder="handleFolderOpening" :current-tab="activeTab" :current-folder="currentFolder"
+                    @fetch-files="fetchFiles()" />
             </Transition>
-
         </div>
     </div>
 </template>
@@ -219,18 +202,12 @@ const handleFileDrop = (event: DragEvent) => {
     dragover.value = false;
     const droppedFiles = event.dataTransfer?.files;
     if (droppedFiles && droppedFiles.length > 0) {
-        uploadFile(droppedFiles[0]);
+        uploadFile(droppedFiles[0]!);
     }
 };
 
 
-const back = () => {
-    if (currentFolder.value) {
-        currentFolder.value = null;
-        activeTab.value = 'folders';
-        fetchFiles();
-    }
-};
+
 
 onMounted(async () => {
     await nextTick(async () => {
