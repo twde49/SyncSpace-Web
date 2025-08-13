@@ -150,12 +150,10 @@
                                         class="w-full p-3 pr-10 border rounded-lg dark:border-gray-600 dark:bg-gray-800 dark:text-white focus:outline-none"
                                         :class="passwordMatchError ? 'border-red-500' : 'border-gray-300'" />
                                     <button type="button"
-
                                         class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
                                         <Icon :name="showMasterPasswordConfirmation ? 'ph:eye-slash' : 'ph:eye'"
                                             size="20px"
-                                           @click="showMasterPasswordConfirmation = !showMasterPasswordConfirmation"
-                                            />
+                                            @click="showMasterPasswordConfirmation = !showMasterPasswordConfirmation" />
                                     </button>
                                 </div>
                                 <p v-if="passwordMatchError" class="mt-1 text-xs text-red-600">
@@ -178,7 +176,7 @@
                                     Annuler
                                 </button>
                                 <button @click="confirmMasterPasswordCreation" :disabled="!canConfirmCreation"
-                                class="flex-1 textColorWhite bgColorPrimary font-medium rounded-lg text-sm px-5 py-2.5 text-center disabled:bg-gray-400 disabled:cursor-not-allowed transition-transform hover:scale-105">
+                                    class="flex-1 textColorWhite bgColorPrimary font-medium rounded-lg text-sm px-5 py-2.5 text-center disabled:bg-gray-400 disabled:cursor-not-allowed transition-transform hover:scale-105">
                                     Créer le coffre
                                 </button>
                             </div>
@@ -204,8 +202,7 @@
                             </h4>
 
                             <div>
-                                <label for="new-password-url"
-                                    class="block text-sm font-medium textColorBlack mb-2">
+                                <label for="new-password-url" class="block text-sm font-medium textColorBlack mb-2">
                                     URL / Site web <span class="text-red-500">*</span>
                                 </label>
                                 <div
@@ -220,8 +217,7 @@
                             </div>
 
                             <div>
-                                <label for="new-password-name"
-                                    class="block text-sm font-medium textColorBlack mb-2">
+                                <label for="new-password-name" class="block text-sm font-medium textColorBlack mb-2">
                                     Nom / Description
                                 </label>
                                 <div
@@ -236,8 +232,7 @@
                             </div>
 
                             <div>
-                                <label for="new-password-email"
-                                    class="block text-sm font-medium textColorBlack mb-2">
+                                <label for="new-password-email" class="block text-sm font-medium textColorBlack mb-2">
                                     Email
                                 </label>
                                 <div
@@ -252,8 +247,7 @@
                             </div>
 
                             <div>
-                                <label for="new-password-value"
-                                    class="block text-sm font-medium textColorBlack mb-2">
+                                <label for="new-password-value" class="block text-sm font-medium textColorBlack mb-2">
                                     Mot de passe <span class="text-red-500">*</span>
                                 </label>
                                 <div class="relative">
@@ -266,24 +260,26 @@
                                             Générer
                                         </button>
 
-                                            <Icon @click="showNewPassword = !showNewPassword" :name="showNewPassword ? 'ph:eye-slash' : 'ph:eye'" size="20px" class="textColorPrimary" />
-                                            <Icon v-if="newPasswordForm.password"
-                                                @click="copyToClipboard(newPasswordForm.password)" name="ph:copy" size="20px" class="textColorPrimary" />
+                                        <Icon @click="showNewPassword = !showNewPassword"
+                                            :name="showNewPassword ? 'ph:eye-slash' : 'ph:eye'" size="20px"
+                                            class="textColorPrimary" />
+                                        <Icon v-if="newPasswordForm.password"
+                                            @click="copyToClipboard(newPasswordForm.password)" name="ph:copy"
+                                            size="20px" class="textColorPrimary" />
                                     </div>
                                 </div>
                             </div>
 
                             <div>
-                                <label for="new-password-notes"
-                                    class="block text-sm font-medium textColorBlack mb-2">
+                                <label for="new-password-notes" class="block text-sm font-medium textColorBlack mb-2">
                                     Notes (optionnel)
                                 </label>
                                 <div class="relative p-3 bgColorBlack rounded-lg textColorWhite">
                                     <textarea id="new-password-notes" v-model="newPasswordForm.notes" rows="3"
                                         placeholder="Ajoutez des notes supplémentaires ici..."
                                         class="w-full bg-transparent border-none focus:outline-none textColorWhite resize-y pr-8"></textarea>
-                                    <Icon v-if="newPasswordForm.notes"
-                                        @click="copyToClipboard(newPasswordForm.notes)" name="ph:copy" size="20px"
+                                    <Icon v-if="newPasswordForm.notes" @click="copyToClipboard(newPasswordForm.notes)"
+                                        name="ph:copy" size="20px"
                                         class="absolute top-3 right-3 textColorPrimary hover:textColorSecondary cursor-pointer" />
                                 </div>
                             </div>
@@ -315,8 +311,7 @@
                             </h4>
 
                             <div>
-                                <label for="edit-password-url"
-                                    class="block text-sm font-medium textColorBlack mb-1">
+                                <label for="edit-password-url" class="block text-sm font-medium textColorBlack mb-1">
                                     URL / Site web <span class="text-red-500">*</span>
                                 </label>
                                 <div
@@ -331,8 +326,7 @@
                             </div>
 
                             <div>
-                                <label for="edit-password-name"
-                                    class="block text-sm font-medium textColorBlack mb-1">
+                                <label for="edit-password-name" class="block text-sm font-medium textColorBlack mb-1">
                                     Nom / Description
                                 </label>
                                 <div
@@ -347,8 +341,7 @@
                             </div>
 
                             <div>
-                                <label for="edit-password-email"
-                                    class="block text-sm font-medium textColorBlack mb-1">
+                                <label for="edit-password-email" class="block text-sm font-medium textColorBlack mb-1">
                                     Email
                                 </label>
                                 <div
@@ -363,8 +356,7 @@
                             </div>
 
                             <div>
-                                <label for="edit-password-value"
-                                    class="block text-sm font-medium textColorBlack mb-1">
+                                <label for="edit-password-value" class="block text-sm font-medium textColorBlack mb-1">
                                     Mot de passe <span class="text-red-500">*</span>
                                 </label>
                                 <div class="relative p-3 pr-[140px] bgColorBlack rounded-lg textColorWhite">
@@ -377,25 +369,26 @@
                                             Générer
                                         </button>
 
-                                            <Icon @click="showEditPassword = !showEditPassword" :name="showEditPassword ? 'ph:eye-slash' : 'ph:eye'" size="20px" class="textColorPrimary cursor-pointer"/>
-                                            <Icon v-if="editPasswordForm.password"
-                                                @click="copyToClipboard(editPasswordForm.password)"
-                                                name="ph:copy" size="20px" class="textColorPrimary cursor-pointer" />
+                                        <Icon @click="showEditPassword = !showEditPassword"
+                                            :name="showEditPassword ? 'ph:eye-slash' : 'ph:eye'" size="20px"
+                                            class="textColorPrimary cursor-pointer" />
+                                        <Icon v-if="editPasswordForm.password"
+                                            @click="copyToClipboard(editPasswordForm.password)" name="ph:copy"
+                                            size="20px" class="textColorPrimary cursor-pointer" />
                                     </div>
                                 </div>
                             </div>
 
                             <div>
-                                <label for="edit-password-notes"
-                                    class="block text-sm font-medium textColorBlack mb-1">
+                                <label for="edit-password-notes" class="block text-sm font-medium textColorBlack mb-1">
                                     Notes (optionnel)
                                 </label>
                                 <div class="relative p-3 bgColorBlack rounded-lg textColorWhite">
                                     <textarea id="edit-password-notes" v-model="editPasswordForm.notes" rows="3"
                                         placeholder="Ajoutez des notes supplémentaires ici..."
                                         class="w-full bg-transparent border-none focus:outline-none textColorWhite resize-y pr-8"></textarea>
-                                    <Icon v-if="editPasswordForm.notes"
-                                        @click="copyToClipboard(editPasswordForm.notes)" name="ph:copy" size="20px"
+                                    <Icon v-if="editPasswordForm.notes" @click="copyToClipboard(editPasswordForm.notes)"
+                                        name="ph:copy" size="20px"
                                         class="absolute top-3 right-3 textColorPrimary hover:textColorSecondary cursor-pointer" />
                                 </div>
                             </div>
@@ -433,26 +426,29 @@
                                     class="p-3 bgColorBlack rounded-lg textColorWhite flex justify-between items-center">
                                     <span>{{ chosenPassword?.url }}</span>
                                     <Icon v-if="chosenPassword?.url" @click="copyToClipboard(chosenPassword.url)"
-                                        name="ph:copy" size="20px" class="textColorPrimary hover:textColorSecondary cursor-pointer"/>
+                                        name="ph:copy" size="20px"
+                                        class="textColorPrimary hover:textColorSecondary cursor-pointer" />
                                 </div>
                             </div>
 
                             <div v-if="chosenPassword?.name">
                                 <label class="block text-sm font-medium textColorBlack mb-1">Nom /
                                     Description</label>
-                                <div class="p-3 bgColorBlack rounded-lg textColorWhite flex justify-between items-center">
+                                <div
+                                    class="p-3 bgColorBlack rounded-lg textColorWhite flex justify-between items-center">
                                     <span>{{ chosenPassword.name }}</span>
-                                    <Icon @click="copyToClipboard(chosenPassword.name)" name="ph:copy" size="20px"  class="textColorPrimary hover:textColorSecondary cursor-pointer"/>
+                                    <Icon @click="copyToClipboard(chosenPassword.name)" name="ph:copy" size="20px"
+                                        class="textColorPrimary hover:textColorSecondary cursor-pointer" />
                                 </div>
                             </div>
 
                             <div v-if="chosenPassword?.email">
-                                <label
-                                    class="block text-sm font-medium textColorBlack mb-1">Email</label>
+                                <label class="block text-sm font-medium textColorBlack mb-1">Email</label>
                                 <div
                                     class="p-3 bgColorBlack rounded-lg textColorWhite flex justify-between items-center">
                                     <span>{{ chosenPassword.email }}</span>
-                                    <Icon @click="copyToClipboard(chosenPassword.email)" name="ph:copy" size="20px"  class="textColorPrimary hover:textColorSecondary cursor-pointer"/>
+                                    <Icon @click="copyToClipboard(chosenPassword.email)" name="ph:copy" size="20px"
+                                        class="textColorPrimary hover:textColorSecondary cursor-pointer" />
                                 </div>
                             </div>
 
@@ -465,23 +461,25 @@
                                         class="w-full p-3 pr-28 border bgColorBlack rounded-lg textColorWhite focus:outline-none" />
                                     <div class="absolute inset-y-0 right-0 pr-3 flex items-center space-x-2">
                                         <Icon v-if="chosenPassword?.decryptedPassword"
-                                            @click="copyToClipboard(chosenPassword.decryptedPassword)"
-                                            name="ph:copy" size="20px" class="textColorPrimary hover:textColorSecondary cursor-pointer"/>
+                                            @click="copyToClipboard(chosenPassword.decryptedPassword)" name="ph:copy"
+                                            size="20px"
+                                            class="textColorPrimary hover:textColorSecondary cursor-pointer" />
                                         <Icon @click="showPasswordInView = !showPasswordInView"
-                                            :name="showPasswordInView ? 'ph:eye-slash' : 'ph:eye'" size="20px" class="textColorPrimary hover:textColorSecondary cursor-pointer"/>
+                                            :name="showPasswordInView ? 'ph:eye-slash' : 'ph:eye'" size="20px"
+                                            class="textColorPrimary hover:textColorSecondary cursor-pointer" />
                                     </div>
                                 </div>
                             </div>
 
                             <div v-if="chosenPassword?.decryptedNotes">
-                                <label
-                                    class="block text-sm font-medium textColorBlack mb-1">Notes</label>
+                                <label class="block text-sm font-medium textColorBlack mb-1">Notes</label>
                                 <div class="relative">
                                     <textarea :value="chosenPassword.decryptedNotes" readonly rows="3"
                                         class="w-full p-3 border bgColorBlack rounded-lg textColorWhite resize-y focus:outline-none"></textarea>
                                     <Icon v-if="chosenPassword.decryptedNotes"
-                                        @click="copyToClipboard(chosenPassword.decryptedNotes)"
-                                        name="ph:copy" size="20px" class="absolute top-3 right-3 textColorPrimary hover:textColorSecondary cursor-pointer"/>
+                                        @click="copyToClipboard(chosenPassword.decryptedNotes)" name="ph:copy"
+                                        size="20px"
+                                        class="absolute top-3 right-3 textColorPrimary hover:textColorSecondary cursor-pointer" />
                                 </div>
                             </div>
 
@@ -500,7 +498,7 @@
                                     Retour
                                 </button>
                                 <button @click="openEditPasswordModal(chosenPassword as DisplayPasswordItem)"
-                                class="flex-1 bgColorCategoryPrimary textColorWhite font-medium rounded-lg text-sm px-5 py-2.5 text-center transition-transform hover:scale-105">
+                                    class="flex-1 bgColorCategoryPrimary textColorWhite font-medium rounded-lg text-sm px-5 py-2.5 text-center transition-transform hover:scale-105">
                                     Modifier
                                 </button>
                                 <button @click="confirmDelete(chosenPassword?.id)"
@@ -549,8 +547,8 @@
                                                 <Icon :name="password.isFavorite ? 'ph:star-fill' : 'ph:star'"
                                                     size="18px" />
                                             </button>
-                                            <NuxtLink :to="password.url"
-                                                target="_blank" class="text-lg font-semibold textColorPrimary">
+                                            <NuxtLink :to="password.url" target="_blank"
+                                                class="text-lg font-semibold textColorPrimary">
                                                 {{ password.url }}
                                             </NuxtLink>
                                         </div>
@@ -562,20 +560,19 @@
                                             class="w-full text-sm text-gray-600 dark:text-gray-400">
                                             {{ password.email }}
                                         </div>
-                                        <div
-                                            class="w-full text-gray-500 dark:text-gray-400">
+                                        <div class="w-full text-gray-500 dark:text-gray-400">
                                             Dernière mise à jour:
                                             <br />
                                             {{ getFormattedDate(password.updatedAt) }}
                                         </div>
-                                        <Icon v-if="password.mustBeUpdated" name="ph:seal-warning" size="32px" class="textColorCategoryQuaternary" />
+                                        <Icon v-if="password.mustBeUpdated" name="ph:seal-warning" size="32px"
+                                            class="textColorCategoryQuaternary" />
                                     </div>
                                     <div class="flex items-center space-x-2">
-                                        <Icon name="ph:copy" size="21px"
-                                            v-if="password.decryptedPassword"
+                                        <Icon name="ph:copy" size="21px" v-if="password.decryptedPassword"
                                             @click.stop="copyToClipboard(password.decryptedPassword)" />
-                                        <Icon name="ph:trash-fill" size="21px"
-                                            class="trashIcon" @click.stop="confirmDelete(password.id)" />
+                                        <Icon name="ph:trash-fill" size="21px" class="trashIcon"
+                                            @click.stop="confirmDelete(password.id)" />
                                     </div>
                                 </label>
                             </li>
@@ -592,11 +589,12 @@
         </div>
     </div>
 
-    <!-- Delete Confirmation Modal -->
-    <div v-if="showDeleteConfirmationModal" class="flex overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-full bg-black bg-opacity-50">
+    <div v-if="showDeleteConfirmationModal"
+        class="flex overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-full bg-black bg-opacity-50">
         <div class="relative p-4 w-full max-w-md max-h-[90%]">
             <div class="relative bgColorWhite rounded-lg shadow-sm dark:bg-gray-700">
-                <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600 border-gray-200">
+                <div
+                    class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600 border-gray-200">
                     <h3 class="text-lg font-semibold text-gray-900 dark:textColorWhite">
                         Confirmer la suppression
                     </h3>
@@ -657,8 +655,8 @@ interface DisplayPasswordItem extends PasswordItem {
 
 const passwords = ref<DisplayPasswordItem[]>();
 const chosenPassword = ref<DisplayPasswordItem | undefined>();
-const passwordToDelete = ref<number | null>(null); // This will now only store the ID for the main delete action
-const passwordToDeleteDetails = ref<DisplayPasswordItem | null>(null); // To display details in the delete confirmation modal
+const passwordToDelete = ref<number | null>(null);
+const passwordToDeleteDetails = ref<DisplayPasswordItem | null>(null);
 const encryptionKey = ref<CryptoKey | null>(null);
 const isMasterPasswordSet = ref<boolean>(false);
 const isMasterPasswordActive = ref<boolean>(false);
@@ -666,7 +664,7 @@ const showVerificationModal = ref<boolean>(false);
 const confirmUnderstanding = ref<boolean>(false);
 const showMasterPassword = ref<boolean>(false);
 const showMasterPasswordConfirmation = ref<boolean>(false);
-const showDeleteConfirmationModal = ref<boolean>(false); // New ref for the delete confirmation modal
+const showDeleteConfirmationModal = ref<boolean>(false);
 
 const showAddPasswordModal = ref<boolean>(false);
 const newPasswordForm = ref({
@@ -682,18 +680,17 @@ const showNewPassword = ref<boolean>(false);
 const showViewPasswordDetails = ref<boolean>(false);
 const showPasswordInView = ref<boolean>(false);
 
-// New refs for editing
 const showEditPasswordModal = ref<boolean>(false);
 const editPasswordForm = ref({
     id: null as number | null,
     url: '',
     name: '',
     email: '',
-    password: '', // This will hold the decrypted password for editing
+    password: '',
     notes: '',
     isFavorite: false,
 });
-const showEditPassword = ref<boolean>(false); // To toggle visibility of password in edit form
+const showEditPassword = ref<boolean>(false);
 
 const passwordRequirements = ref({
     minLength: false,
@@ -713,7 +710,7 @@ const validatePasswordStrength = () => {
         hasUppercase: /[A-Z]/.test(password),
         hasLowercase: /[a-z]/.test(password),
         hasNumbers: /\d/.test(password),
-        hasSpecialChars: /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)
+        hasSpecialChars: /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(password)
     };
 
     passwordStrength.value = Object.values(passwordRequirements.value).filter(Boolean).length;
@@ -826,6 +823,7 @@ const createMasterPassword = async () => {
         confirmUnderstanding.value = false;
 
     } catch (error) {
+        console.warn(error);
         $toast.error("Erreur lors de la création du mot de passe maître.");
         masterPassword.value = "";
         masterPasswordConfirmation.value = "";
@@ -861,7 +859,8 @@ const fetchPasswords = async () => {
             encryptionKey.value = (await cryptoUtils.deriveKey(
                 masterPassword.value,
             )) as CryptoKey;
-        } catch (error: any) {
+        } catch (error) {
+            console.warn(error);
             $toast.error("Échec de la dérivation de la clé de chiffrement.");
             return;
         }
@@ -876,7 +875,7 @@ const fetchPasswords = async () => {
     try {
         res = await useAuthFetch(`passwords/list?${Date.now()}`);
     } catch (error) {
-        console.error(error);
+        console.warn(error);
         $toast.error("Erreur lors de la récupération des mots de passe.");
         passwords.value = [];
         return;
@@ -899,15 +898,15 @@ const fetchPasswords = async () => {
                 p.iv,
                 encryptionKey.value as CryptoKey,
             );
-            if (p.notesEncrypted) { // Changed from p.notes to p.notesEncrypted based on likely backend schema
+            if (p.notesEncrypted) {
                 decryptedNotes = await cryptoUtils.decryptData(
-                    p.notesEncrypted, // Use notesEncrypted
-                    p.iv, // Assuming same IV for notes for simplicity, but ideally notes should have their own IV
+                    p.notesEncrypted,
+                    p.iv,
                     encryptionKey.value as CryptoKey,
                 );
             }
-        } catch (error: any) {
-            console.error(`Failed to decrypt for ${p.url}:`, error);
+        } catch (error) {
+            console.warn(error);
             $toast.error(`Échec du déchiffrement pour ${p.url}.`);
         }
 
@@ -928,13 +927,11 @@ const fetchPasswords = async () => {
         return 0;
     });
 
-    // If chosenPassword was set, try to find the updated version in the new list
     if (chosenPassword.value?.id) {
         const updatedChosen = passwords.value.find(p => p.id === chosenPassword.value?.id);
         if (updatedChosen) {
             chosenPassword.value = updatedChosen;
         } else {
-            // If the chosen password was deleted or no longer exists
             chosenPassword.value = undefined;
             showViewPasswordDetails.value = false;
         }
@@ -952,8 +949,9 @@ const generatePasswordForNew = () => {
             symbols: true
         };
         newPasswordForm.value.password = $generatePassword(defaultGenerationOptions);
-    } catch (error: any) {
-        $toast.error(error.message || "Erreur lors de la génération du mot de passe.");
+    } catch (error) {
+        console.warn(error);
+        $toast.error("Erreur lors de la génération du mot de passe.");
     }
 };
 
@@ -967,8 +965,9 @@ const generatePasswordForEdit = () => {
             symbols: true
         };
         editPasswordForm.value.password = $generatePassword(defaultGenerationOptions);
-    } catch (error: any) {
-        $toast.error(error.message || "Erreur lors de la génération du mot de passe.");
+    } catch (error) {
+        console.warn(error);
+        $toast.error("Erreur lors de la génération du mot de passe.");
     }
 };
 
@@ -982,8 +981,8 @@ const openAddPasswordModal = () => {
         isFavorite: false,
     };
     showNewPassword.value = false;
-    showEditPasswordModal.value = false; // Ensure edit modal is closed
-    showViewPasswordDetails.value = false; // Ensure view modal is closed
+    showEditPasswordModal.value = false;
+    showViewPasswordDetails.value = false;
     showAddPasswordModal.value = true;
 };
 
@@ -1027,8 +1026,8 @@ const saveNewPassword = async () => {
         $toast.success("Mot de passe créé avec succès!");
         cancelAddPassword();
         await fetchPasswords();
-    } catch (error: any) {
-        console.error("Error saving new password:", error);
+    } catch (error) {
+        console.warn(error);
         $toast.error("Erreur lors de la création du mot de passe.");
     }
 };
@@ -1046,23 +1045,23 @@ const openEditPasswordModal = (password: DisplayPasswordItem) => {
 
     editPasswordForm.value = {
         id: password.id,
-        url: password.url,
+        url: password.url || '',
         name: password.name || '',
         email: password.email || '',
-        password: password.decryptedPassword || '', // Pre-fill with decrypted password
-        notes: password.decryptedNotes || '', // Pre-fill with decrypted notes
-        isFavorite: password.isFavorite,
+        password: password.decryptedPassword || '',
+        notes: password.decryptedNotes || '',
+        isFavorite: password.isFavorite || false,
     };
-    showPasswordInView.value = false; // Close password visibility in view mode
-    showViewPasswordDetails.value = false; // Close view details modal
-    showEditPassword.value = false; // Hide password in edit form by default
-    showEditPasswordModal.value = true; // Open edit modal
+    showPasswordInView.value = false;
+    showViewPasswordDetails.value = false;
+    showEditPassword.value = false;
+    showEditPasswordModal.value = true;
 };
 
 const cancelEditPassword = () => {
     showEditPasswordModal.value = false;
     showEditPassword.value = false;
-    editPasswordForm.value = { // Reset form
+    editPasswordForm.value = {
         id: null,
         url: '',
         name: '',
@@ -1071,7 +1070,6 @@ const cancelEditPassword = () => {
         notes: '',
         isFavorite: false,
     };
-    // Re-open view details if a password was selected
     if (chosenPassword.value) {
         showViewPasswordDetails.value = true;
     }
@@ -1097,8 +1095,7 @@ const updatePassword = async () => {
         if (editPasswordForm.value.notes) {
             const { ciphertext: encryptedNotes } = await cryptoUtils.encryptData(
                 editPasswordForm.value.notes,
-                encryptionKey.value,
-                passwordIv // Reuse the IV from password for notes
+                encryptionKey.value
             );
             notesEncrypted = encryptedNotes;
         }
@@ -1109,22 +1106,22 @@ const updatePassword = async () => {
             email: editPasswordForm.value.email || null,
             passwordEncrypted: passwordEncrypted,
             iv: passwordIv,
-            notesEncrypted: notesEncrypted, // Updated key name
+            notesEncrypted: notesEncrypted,
             isFavorite: editPasswordForm.value.isFavorite,
         };
 
         await useAuthFetch(`passwords/update/${editPasswordForm.value.id}?${Date.now()}`, {
-            method: "PATCH", // Or PUT, depending on API design
+            method: "PATCH",
             body: JSON.stringify(payload),
         });
 
         $toast.success("Mot de passe mis à jour avec succès!");
-        showEditPasswordModal.value = false; // Close edit modal
-        await fetchPasswords(); // Re-fetch passwords to update the list and chosenPassword
-        showViewPasswordDetails.value = true; // Re-open view details for the updated password
+        showEditPasswordModal.value = false;
+        await fetchPasswords();
+        showViewPasswordDetails.value = true;
 
-    } catch (error: any) {
-        console.error("Error updating password:", error);
+    } catch (error) {
+        console.warn(error);
         $toast.error("Erreur lors de la mise à jour du mot de passe.");
     }
 };
@@ -1139,8 +1136,8 @@ const openPassword = async (password: DisplayPasswordItem) => {
 
     chosenPassword.value = { ...password };
 
-    showAddPasswordModal.value = false; // Ensure add modal is closed
-    showEditPasswordModal.value = false; // Ensure edit modal is closed
+    showAddPasswordModal.value = false;
+    showEditPasswordModal.value = false;
     showViewPasswordDetails.value = true;
     showPasswordInView.value = false;
 };
@@ -1149,14 +1146,15 @@ const cancelViewPassword = () => {
     showViewPasswordDetails.value = false;
     chosenPassword.value = undefined;
     showPasswordInView.value = false;
-    passwordToDelete.value = null; // Also clear this when exiting view
+    passwordToDelete.value = null;
 };
 
 const copyToClipboard = async (text: string) => {
     try {
         await navigator.clipboard.writeText(text);
         $toast.success("Copié dans le presse-papiers !");
-    } catch (err: any) {
+    } catch (error) {
+        console.warn(error);
         $toast.error("Échec de la copie.");
     }
 };
@@ -1172,14 +1170,14 @@ const confirmDelete = (id: number | undefined) => {
     if (id !== undefined) {
         passwordToDelete.value = id;
         passwordToDeleteDetails.value = passwords.value?.find(p => p.id === id) || null;
-        showDeleteConfirmationModal.value = true; // Show the delete confirmation modal
+        showDeleteConfirmationModal.value = true;
     }
 };
 
 const cancelDelete = () => {
     passwordToDelete.value = null;
     passwordToDeleteDetails.value = null;
-    showDeleteConfirmationModal.value = false; // Hide the delete confirmation modal
+    showDeleteConfirmationModal.value = false;
 };
 
 const deletePassword = async (id: number) => {
@@ -1194,11 +1192,11 @@ const deletePassword = async (id: number) => {
     try {
         await useAuthFetch(`passwords/remove/${id}?${Date.now()}`, { method: "DELETE" });
         $toast.success("Mot de passe supprimé.");
-        passwordToDelete.value = null; // Clear id after successful deletion
-        showDeleteConfirmationModal.value = false; // Hide the confirmation modal
+        passwordToDelete.value = null;
+        showDeleteConfirmationModal.value = false;
         await fetchPasswords();
-    } catch (error: any) {
-        console.error("Error deleting password:", error);
+    } catch (error) {
+        console.warn(error);
         $toast.error("Erreur lors de la suppression du mot de passe.");
     }
 };
@@ -1206,7 +1204,7 @@ const deletePassword = async (id: number) => {
 const deletePasswordAndCloseView = async () => {
     if (passwordToDelete.value === null) return;
     await deletePassword(passwordToDelete.value);
-    cancelViewPassword(); // This will also reset chosenPassword and close view details
+    cancelViewPassword();
 };
 
 const toggleFavorite = async (password: DisplayPasswordItem) => {
@@ -1227,16 +1225,14 @@ const toggleFavorite = async (password: DisplayPasswordItem) => {
             body: JSON.stringify({ isFavorite: !password.isFavorite }),
         });
 
-        // Update local state for immediate feedback
         password.isFavorite = !password.isFavorite;
         $toast.success(`Mot de passe ${password.isFavorite ? 'ajouté aux' : 'retiré des'} favoris.`);
 
-        // Re-fetch and re-sort to ensure favorite items appear at the top
         await fetchPasswords();
 
-    } catch (error: any) {
+    } catch (error) {
         $toast.error("Erreur lors de la mise à jour du statut favori.");
-        console.error("Error toggling favorite:", error);
+        console.warn(error);
     }
 };
 
@@ -1265,14 +1261,14 @@ onMounted(async () => {
 
 <style scoped>
 .checkboxStyle {
-  appearance: none;
-  border: none;
-  border-radius: 5px;
-  width: 30px;
-  height: 30px;
-  background-color: #e0e0e0;
-  cursor: pointer;
-  outline: none; /* Remove focus border */
+    appearance: none;
+    border: none;
+    border-radius: 5px;
+    width: 30px;
+    height: 30px;
+    background-color: #e0e0e0;
+    cursor: pointer;
+    outline: none;
 }
 
 .checkboxStyle:focus {
@@ -1281,10 +1277,10 @@ onMounted(async () => {
 }
 
 .checkboxStyle:checked {
-  background-color: #ff7f50;
+    background-color: #ff7f50;
 }
 
 .checkboxStyle:hover {
-  background-color: #ffc299;
+    background-color: #ffc299;
 }
 </style>

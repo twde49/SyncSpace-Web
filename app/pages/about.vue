@@ -603,9 +603,6 @@ const roadmap = ref([
         align-items: center;
     }
 
-    .roadmap-timeline {
-        /* max-width will handle centering, no padding-left needed */
-    }
 
     .timeline-item {
         margin-left: 30px;

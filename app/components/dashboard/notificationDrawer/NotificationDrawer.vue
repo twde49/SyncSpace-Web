@@ -1,52 +1,33 @@
 <template>
-		<div
-				v-if="!isNotificationDrawerOpen"
-				@click="toggleNotificationDrawer"
-				class="w-fit fixed top-4 left-1/2 transform -translate-x-1/2"
-		>
-				<Icon
-						:name="notifications && notifications.length > 0 ? 'ph:bell-simple-ringing-fill' : 'ph:bell-simple-fill'"
-						size="2rem"
-						class="textColorWhite hover:animate-bell cursor-pointer"
-				/>
-				<div
-						v-if="notifications && notifications.length > 0"
-						class="absolute bottom-0 right-0 w-3 h-3 bg-red-500 rounded-full"
-				></div>
-		</div>
+    <div v-if="!isNotificationDrawerOpen" @click="toggleNotificationDrawer"
+        class="w-fit fixed top-4 left-1/2 transform -translate-x-1/2">
+        <Icon :name="notifications && notifications.length > 0 ? 'ph:bell-simple-ringing-fill' : 'ph:bell-simple-fill'"
+            size="2rem" class="textColorWhite hover:animate-bell cursor-pointer" />
+        <div v-if="notifications && notifications.length > 0"
+            class="absolute bottom-0 right-0 w-3 h-3 bg-red-500 rounded-full"></div>
+    </div>
 
-		<div v-show="isNotificationDrawerOpen">
-				<div
-						ref="notificationDrawer"
-						class="fixed top-4 left-1/2 transform -translate-x-1/2 bgColorWhite border border-gray-200 rounded-lg shadow-lg p-6 min-w-[400px] max-h-[80vh] overflow-y-auto opacity-100 scale-100 z-50"
-						@click.stop
-				>
-						<div class="flex justify-between items-center mb-3">
-								<div class="flex flex-col">
-										<div class="text-lg textColorBlack font-semibold">Notifications</div>
-										<button
-												v-if="notifications.length > 0"
-												@click="readAllNotifications"
-												class="text-xs text-gray-500 hover:text-gray-700 transition-colors mt-1 flex items-center"
-										>
-												<Icon name="ph:checks" class="mr-1" size="0.8rem" />
-												Marquer toutes comme lues
-										</button>
-								</div>
-								<div @click="toggleNotificationDrawer" class="cursor-pointer p-1">
-										<Icon name="ph:x-square" size="1.2rem" class="textColorBlack" />
-								</div>
-						</div>
-						<NotificationList
-								:notifications="notifications"
-								@read-notification="readNotification"
-						/>
-				</div>
-				<div
-						class="fixed inset-0 bg-black bg-opacity-25 z-40"
-						@click="toggleNotificationDrawer"
-				></div>
-		</div>
+    <div v-show="isNotificationDrawerOpen">
+        <div ref="notificationDrawer"
+            class="fixed top-4 left-1/2 transform -translate-x-1/2 bgColorWhite border border-gray-200 rounded-lg shadow-lg p-6 min-w-[400px] max-h-[80vh] overflow-y-auto opacity-100 scale-100 z-50"
+            @click.stop>
+            <div class="flex justify-between items-center mb-3">
+                <div class="flex flex-col">
+                    <div class="text-lg textColorBlack font-semibold">Notifications</div>
+                    <button v-if="notifications.length > 0" @click="readAllNotifications"
+                        class="text-xs text-gray-500 hover:text-gray-700 transition-colors mt-1 flex items-center">
+                        <Icon name="ph:checks" class="mr-1" size="0.8rem" />
+                        Marquer toutes comme lues
+                    </button>
+                </div>
+                <div @click="toggleNotificationDrawer" class="cursor-pointer p-1">
+                    <Icon name="ph:x-square" size="1.2rem" class="textColorBlack" />
+                </div>
+            </div>
+            <NotificationList :notifications="notifications" @read-notification="readNotification" />
+        </div>
+        <div class="fixed inset-0 bg-black bg-opacity-25 z-40" @click="toggleNotificationDrawer"></div>
+    </div>
 </template>
 
 <script setup lang="ts">
@@ -66,116 +47,121 @@ const notificationDrawer = ref(null);
 const notifications = ref<Notification[]>([]);
 
 const toggleNotificationDrawer = () => {
-	isNotificationDrawerOpen.value = !isNotificationDrawerOpen.value;
+    isNotificationDrawerOpen.value = !isNotificationDrawerOpen.value;
 
-	if (isNotificationDrawerOpen.value) {
-		gsap.to(notificationDrawer.value, {
-			duration: 0.3,
-			opacity: 1,
-			scale: 1,
-			ease: "back.out(1.7)",
-		});
-	} else {
-		gsap.to(notificationDrawer.value, {
-			duration: 0.2,
-			opacity: 0,
-			scale: 0.95,
-			ease: "power2.in",
-		});
-	}
+    if (isNotificationDrawerOpen.value) {
+        gsap.to(notificationDrawer.value, {
+            duration: 0.3,
+            opacity: 1,
+            scale: 1,
+            ease: "back.out(1.7)",
+        });
+    } else {
+        gsap.to(notificationDrawer.value, {
+            duration: 0.2,
+            opacity: 0,
+            scale: 0.95,
+            ease: "power2.in",
+        });
+    }
 };
 
 const handleEscapeKey = (event: KeyboardEvent) => {
-		if (event.key === 'Escape' && isNotificationDrawerOpen.value) {
-				toggleNotificationDrawer();
-		}
+    if (event.key === 'Escape' && isNotificationDrawerOpen.value) {
+        toggleNotificationDrawer();
+    }
 };
 
 onMounted(() => {
-		document.addEventListener('keydown', handleEscapeKey);
+    document.addEventListener('keydown', handleEscapeKey);
 });
 
 onBeforeUnmount(() => {
-		document.removeEventListener('keydown', handleEscapeKey);
+    document.removeEventListener('keydown', handleEscapeKey);
 });
 
 const fetchNotifications = async () => {
-	try {
-		const res = await useAuthFetch(`notifications/all?${Date.now()}`);
-		notifications.value = res.data.value as Notification[];
-	} catch (error) {
-		console.error("Error fetching notifications:", error);
-	}
+    try {
+        const res = await useAuthFetch(`notifications/all?${Date.now()}`);
+        notifications.value = res.data.value as Notification[];
+    } catch (error) {
+        console.error("Error fetching notifications:", error);
+    }
 };
 
 const readNotification = async (id: number) => {
-	try {
-		await useAuthFetch(`notifications/${id}/read?${Date.now()}`, {
-			method: "PUT",
-		});
-		notifications.value = notifications.value.filter((n) => n.id !== id);
-	} catch (error) {
-		console.error("Error reading notification:", error);
-	}
+    try {
+        await useAuthFetch(`notifications/${id}/read?${Date.now()}`, {
+            method: "PUT",
+        });
+        notifications.value = notifications.value.filter((n) => n.id !== id);
+    } catch (error) {
+        console.error("Error reading notification:", error);
+    }
 };
 
 const readAllNotifications = async () => {
-	try {
-		await useAuthFetch(`notifications/readAll?${Date.now()}`, {
-			method: "PUT",
-		});
-		notifications.value = [];
-	} catch (error) {
-		console.error("Error reading all notifications:", error);
-	}
+    try {
+        await useAuthFetch(`notifications/readAll?${Date.now()}`, {
+            method: "PUT",
+        });
+        notifications.value = [];
+    } catch (error) {
+        console.error("Error reading all notifications:", error);
+    }
 };
 
 watch(webSocketData.value, async (newData) => {
-	if (newData.type === "notification") {
-		if (newData.userEmail === userStore.email) {
-			$toast.info(newData.notification.title);
-			await fetchNotifications();
-		}
-	}
+    if (newData.type === "notification") {
+        if (newData.userEmail === userStore.email) {
+            $toast.info(newData.notification.title);
+            await fetchNotifications();
+        }
+    }
 });
 
 onMounted(async () => {
-	await nextTick(async () => {
-		await fetchNotifications();
-	});
-	if (notificationDrawer.value) {
-		gsap.set(notificationDrawer.value, {
-			opacity: 0,
-			scale: 0.95,
-		});
-	}
-	userStore.loadUserFromCookies();
-	connect();
+    await nextTick(async () => {
+        await fetchNotifications();
+    });
+    if (notificationDrawer.value) {
+        gsap.set(notificationDrawer.value, {
+            opacity: 0,
+            scale: 0.95,
+        });
+    }
+    userStore.loadUserFromCookies();
+    connect();
 });
 
 </script>
 
 <style scoped>
 .hover\:animate-bell:hover {
-		animation: bellRing 0.5s ease-in-out;
+    animation: bellRing 0.5s ease-in-out;
 }
 
 @keyframes bellRing {
-		0%,
-		100% {
-				transform: rotate(0);
-		}
-		20% {
-				transform: rotate(15deg);
-		}
-		40% {
-				transform: rotate(-15deg);
-		}
-		60% {
-				transform: rotate(7deg);
-		}
-		80% {
-				transform: rotate(-7deg);
-		}
+
+    0%,
+    100% {
+        transform: rotate(0);
+    }
+
+    20% {
+        transform: rotate(15deg);
+    }
+
+    40% {
+        transform: rotate(-15deg);
+    }
+
+    60% {
+        transform: rotate(7deg);
+    }
+
+    80% {
+        transform: rotate(-7deg);
+    }
 }
 </style>

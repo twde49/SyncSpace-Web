@@ -11,7 +11,7 @@ import {
 import useAuthFetch from "@/composables/useAuthFetch";
 import { useUserStore } from "@/stores/userStore";
 import type { FavoriteTrack } from "~/types/FavoriteTrack";
-import type { Playlist } from "~/types/Playlist"; // Added import for Playlist type
+import type { Playlist } from "~/types/Playlist";
 import type { Track } from "~/types/Track";
 
 export function useMusicPlayer() {
@@ -26,20 +26,22 @@ export function useMusicPlayer() {
 	const favoriteQuantity = ref<number>(0);
 	const playlistQuantity = ref<number>(0);
 	const favoriteTracks = ref<FavoriteTrack[]>([]);
-	const playlists = ref<Playlist[]>([]); // Added playlists ref
-	const isLoading = ref(false); // Added isLoading ref
+	const playlists = ref<Playlist[]>([]);
+	const isLoading = ref(false);
 
 	const currentYoutubeId = computed(() => {
 		if (
 			playlist.value.length > 0 &&
 			currentTrackIndex.value < playlist.value.length
 		) {
-			return playlist.value[currentTrackIndex.value].youtubeId;
+			return (
+				playlist.value[currentTrackIndex.value]?.youtubeId ?? "dQw4w9WgXcQ"
+			);
 		}
 		return "dQw4w9WgXcQ";
 	});
 
-	const youtubePlayer = ref<any | null>(null);
+	const youtubePlayer = ref<unknown | null>(null);
 	provide("youtubePlayerRef", youtubePlayer);
 	const playerElement = ref<HTMLElement | null>(null);
 	const dragHandle = ref<HTMLElement | null>(null);
@@ -103,7 +105,7 @@ export function useMusicPlayer() {
 	};
 
 	const updateHeightsOnResize = () => {
-		if (process.client) {
+		if (import.meta.client) {
 			HEIGHTS.mini = window.innerHeight * 0.12;
 			HEIGHTS.full = window.innerHeight * 0.9;
 			if (playerElement.value) {
@@ -115,7 +117,7 @@ export function useMusicPlayer() {
 	};
 
 	onMounted(() => {
-		if (process.client) {
+		if (import.meta.client) {
 			updateHeightsOnResize();
 			window.addEventListener("resize", updateHeightsOnResize);
 			if (playerElement.value && playerMode.value !== "hidden") {
@@ -125,7 +127,7 @@ export function useMusicPlayer() {
 	});
 
 	onBeforeUnmount(() => {
-		if (process.client) {
+		if (import.meta.client) {
 			window.removeEventListener("resize", updateHeightsOnResize);
 		}
 	});
@@ -135,7 +137,9 @@ export function useMusicPlayer() {
 
 		isDragging.value = true;
 		const clientY =
-			event instanceof MouseEvent ? event.clientY : event.touches[0].clientY;
+			event instanceof MouseEvent
+				? event.clientY
+				: (event.touches?.[0]?.clientY ?? 0);
 		startY.value = clientY;
 		startHeight.value = playerElement.value.offsetHeight;
 
@@ -151,7 +155,9 @@ export function useMusicPlayer() {
 		if (!isDragging.value || !playerElement.value) return;
 
 		const clientY =
-			event instanceof MouseEvent ? event.clientY : event.touches[0].clientY;
+			event instanceof MouseEvent
+				? event.clientY
+				: (event.touches?.[0]?.clientY ?? 0);
 		const deltaY = startY.value - clientY;
 		let newHeight = startHeight.value + deltaY;
 
@@ -161,13 +167,14 @@ export function useMusicPlayer() {
 	};
 
 	const endDrag = (event: MouseEvent | TouchEvent) => {
-		if (!isDragging.value || !playerElement.value || !process.client) return;
+		if (!isDragging.value || !playerElement.value || !import.meta.client)
+			return;
 
 		isDragging.value = false;
 		const clientY =
 			event instanceof MouseEvent
 				? event.clientY
-				: event.changedTouches[0].clientY;
+				: (event.changedTouches?.[0]?.clientY ?? 0);
 		const deltaY = startY.value - clientY;
 		const currentHeight = playerElement.value.offsetHeight;
 		const viewportHeight = window.innerHeight;
@@ -216,7 +223,8 @@ export function useMusicPlayer() {
 				newTrack &&
 				playlist.value.length > 0 &&
 				currentTrackIndex.value < playlist.value.length &&
-				playlist.value[currentTrackIndex.value].youtubeId !== newTrack.youtubeId
+				playlist.value[currentTrackIndex.value]?.youtubeId !==
+					newTrack.youtubeId
 			) {
 				initializePlaylist();
 			}
@@ -235,8 +243,9 @@ export function useMusicPlayer() {
 			playlist.value.length > 0 &&
 			currentTrackIndex.value < playlist.value.length
 		) {
-			youtubePlayer.value.loadVideoById(
-				playlist.value[currentTrackIndex.value].youtubeId,
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+			(youtubePlayer.value as any).loadVideoById(
+				playlist.value[currentTrackIndex.value]?.youtubeId ?? "dQw4w9WgXcQ",
 			);
 		}
 
@@ -264,9 +273,6 @@ export function useMusicPlayer() {
 			playlist.value.length > 0 &&
 			currentTrackIndex.value < playlist.value.length
 		) {
-			const videoId = playlist.value[currentTrackIndex.value].youtubeId;
-			// youtubePlayer.value.loadVideoById(videoId); // Disabled autoplay
-
 			setTimeout(() => {
 				canPlay.value = true;
 			}, 500);
@@ -278,7 +284,8 @@ export function useMusicPlayer() {
 	function play() {
 		if (!canPlay.value || !youtubePlayer.value) return;
 		if (onMountedMusicLoaded.value === false) {
-			const videoId = playlist.value[currentTrackIndex.value].youtubeId;
+			const videoId =
+				playlist.value[currentTrackIndex.value]?.youtubeId ?? "dQw4w9WgXcQ";
 			youtubePlayer.value.loadVideoById(videoId);
 			onMountedMusicLoaded.value = true;
 		}
@@ -374,17 +381,25 @@ export function useMusicPlayer() {
 		isSearching.value = true;
 
 		searchTimeout = setTimeout(async () => {
-			isLoading.value = true; // Set isLoading to true
+			isLoading.value = true;
 			try {
 				const params = {
 					query: searchQuery.value,
 				};
-				const response = await useAuthFetch(`music/youtube/search?${Date.now()}`, {
-					params,
-				});
+				const response = await useAuthFetch(
+					`music/youtube/search?${Date.now()}`,
+					{
+						params,
+					},
+				);
 				const rawResults = response.data?.value;
 				searchResults.value = (Array.isArray(rawResults) ? rawResults : []).map(
-					(item: any) => ({
+					(item: {
+						videoId: string;
+						title: string;
+						channelTitle: string;
+						thumbnail: string;
+					}) => ({
 						youtubeId: item.videoId,
 						title: item.title
 							.replace(/official video/gi, "")
@@ -403,7 +418,7 @@ export function useMusicPlayer() {
 				searchResults.value = [];
 			} finally {
 				isSearching.value = false;
-				isLoading.value = false; // Set isLoading to false
+				isLoading.value = false;
 				searchTimeout = null;
 			}
 		}, 500);
@@ -424,23 +439,25 @@ export function useMusicPlayer() {
 			await checkPlaylistQuantity();
 			await fetchFavoriteTracks();
 			const responseData = response.data.value as { message: string } | null;
-			console.log(responseData)
-			if (responseData?.message === 'Track liked successfully') {
-				$toast.success('Chanson ajoutée aux favoris');
+			console.log(responseData);
+			if (responseData?.message === "Track liked successfully") {
+				$toast.success("Chanson ajoutée aux favoris");
 			} else {
-				$toast.error('Chanson supprimée des favoris');
+				$toast.error("Chanson supprimée des favoris");
 			}
 		} catch (error) {
 			console.error(error);
 		} finally {
-			isLoading.value = false; // Set isLoading to false
+			isLoading.value = false;
 		}
 	}
 
 	const checkFavoriteQuantity = async () => {
-		isLoading.value = true; // Set isLoading to true
+		isLoading.value = true;
 		try {
-			const response = await useAuthFetch(`music/favorites/quantity?${Date.now()}`);
+			const response = await useAuthFetch(
+				`music/favorites/quantity?${Date.now()}`,
+			);
 
 			favoriteQuantity.value = (response.data.value as { quantity: number })
 				?.quantity as number;
@@ -450,14 +467,16 @@ export function useMusicPlayer() {
 				err,
 			);
 		} finally {
-			isLoading.value = false; // Set isLoading to false
+			isLoading.value = false;
 		}
 	};
 
 	const checkPlaylistQuantity = async () => {
 		isLoading.value = true;
 		try {
-			const response = await useAuthFetch(`music/playlist/quantity?${Date.now()}`);
+			const response = await useAuthFetch(
+				`music/playlist/quantity?${Date.now()}`,
+			);
 
 			playlistQuantity.value = (response.data.value as { quantity: number })
 				?.quantity as number;
@@ -488,22 +507,24 @@ export function useMusicPlayer() {
 			console.error("Error fetching favorite tracks:", err);
 			favoriteTracks.value = [];
 		} finally {
-			isLoading.value = false; // Set isLoading to false
+			isLoading.value = false;
 		}
 	};
 
 	const getPlaylistTracks = async (playlistId: string) => {
 		isLoading.value = true;
 		try {
-			const response = await useAuthFetch(`music/playlist/${playlistId}?${Date.now()}`);
+			const response = await useAuthFetch(
+				`music/playlist/${playlistId}?${Date.now()}`,
+			);
 			if (response.error.value) {
 				throw new Error(
 					response.error.value?.message || "Failed to fetch playlist tracks",
 				);
 			}
 
-			const playlistData = response.data.value as Track;
-			return playlistData || [];
+			const playlistData = response.data.value as Track[];
+			return playlistData || null;
 		} catch (err) {
 			console.error("Error fetching playlist tracks:", err);
 			return [];
@@ -513,7 +534,7 @@ export function useMusicPlayer() {
 	};
 
 	const fetchPlaylists = async () => {
-		isLoading.value = true; // Set isLoading to true
+		isLoading.value = true;
 		try {
 			const response = await useAuthFetch(`music/playlist/index?${Date.now()}`);
 			const rawPlaylists = response.data?.value;
@@ -529,12 +550,12 @@ export function useMusicPlayer() {
 			console.error("Error fetching playlists:", err);
 			playlists.value = [];
 		} finally {
-			isLoading.value = false; // Set isLoading back to false
+			isLoading.value = false;
 		}
 	};
 
 	const createPlaylist = async (playlistName: string): Promise<Playlist> => {
-		isLoading.value = true; // Set isLoading to true
+		isLoading.value = true;
 		try {
 			const response = await useAuthFetch(`music/playlist/new?${Date.now()}`, {
 				method: "POST",
@@ -549,7 +570,6 @@ export function useMusicPlayer() {
 				);
 			}
 
-			// Refresh playlists
 			await fetchPlaylists();
 
 			return response.data.value as Playlist;
@@ -557,7 +577,7 @@ export function useMusicPlayer() {
 			console.error("Error creating playlist:", err);
 			throw err;
 		} finally {
-			isLoading.value = false; // Set isLoading back to false
+			isLoading.value = false;
 		}
 	};
 
@@ -569,60 +589,36 @@ export function useMusicPlayer() {
 	const offsetDouble = ref<number>(0);
 
 	async function loadNextRecommendation() {
-		console.log("loadNextRecommendation: Function started.");
 		if (isLoadingRecommendation.value) {
-			console.log(
-				"loadNextRecommendation: Already loading recommendation, returning.",
-			);
 			return;
 		}
 		isLoadingRecommendation.value = true;
-		isLoading.value = true; // Set isLoading to true
-		console.log("loadNextRecommendation: isLoadingRecommendation set to true.");
+		isLoading.value = true;
 
 		try {
-			console.log(
-				`loadNextRecommendation: Playlist length: ${playlist.value.length}, Current track index: ${currentTrackIndex.value}`,
-			);
 			if (
 				playlist.value.length === 0 ||
 				currentTrackIndex.value >= playlist.value.length
 			) {
-				console.error(
-					"loadNextRecommendation: Cannot load recommendation: playlist is empty or current track index is out of bounds.",
-				);
 				isLoadingRecommendation.value = false;
 				isLoadingNextTrack.value = false;
 				return;
 			}
 
 			const currentTrack = playlist.value[currentTrackIndex.value];
-			console.log("loadNextRecommendation: Current track:", currentTrack);
-			const { artist, title } = currentTrack;
+			const { artist, title } = currentTrack || {};
 			if (!artist || !title) {
-				console.error(
-					"loadNextRecommendation: Current track is missing artist or title, cannot fetch recommendation.",
-				);
 				isLoadingRecommendation.value = false;
 				isLoadingNextTrack.value = false;
 				return;
 			}
 
 			const recommendationUrl = `recommendations?artist=${encodeURIComponent(artist.replace(/\s/g, ""))}&track=${encodeURIComponent(title.toLowerCase())}&offset=${offsetDouble.value}`;
-			console.log(
-				"loadNextRecommendation: Fetching recommendation from URL:",
-				recommendationUrl,
-			);
 			const response = await useAuthFetch(recommendationUrl);
 
 			const recommendation = response.data.value as Track;
-			console.log(
-				"loadNextRecommendation: Received recommendation:",
-				recommendation,
-			);
 
 			if (!recommendation) {
-				console.log("loadNextRecommendation: No new recommendation received.");
 				isLoadingNextTrack.value = false;
 				isLoadingRecommendation.value = false;
 				return;
@@ -631,14 +627,8 @@ export function useMusicPlayer() {
 			const exists = playlist.value.some(
 				(track) => track.youtubeId === recommendation.youtubeId,
 			);
-			console.log(
-				`loadNextRecommendation: Recommendation already exists in playlist: ${exists}`,
-			);
 			if (exists) {
 				offsetDouble.value++;
-				console.log(
-					`loadNextRecommendation: Incrementing offsetDouble to ${offsetDouble.value} and retrying.`,
-				);
 				loadNextRecommendation();
 			} else {
 				playlist.value.push({
@@ -647,20 +637,10 @@ export function useMusicPlayer() {
 					artist: recommendation.artist.replace(/VEVO/gi, ""),
 					coverUrl: recommendation.coverUrl ?? "",
 				});
-				console.log(
-					"loadNextRecommendation: New track added to playlist:",
-					recommendation,
-				);
 				setCurrentMusicToUser(recommendation);
-				console.log(
-					"loadNextRecommendation: Set current music to user with new recommendation.",
-				);
 
 				currentTrackIndex.value = playlist.value.length - 1;
 				offsetDouble.value = 0;
-				console.log(
-					`loadNextRecommendation: Updated currentTrackIndex to ${currentTrackIndex.value} and reset offsetDouble to ${offsetDouble.value}.`,
-				);
 			}
 		} catch (error) {
 			console.error(
@@ -670,16 +650,13 @@ export function useMusicPlayer() {
 		} finally {
 			isLoadingRecommendation.value = false;
 			isLoadingNextTrack.value = false;
-			isLoading.value = false; // Set isLoading to false
-			console.log(
-				"loadNextRecommendation: isLoadingRecommendation and isLoadingNextTrack set to false (finally block).",
-			);
+			isLoading.value = false;
 		}
 	}
 
 	function startProgressTimer() {
 		stopProgressTimer();
-		if (process.client) {
+		if (import.meta.client) {
 			progressTimer = window.setInterval(async () => {
 				if (
 					youtubePlayer.value &&
@@ -741,7 +718,7 @@ export function useMusicPlayer() {
 
 	async function setCurrentMusicToUser(track: Track) {
 		if (!track) return;
-		isLoading.value = true; // Set isLoading to true
+		isLoading.value = true;
 		try {
 			const trackData = {
 				youtubeId: track.youtubeId,
@@ -761,7 +738,7 @@ export function useMusicPlayer() {
 		} catch (error) {
 			console.error("Error setting current music:", error);
 		} finally {
-			isLoading.value = false; // Set isLoading to false
+			isLoading.value = false;
 		}
 	}
 	function initializePlaylist() {
@@ -808,11 +785,14 @@ export function useMusicPlayer() {
 		}
 
 		await nextTick(async () => {
-			isLoading.value = true; // Set isLoading to true
+			isLoading.value = true;
 			try {
-				const response = await useAuthFetch(`settings/current-track?${Date.now()}`, {
-					method: "GET",
-				});
+				const response = await useAuthFetch(
+					`settings/current-track?${Date.now()}`,
+					{
+						method: "GET",
+					},
+				);
 				const currentTrack = response.data.value as Track;
 
 				if (currentTrack?.youtubeId) {
@@ -842,7 +822,7 @@ export function useMusicPlayer() {
 					initializePlaylist();
 				}
 			} finally {
-				isLoading.value = false; // Set isLoading to false
+				isLoading.value = false;
 			}
 		});
 	});
@@ -903,6 +883,6 @@ export function useMusicPlayer() {
 		fetchPlaylists,
 		getPlaylistTracks,
 		createPlaylist,
-		isLoading, // Return isLoading
+		isLoading,
 	};
 }

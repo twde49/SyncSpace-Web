@@ -3,7 +3,6 @@
     <Navbar />
     <div class="module-container mt-8">
       <div class="module-content">
-        <!-- Hero Section -->
         <div class="hero-section mb-16">
           <div class="hero-icon mb-6">
             <Icon name="ri:calendar-line" size="400%" class="textColorTritary" />
@@ -77,13 +76,13 @@
                 <div class="calendar-header">
                   <div class="month-nav">
                     <Icon name="ri:arrow-left-s-line" class="textColorWhite" />
-                    <span class="mediumFont textColorWhite">{{ getCurrentView().title }}</span>
+                    <span class="mediumFont textColorWhite">{{ getCurrentView()?.title }}</span>
                     <Icon name="ri:arrow-right-s-line" class="textColorWhite" />
                   </div>
                 </div>
                 <div class="calendar-grid">
                   <div
-                    v-for="day in getCurrentView().days"
+                    v-for="day in getCurrentView()?.days"
                     :key="day"
                     :class="['calendar-day', { 'has-event': Math.random() > 0.7 }]"
                   >
@@ -94,11 +93,11 @@
               </div>
             </div>
             <div class="view-description">
-              <h3 class="mediumFont textColorWhite mb-3">{{ getCurrentView().name }}</h3>
-              <p class="normalFont textColorWhite opacity-80 mb-4">{{ getCurrentView().description }}</p>
+              <h3 class="mediumFont textColorWhite mb-3">{{ getCurrentView()?.name }}</h3>
+              <p class="normalFont textColorWhite opacity-80 mb-4">{{ getCurrentView()?.description }}</p>
               <div class="view-benefits">
                 <div
-                  v-for="benefit in getCurrentView().benefits"
+                  v-for="benefit in getCurrentView()?.benefits"
                   :key="benefit"
                   class="benefit-tag"
                 >

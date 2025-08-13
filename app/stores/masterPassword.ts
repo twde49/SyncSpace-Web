@@ -17,7 +17,9 @@ export const useMasterPasswordStore = defineStore("masterPassword", {
 		},
 
 		async authenticate(masterPassword: string) {
-			const res = await useAuthFetch(`passwords/get-master-password-hash?${Date.now()}`);
+			const res = await useAuthFetch(
+				`passwords/get-master-password-hash?${Date.now()}`,
+			);
 			if (
 				!res.data.value ||
 				!res.data.value ||

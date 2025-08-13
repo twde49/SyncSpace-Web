@@ -26,20 +26,18 @@
                 }}
             </div>
             <div class="message-bubble bgColorWhite">
-                <!-- Image Message -->
                 <div v-if="isImageMessage(message.content)" class="image-message">
-                    <img :src="message.content?.includes('.gif') ? message.content : baseUrlWithoutApi + message.content" 
-                         alt="Shared image" 
-                         class="message-image" 
-                         @click="openImageModal(message.content?.includes('.gif') ? message.content : baseUrlWithoutApi + message.content)" />
+                    <img :src="message.content?.includes('.gif') ? message.content : baseUrlWithoutApi + message.content"
+                        alt="Shared image" class="message-image"
+                        @click="openImageModal(message.content?.includes('.gif') ? message.content : baseUrlWithoutApi + message.content)" />
                 </div>
-                <!-- Audio Player pour les fichiers audio -->
                 <div v-else-if="isAudioMessage(message.content)" class="audio-message">
                     <div class="custom-audio-player">
                         <button v-if="message.content"
                             @click="toggleAudioPlayback(String(message.id), baseUrlWithoutApi + message.content)"
                             class="play-pause-btn" :class="{ 'playing': audioStates[message.id]?.isPlaying }">
-                            <Icon :name="audioStates[message.id]?.isPlaying ? 'ph:pause-fill' : 'ph:play-fill'" size="20px" />
+                            <Icon :name="audioStates[message.id]?.isPlaying ? 'ph:pause-fill' : 'ph:play-fill'"
+                                size="20px" />
                         </button>
 
                         <div class="audio-progress-container">
@@ -55,7 +53,6 @@
                         </div>
                     </div>
                 </div>
-                <!-- Message texte normal -->
                 <span v-else class="textColorBlack">{{ message.content }}</span>
             </div>
 
@@ -83,7 +80,6 @@
         </div>
     </div>
 
-    <!-- Modal d'édition -->
     <div v-if="showEditModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
         <div class="bg-white rounded-lg p-6 w-11/12 max-w-md">
             <div class="flex justify-between items-center mb-4">
@@ -110,7 +106,6 @@
         </div>
     </div>
 
-    <!-- Modal de confirmation audio -->
     <div v-if="showAudioConfirmModal"
         class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
         <div class="bg-white rounded-lg p-6 w-11/12 max-w-md">
@@ -143,24 +138,21 @@
             </div>
 
             <div class="flex justify-end gap-2">
-                <button @click="cancelAudioPreview"
-                    class="px-4 py-2 bgColorBlack textColorWhite globalRadius">
+                <button @click="cancelAudioPreview" class="px-4 py-2 bgColorBlack textColorWhite globalRadius">
                     Annuler
                 </button>
-                <button @click="retryRecording"
-                    class="px-4 py-2 bgColorTritary textColorWhite globalRadius">
+                <button @click="retryRecording" class="px-4 py-2 bgColorTritary textColorWhite globalRadius">
                     Réenregistrer
                 </button>
-                <button @click="confirmSendAudio"
-                    class="px-4 py-2 bgColorCategoryTritary textColorWhite globalRadius">
+                <button @click="confirmSendAudio" class="px-4 py-2 bgColorCategoryTritary textColorWhite globalRadius">
                     Envoyer
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Modal pour afficher les images en plein écran -->
-    <div v-if="showImageModal" class="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50" @click="closeImageModal">
+    <div v-if="showImageModal" class="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50"
+        @click="closeImageModal">
         <div class="relative w-auto h-auto max-w-[90vw] max-h-[90vh] p-4">
             <button @click="closeImageModal" class="absolute top-2 right-2 text-white hover:text-gray-300 z-10">
                 <Icon name="ph:x-square" size="32" />
@@ -169,10 +161,8 @@
         </div>
     </div>
 
-    <!-- Modal Giphy -->
     <div v-if="showGiphyModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
         <div class="bg-white rounded-lg w-11/12 max-w-4xl h-5/6 max-h-[600px] flex flex-col">
-            <!-- Header -->
             <div class="flex justify-between items-center p-4 border-b">
                 <h3 class="text-lg font-semibold text-gray-900">Choisir un GIF</h3>
                 <button @click="closeGiphyModal" class="text-gray-500 hover:text-gray-700">
@@ -180,21 +170,16 @@
                 </button>
             </div>
 
-            <!-- Barre de recherche -->
             <div class="p-4 border-b">
                 <div class="relative">
-                    <input 
-                        v-model="giphySearchQuery"
-                        @input="debouncedSearch(giphySearchQuery)"
-                        type="text" 
-                        placeholder="Rechercher des GIFs..." 
-                        class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900"
-                    />
-                    <Icon name="ph:magnifying-glass" size="20" class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                    <input v-model="giphySearchQuery" @input="debouncedSearch(giphySearchQuery)" type="text"
+                        placeholder="Rechercher des GIFs..."
+                        class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900" />
+                    <Icon name="ph:magnifying-glass" size="20"
+                        class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                 </div>
             </div>
 
-            <!-- Grille des GIFs -->
             <div class="flex-1 overflow-y-auto p-4">
                 <div v-if="isLoadingGiphy && giphyGifs.length === 0" class="flex items-center justify-center h-32">
                     <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
@@ -202,39 +187,31 @@
                 </div>
 
                 <div v-else class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-                    <div 
-                        v-for="gif in giphyGifs" 
-                        :key="gif.id"
+                    <div v-for="gif in giphyGifs" :key="gif.id"
                         class="relative group cursor-pointer overflow-hidden rounded-lg bg-gray-100 aspect-square"
-                        @click="selectGiphyGif(gif)"
-                    >
-                        <img 
-                            :src="gif.images.fixed_width.url" 
-                            :alt="gif.title"
+                        @click="selectGiphyGif(gif)">
+                        <img :src="gif.images.fixed_width.url" :alt="gif.title"
                             class="w-full h-full object-cover transition-transform duration-200 group-hover:scale-105"
-                            loading="lazy"
-                        />
-                        <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-200 flex items-center justify-center">
-                            <div class="opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-white rounded-full p-2">
+                            loading="lazy" />
+                        <div
+                            class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-200 flex items-center justify-center">
+                            <div
+                                class="opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-white rounded-full p-2">
                                 <Icon name="ph:plus-circle" size="20" class="text-gray-700" />
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Bouton Charger plus -->
                 <div v-if="hasMoreGiphy && giphyGifs.length > 0" class="flex justify-center mt-6">
-                    <button 
-                        @click="loadMoreGifs"
-                        :disabled="isLoadingGiphy"
-                        class="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
-                    >
-                        <div v-if="isLoadingGiphy" class="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                    <button @click="loadMoreGifs" :disabled="isLoadingGiphy"
+                        class="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2">
+                        <div v-if="isLoadingGiphy" class="animate-spin rounded-full h-4 w-4 border-b-2 border-white">
+                        </div>
                         {{ isLoadingGiphy ? 'Chargement...' : 'Charger plus' }}
                     </button>
                 </div>
 
-                <!-- Message si aucun résultat -->
                 <div v-if="!isLoadingGiphy && giphyGifs.length === 0" class="text-center text-gray-500 py-8">
                     <Icon name="ph:smiley-nervous" size="48" class="mx-auto mb-2 text-gray-300" />
                     <p>Aucun GIF trouvé</p>
@@ -242,7 +219,6 @@
                 </div>
             </div>
 
-            <!-- Footer -->
             <div class="p-4 border-t bg-gray-50 text-center">
                 <p class="text-xs text-gray-500">Propulsé par Giphy</p>
             </div>
@@ -251,20 +227,15 @@
 
     <div class="messageInput bgColorWhite flex items-center">
         <div class="flex utilsZone items-center justify-between relative">
-            <!-- Menu média animé -->
             <div class="media-menu-container relative flex">
-                <Icon name="ph:plus-fill" 
-                      size="21px" 
-                      class="media textColorBlack cursor-pointer transition-transform duration-300 hover:scale-110" 
-                      :class="{ 'rotate-45': showMediaMenu }"
-                      @click="toggleMediaMenu" />
+                <Icon name="ph:plus-fill" size="21px"
+                    class="media textColorBlack cursor-pointer transition-transform duration-300 hover:scale-110"
+                    :class="{ 'rotate-45': showMediaMenu }" @click="toggleMediaMenu" />
 
-                <!-- Menu déroulant -->
-                <div v-if="showMediaMenu" 
-                     class="media-menu absolute bottom-full left-0 mb-2 bg-white rounded-lg shadow-xl border overflow-hidden grid grid-cols-2 gap-x-4 gap-y-2"
-                     :class="{ 'menu-enter-active': showMediaMenu }">
+                <div v-if="showMediaMenu"
+                    class="media-menu absolute bottom-full left-0 mb-2 bg-white rounded-lg shadow-xl border overflow-hidden grid grid-cols-2 gap-x-4 gap-y-2"
+                    :class="{ 'menu-enter-active': showMediaMenu }">
 
-                    <!-- Option Photo -->
                     <div class="menu-item photo-item" @click="selectMediaType('photo')">
                         <div class="menu-icon bgColorSecondary">
                             <Icon name="ph:camera" size="18px" class="text-white" />
@@ -275,7 +246,6 @@
                         </div>
                     </div>
 
-                    <!-- Option GIF -->
                     <div class="menu-item gif-item" @click="selectMediaType('gif')">
                         <div class="menu-icon bgColorCategoryPrimary">
                             <Icon name="ph:gif" size="18px" class="text-white" />
@@ -286,7 +256,6 @@
                         </div>
                     </div>
 
-                    <!-- Option Mot de passe -->
                     <div class="menu-item password-item" @click="selectMediaType('password')">
                         <div class="menu-icon bg-red-500">
                             <Icon name="ph:key" size="18px" class="text-white" />
@@ -297,7 +266,6 @@
                         </div>
                     </div>
 
-                    <!-- Option Note -->
                     <div class="menu-item note-item" @click="selectMediaType('note')">
                         <div class="menu-icon bg-yellow-500">
                             <Icon name="ph:note-pencil" size="18px" class="text-white" />
@@ -308,7 +276,6 @@
                         </div>
                     </div>
 
-                    <!-- Option Événement -->
                     <div class="menu-item event-item" @click="selectMediaType('event')">
                         <div class="menu-icon bg-blue-500">
                             <Icon name="ph:calendar-plus" size="18px" class="text-white" />
@@ -319,7 +286,6 @@
                         </div>
                     </div>
 
-                    <!-- Option Fichier -->
                     <div class="menu-item file-item" @click="selectMediaType('file')">
                         <div class="menu-icon bg-gray-600">
                             <Icon name="ph:file-arrow-up" size="18px" class="text-white" />
@@ -330,7 +296,6 @@
                         </div>
                     </div>
 
-                    <!-- Option Musique -->
                     <div class="menu-item music-item" @click="selectMediaType('music')">
                         <div class="menu-icon bg-green-500">
                             <Icon name="ph:music-note" size="18px" class="text-white" />
@@ -342,34 +307,24 @@
                     </div>
                 </div>
 
-                <!-- Input files cachés -->
-                <input ref="photoInput" 
-                       type="file" 
-                       accept="image/*" 
-                       class="hidden" 
-                       @change="handlePhotoSelect" />
+                <input ref="photoInput" type="file" accept="image/*" class="hidden" @change="handlePhotoSelect" />
             </div>
 
             <div class="microphone-container" @click="toggleRecording">
-                <!-- Animation d'enregistrement -->
                 <div v-if="isRecording" class="recording-overlay">
-                    <!-- Cercles pulsants -->
                     <div class="pulse-circle pulse-1"></div>
                     <div class="pulse-circle pulse-2"></div>
                     <div class="pulse-circle pulse-3"></div>
 
-                    <!-- Barres de vague animées -->
                     <div class="wave-container">
                         <div class="wave-bar" v-for="i in 5" :key="i" :style="{ animationDelay: `${i * 0.1}s` }"></div>
                     </div>
 
-                    <!-- Cercle central avec microphone -->
                     <div class="mic-circle">
                         <Icon name="mdi:microphone" size="24px" class="text-white" />
                     </div>
                 </div>
 
-                <!-- Microphone normal -->
                 <Icon name="ph:microphone" size="21px"
                     class="media textColorBlack cursor-pointer transition-all duration-200 hover:scale-110"
                     :class="{ 'opacity-0': isRecording }" />
@@ -404,18 +359,15 @@ const currentAttachment = ref<string>('');
 const activeMenu = ref<string | null>(null);
 const menuPositions = ref<{ [key: string]: number }>({});
 
-// États pour le menu média
 const showMediaMenu = ref(false);
 const photoInput = ref<HTMLInputElement | null>(null);
 const isUploadingMedia = ref(false);
 
-// État pour les modals d'image
 const showImageModal = ref(false);
 const selectedImage = ref<string>('');
 
-// États pour Giphy
 const showGiphyModal = ref(false);
-const giphyGifs = ref<any[]>([]);
+const giphyGifs = ref<{ id: string; images: { fixed_width: { url: string }; original: { url: string } }; title: string }[]>([]);
 const giphySearchQuery = ref('');
 const isLoadingGiphy = ref(false);
 const giphyOffset = ref(0);
@@ -425,11 +377,9 @@ const showEditModal = ref(false);
 const editedMessageContent = ref('');
 const currentEditingMessage = ref<Message | null>(null);
 
-// État pour la gestion audio
 const audioElements = ref<{ [key: string]: HTMLAudioElement }>({});
 const audioStates = ref<{ [key: string]: { isPlaying: boolean; currentTime: number; duration: number; progress: number } }>({});
 
-// État pour la confirmation audio
 const showAudioConfirmModal = ref(false);
 const recordedAudioBlob = ref<Blob | null>(null);
 const previewAudioUrl = ref<string>('');
@@ -487,7 +437,6 @@ const formatTime = (seconds: number): string => {
     return `${mins}:${secs.toString().padStart(2, '0')}`;
 };
 
-// Fonctions pour le menu média
 const toggleMediaMenu = () => {
     showMediaMenu.value = !showMediaMenu.value;
 };
@@ -525,7 +474,6 @@ const handlePhotoSelect = async (event: Event) => {
     target.value = '';
 };
 
-// Fonctions Giphy
 const openGiphyModal = async () => {
     showGiphyModal.value = true;
     if (giphyGifs.value.length === 0) {
@@ -548,7 +496,7 @@ const searchGiphy = async (query: string = giphySearchQuery.value) => {
         giphyOffset.value = 0;
 
         const apiKey = config.public.giphyApiKey;
-        const endpoint = query 
+        const endpoint = query
             ? `https://api.giphy.com/v1/gifs/search?api_key=${apiKey}&q=${encodeURIComponent(query)}&limit=20&offset=0&rating=g`
             : `https://api.giphy.com/v1/gifs/trending?api_key=${apiKey}&limit=20&offset=0&rating=g`;
 
@@ -578,7 +526,7 @@ const loadMoreGifs = async () => {
         isLoadingGiphy.value = true;
 
         const apiKey = config.public.giphyApiKey;
-        const endpoint = giphySearchQuery.value 
+        const endpoint = giphySearchQuery.value
             ? `https://api.giphy.com/v1/gifs/search?api_key=${apiKey}&q=${encodeURIComponent(giphySearchQuery.value)}&limit=20&offset=${giphyOffset.value}&rating=g`
             : `https://api.giphy.com/v1/gifs/trending?api_key=${apiKey}&limit=20&offset=${giphyOffset.value}&rating=g`;
 
@@ -600,7 +548,7 @@ const loadMoreGifs = async () => {
     }
 };
 
-const selectGiphyGif = async (gif: any) => {
+const selectGiphyGif = async (gif: { images: { original: { url: string } } }) => {
     try {
         const gifUrl = gif.images.original.url;
         await sendGifMessage(gifUrl);
@@ -630,7 +578,6 @@ const sendGifMessage = async (gifUrl: string) => {
     }
 };
 
-// Debounce pour la recherche
 let searchTimeout: ReturnType<typeof setTimeout>;
 const debouncedSearch = (query: string) => {
     clearTimeout(searchTimeout);
@@ -666,7 +613,6 @@ const uploadMedia = async (file: File, type: 'image' | 'gif') => {
     }
 };
 
-// Fonctions pour les modals d'image
 const openImageModal = (imageSrc: string) => {
     selectedImage.value = imageSrc;
     showImageModal.value = true;
@@ -720,10 +666,11 @@ const toggleAudioPlayback = async (messageId: string, audioUrl: string) => {
         audio.pause();
         state.isPlaying = false;
     } else {
-        // Pause tous les autres audios
         Object.keys(audioElements.value).forEach(key => {
             if (key !== messageId && audioStates.value[key]?.isPlaying) {
-                audioElements.value[key].pause();
+                if (audioElements.value[key]) {
+                    audioElements.value[key]!.pause();
+                }
                 if (audioStates.value[key]) {
                     audioStates.value[key]!.isPlaying = false;
                 }
@@ -795,7 +742,6 @@ onMounted(() => {
     document.addEventListener('click', event => {
         const target = event.target as Element;
 
-        // Fermer le menu contextuel des messages
         if (
             activeMenu.value &&
             !target?.closest?.('.message-container')
@@ -803,7 +749,6 @@ onMounted(() => {
             activeMenu.value = null;
         }
 
-        // Fermer le menu média si on clique ailleurs
         if (
             showMediaMenu.value &&
             !target?.closest?.('.media-menu-container')
@@ -811,7 +756,6 @@ onMounted(() => {
             showMediaMenu.value = false;
         }
 
-        // Fermer la modal Giphy si on clique en dehors
         if (
             showGiphyModal.value &&
             !target?.closest?.('.bg-white') &&
@@ -985,7 +929,6 @@ const toggleRecording = async () => {
                 const audioBlob = new Blob(audioChunks.value, { type: 'audio/webm' });
                 audioChunks.value = [];
 
-                // Stocker le blob et afficher la modal de confirmation
                 recordedAudioBlob.value = audioBlob;
                 previewAudioUrl.value = URL.createObjectURL(audioBlob);
                 showAudioConfirmationModal();
@@ -1013,7 +956,6 @@ function stopRecording() {
 const showAudioConfirmationModal = () => {
     showAudioConfirmModal.value = true;
 
-    // Configurer l'audio de prévisualisation
     nextTick(() => {
         previewAudio.value = new Audio(previewAudioUrl.value);
 
@@ -1048,7 +990,6 @@ const cancelAudioPreview = () => {
     recordedAudioBlob.value = null;
     showAudioConfirmModal.value = false;
 
-    // Reset preview state
     Object.assign(previewAudioState, {
         isPlaying: false,
         currentTime: 0,
@@ -1166,7 +1107,6 @@ const sendAudioMessage = async (audioBlob: Blob) => {
     transition: transform 0.3s ease;
 }
 
-/* Styles pour les messages d'image */
 .image-message {
     width: 100%;
     max-width: 300px;
@@ -1186,7 +1126,6 @@ const sendAudioMessage = async (audioBlob: Blob) => {
     transform: scale(1.02);
 }
 
-/* Styles pour le menu média */
 .media-menu-container {
     position: relative;
     z-index: 30;
@@ -1197,18 +1136,15 @@ const sendAudioMessage = async (audioBlob: Blob) => {
     bottom: 100%;
     left: 0;
     margin-bottom: 8px;
-    min-width: 400px; /* Wider for 2 columns */
-    /* max-width: 280px; - Removed, as min-width defines new base */
+    min-width: 400px;
     background: white;
     border-radius: 12px;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
     border: 1px solid rgba(0, 0, 0, 0.08);
-    overflow: hidden; /* Keep hidden for border-radius clip */
+    overflow: hidden;
     transform-origin: bottom left;
     animation: menuSlideUp 0.2s ease-out forwards;
-    /* max-height: 400px; - Removed for 2-row layout */
-    /* overflow-y: auto; - Removed for 2-row layout */
-    padding: 8px; /* Add some padding inside the grid container */
+    padding: 8px;
 }
 
 @keyframes menuSlideUp {
@@ -1216,6 +1152,7 @@ const sendAudioMessage = async (audioBlob: Blob) => {
         opacity: 0;
         transform: translateY(10px) scale(0.95);
     }
+
     to {
         opacity: 1;
         transform: translateY(0) scale(1);
@@ -1228,11 +1165,6 @@ const sendAudioMessage = async (audioBlob: Blob) => {
     padding: 12px 16px;
     cursor: pointer;
     transition: all 0.2s ease;
-    /* border-bottom: 1px solid rgba(0, 0, 0, 0.05); - Removed for grid layout */
-}
-
-.menu-item:last-child {
-    /* border-bottom: none; - No longer needed */
 }
 
 .menu-item:hover {
@@ -1303,12 +1235,10 @@ const sendAudioMessage = async (audioBlob: Blob) => {
     line-height: 1.2;
 }
 
-/* Animation de rotation pour l'icône + */
 .rotate-45 {
     transform: rotate(45deg);
 }
 
-/* Styles pour les lecteurs audio personnalisés */
 .audio-message {
     width: 100%;
     min-width: 250px;
@@ -1402,7 +1332,6 @@ const sendAudioMessage = async (audioBlob: Blob) => {
     animation: fade-in-scale 0.3s ease-out;
 }
 
-/* Cercles pulsants */
 .pulse-circle {
     position: absolute;
     border-radius: 50%;
@@ -1445,7 +1374,6 @@ const sendAudioMessage = async (audioBlob: Blob) => {
     }
 }
 
-/* Cercle central avec microphone */
 .mic-circle {
     position: relative;
     width: 45px;
@@ -1473,7 +1401,6 @@ const sendAudioMessage = async (audioBlob: Blob) => {
     }
 }
 
-/* Container des barres de vague */
 .wave-container {
     position: absolute;
     display: flex;
@@ -1484,7 +1411,6 @@ const sendAudioMessage = async (audioBlob: Blob) => {
     z-index: 3;
 }
 
-/* Barres de vague */
 .wave-bar {
     width: 3px;
     height: 8px;
@@ -1538,7 +1464,6 @@ const sendAudioMessage = async (audioBlob: Blob) => {
     }
 }
 
-/* Animation d'apparition */
 @keyframes fade-in-scale {
     0% {
         opacity: 0;
@@ -1551,7 +1476,6 @@ const sendAudioMessage = async (audioBlob: Blob) => {
     }
 }
 
-/* Responsive */
 @media(max-width: 640px) {
     .recording-overlay {
         width: 70px;
@@ -1583,10 +1507,10 @@ const sendAudioMessage = async (audioBlob: Blob) => {
     }
 
     .media-menu {
-        min-width: 200px; /* Adjusted for smaller screens, single column */
-        max-width: 250px; /* Adjusted for smaller screens */
-        grid-template-columns: 1fr; /* Force single column on small screens */
-        gap: 0; /* Remove gap when single column */
+        min-width: 200px;
+        max-width: 250px;
+        grid-template-columns: 1fr;
+        gap: 0;
     }
 
     .menu-item {
@@ -1606,7 +1530,6 @@ const sendAudioMessage = async (audioBlob: Blob) => {
         font-size: 11px;
     }
 
-    /* Responsive pour la modal Giphy */
     .grid-cols-2 {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }

@@ -35,8 +35,7 @@
                             <div class="module bottomLeftModule">
                                 <PasswordManager @contextmenu.prevent="showContextMenu"
                                     @open-password-center="handlePasswordCenterOpening"
-                                    :refresh-counter='refreshCounter'
-                                    />
+                                    :refresh-counter='refreshCounter' />
                             </div>
                         </div>
                     </div>
@@ -75,9 +74,7 @@
                     <div data-swapy-item="bottomLeft">
                         <div class="module bottomLeftModule">
                             <PasswordManager @contextmenu.prevent="showContextMenu"
-                                @open-password-center="handlePasswordCenterOpening"
-                                :refresh-counter='refreshCounter'
-                                />
+                                @open-password-center="handlePasswordCenterOpening" :refresh-counter='refreshCounter' />
                         </div>
                     </div>
                 </div>
@@ -94,7 +91,7 @@
 
     <MarkdownCenter @open-note="handleOpeningNote" @close-markdown-center="handleMarkdownCenterClosing"
         v-if="isMarkdownCenterOpen" />
-        
+
     <PasswordCenter @close-password-center="handlePasswordCenterClosing" v-if="isPasswordCenterOpen"
         @refresh-counter="handleRefreshCounter" />
 
@@ -228,7 +225,8 @@ onUnmounted(() => {
 
 const swiperInstance = ref(null);
 
-const onSwiperInitialized = (swiper) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const onSwiperInitialized = (swiper: any) => {
     swiperInstance.value = swiper;
     nextTick(() => swiper.update());
 };

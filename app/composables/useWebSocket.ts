@@ -1,11 +1,11 @@
-import { ref } from "vue";
-import { io } from "socket.io-client";
 import type { Socket } from "socket.io-client";
-import type { Notification } from "~/types/Notification";
-import type { Message } from "~/types/Message";
+import { io } from "socket.io-client";
+import { ref } from "vue";
 import { useRuntimeConfig } from "#app";
+import type { Message } from "~/types/Message";
+import type { Notification } from "~/types/Notification";
 
-const webSocketData = ref<Record<string, any>>({});
+const webSocketData = ref<Record<string, unknown>>({});
 let socket: Socket | null = null;
 
 export function useWebSocket() {
@@ -16,7 +16,7 @@ export function useWebSocket() {
 		const config = useRuntimeConfig();
 		socket = io(config.public.webSocketUrl);
 
-		socket.on("message", (message: any) => {
+		socket.on("message", (message: { type: string; data: unknown }) => {
 			if (message.type && message.data) {
 				webSocketData.value[message.type] = message.data;
 			}
@@ -27,18 +27,20 @@ export function useWebSocket() {
 			webSocketData.value.socketId = socketId;
 		});
 
-		socket.on("updatedMessages", (newMessages: Message[], conversationId: string) => {
-			webSocketData.value.type = "updatedMessages";
-			webSocketData.value.updatedMessages = newMessages;
+		socket.on(
+			"updatedMessages",
+			(newMessages: Message[], conversationId: string) => {
+				webSocketData.value.type = "updatedMessages";
+				webSocketData.value.updatedMessages = newMessages;
+				webSocketData.value.conversationId = conversationId;
+			},
+		);
+
+		socket.on("newMessage", (newMessage: Message, conversationId: string) => {
+			webSocketData.value.type = "newMessage";
+			webSocketData.value.newMessage = newMessage;
 			webSocketData.value.conversationId = conversationId;
 		});
-		
-		
-		socket.on('newMessage', (newMessage: Message, conversationId: string)=>{
-		  webSocketData.value.type = "newMessage";
-		  webSocketData.value.newMessage = newMessage;
-		  webSocketData.value.conversationId = conversationId;
-		})
 
 		socket.on("disconnect", () => {
 			socket = null;
@@ -66,7 +68,7 @@ export function useWebSocket() {
 		);
 	};
 
-	const send = (data: any) => {
+	const send = (data: unknown) => {
 		if (!socket || !socket.connected) {
 			return;
 		}

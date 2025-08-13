@@ -2,6 +2,7 @@
  * This composable is used to fetch data from any url outside api platform.
  */
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function useAuthFetch(url: string, options: any = {}) {
 	const config = useRuntimeConfig();
 	const baseUrl = config.public.apiUrl;

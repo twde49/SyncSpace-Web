@@ -19,7 +19,6 @@ export default defineNuxtPlugin(() => {
 				if (options.numbers) characters += nums;
 				if (options.symbols) characters += syms;
 
-
 				if (!characters) throw new Error("No character set selected.");
 
 				let password = "";

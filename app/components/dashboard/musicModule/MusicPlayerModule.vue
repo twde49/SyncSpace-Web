@@ -68,7 +68,6 @@
                                 <p class="normalFont textColorWhite">Chargement des données...</p>
                             </div>
                             <template v-else>
-                                <!-- Categories View -->
                                 <div v-if="activeLibrarySection === 'categories'" class="library-section">
                                     <h3 class="largeFont mb-4 textColorWhite">Ma Bibliothèque</h3>
                                     <div class="library-categories space-y-3">
@@ -78,14 +77,14 @@
                                                 size="20px" />
                                             <span class="normalFont textColorWhite">Titres récents</span>
                                             <span class="ml-auto normalFont textColorTritary">{{ playlist.length
-                                                }}</span>
+                                            }}</span>
                                         </div>
                                         <div class="category-item flex items-center p-3 rounded-lg bgColorBlack cursor-pointer hover:border-[var(--color-secondary)] border border-transparent"
                                             @click="displayFavoriteTracks()">
                                             <Icon name="ph:heart-fill" class="textColorPrimary mr-3" size="20px" />
                                             <span class="normalFont textColorWhite">Favoris</span>
                                             <span class="ml-auto normalFont textColorTritary">{{ favoriteQuantity
-                                                }}</span>
+                                            }}</span>
                                         </div>
                                         <div class="category-item flex items-center p-3 rounded-lg bgColorBlack cursor-pointer hover:border-[var(--color-secondary)] border border-transparent"
                                             @click="displayMyPlaylists()">
@@ -93,12 +92,11 @@
                                                 size="20px" />
                                             <span class="normalFont textColorWhite">Mes Playlists</span>
                                             <span class="ml-auto normalFont textColorTritary">{{ playlistQuantity
-                                                }}</span>
+                                            }}</span>
                                         </div>
                                     </div>
                                 </div>
 
-                                <!-- Recent Tracks View -->
                                 <div v-else-if="activeLibrarySection === 'recent'" class="library-recent-tracks">
                                     <div class="flex justify-between items-center mb-6">
                                         <h3 class="largeFont textColorWhite">Titres récents</h3>
@@ -151,7 +149,6 @@
                                     </div>
                                 </div>
 
-                                <!-- Favorites View -->
                                 <div v-else-if="activeLibrarySection === 'favorites'" class="library-favorites-tracks">
                                     <div class="flex justify-between items-center mb-6">
                                         <h3 class="largeFont textColorWhite">Favoris</h3>
@@ -195,7 +192,6 @@
                                     </div>
                                 </div>
 
-                                <!-- Playlist Tracks View -->
                                 <div v-else-if="activeLibrarySection === 'playlist-tracks'"
                                     class="library-playlist-tracks">
                                     <div class="flex justify-between items-center mb-6">
@@ -245,7 +241,6 @@
                                     </div>
                                 </div>
 
-                                <!-- My Playlists View -->
                                 <div v-else-if="activeLibrarySection === 'playlists'" class="library-playlists">
                                     <div class="flex justify-between items-center mb-6">
                                         <div class="flex items-center">
@@ -400,7 +395,7 @@
                                     <div class="suggestion-tags flex flex-wrap gap-2">
                                         <span v-for="suggestion in suggestions" :key="suggestion"
                                             class="suggestion-tag px-3 py-2 bgColorBlack border border-[var(--color-secondary)] rounded-full miniFont textColorWhite cursor-pointer hover:bgColorSecondary transition-all duration-200"
-                                            @click="() => { searchQuery = suggestion; handleSearch(); }">
+                                            @click="() => { searchQuery = suggestion; performSearch(); }">
                                             {{ suggestion }}
                                         </span>
                                     </div>
@@ -455,8 +450,7 @@
                 <div class="rightControls flex items-center space-x-4">
                     <VolumeControl @volume-change="handleVolumeChange" />
                     <div class="threeDotsMenu relative" ref="menuRef">
-                        <Icon ref="threeDotsRef" name="ph:dots-three-vertical"
-                            size="32px"
+                        <Icon ref="threeDotsRef" name="ph:dots-three-vertical" size="32px"
                             class="threedots textColorSecondary hover:textColorPrimary transition duration-300"
                             @click="isMenuOpen = !isMenuOpen" />
                         <Teleport to="body">
@@ -477,7 +471,6 @@
         <YouTubeAudioPlayer ref="youtubePlayer" :youtubeId="currentYoutubeId" @ready="onYouTubeReady" />
     </div>
 
-    <!-- Playlist Selection Modal -->
     <Teleport to="body">
         <div v-if="showPlaylistModal"
             class="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center z-50">
@@ -535,7 +528,7 @@
                                 <div class="textColorWhite normalFont font-medium">{{ playlist.name }}</div>
                                 <div class="miniFont textColorTritary mt-1">{{ playlist.tracks ? playlist.tracks.length
                                     : 0
-                                }}
+                                    }}
                                     titres</div>
                             </div>
                         </div>
@@ -556,7 +549,6 @@
         </div>
     </Teleport>
 
-    <!-- Track Options Context Menu -->
     <Teleport to="body">
         <div v-if="showTrackOptionsMenu && selectedTrackForMenu" ref="trackOptionsMenuRef"
             class="dropdown-menu fixed w-52 bgColorBlack border-2 border-[var(--color-secondary)] rounded-lg shadow-lg z-50 py-2 animate-fadeIn">
@@ -565,11 +557,9 @@
                 <Icon name="ph:list-plus" size="20px" class="textColorPrimary" />
                 <span>Ajouter à une playlist</span>
             </div>
-            <!-- Add more options here if needed -->
         </div>
     </Teleport>
 
-    <!-- Playlist Options Context Menu -->
     <Teleport to="body">
         <div v-if="showPlaylistOptionsMenu && selectedPlaylistForMenu" ref="playlistOptionsMenuRef"
             class="dropdown-menu fixed w-52 bgColorBlack border-2 border-[var(--color-secondary)] rounded-lg shadow-lg z-50 py-2 animate-fadeIn">
@@ -595,11 +585,11 @@ import YouTubeAudioPlayer from '~/components/dashboard/musicModule/YoutubeAudioP
 import type { Track } from '~/types/Track'
 import useAuthFetch from '~/composables/useAuthFetch'
 
-const isMenuOpen = ref(false) // For the main mini-player menu
-const menuRef = ref(null) // For the main mini-player menu
-const threeDotsRef = ref(null) // For the main mini-player menu icon
+const isMenuOpen = ref(false)
+const menuRef = ref(null)
+const threeDotsRef = ref(null)
 
-const showPlaylistModal = ref(false) // For the playlist selection modal
+const showPlaylistModal = ref(false)
 const newPlaylistName = ref('')
 const showNewPlaylistInput = ref(false)
 
@@ -607,34 +597,28 @@ const userPlaylists = ref<typeof playlists.value>([])
 const isLoadingPlaylists = ref(false)
 const addingTrackStatus = ref<string | null>(null)
 
-// For the individual track options menu
 const showTrackOptionsMenu = ref(false);
 const trackOptionsMenuRef = ref(null);
 const trackMenuAnchorEl = ref<HTMLElement | null>(null);
-const selectedTrackForMenu = ref<Track | null>(null); // The track associated with the open context menu
+const selectedTrackForMenu = ref<Track | null>(null);
 
-// For the individual playlist options menu
 const showPlaylistOptionsMenu = ref(false);
 const playlistOptionsMenuRef = ref(null);
 const playlistMenuAnchorEl = ref<HTMLElement | null>(null);
 const selectedPlaylistForMenu = ref<typeof playlists.value[0] | null>(null);
 
-// For passing track to the playlist modal from any source
 const selectedTrackForModal = ref<Track | null>(null);
 
-// onClickOutside for the main mini-player menu
 onClickOutside(menuRef, () => {
     isMenuOpen.value = false
 })
 
-// onClickOutside for the track options menu
 onClickOutside(trackOptionsMenuRef, () => {
     showTrackOptionsMenu.value = false;
     selectedTrackForMenu.value = null;
     trackMenuAnchorEl.value = null;
 });
 
-// NEW: onClickOutside for the playlist options menu
 onClickOutside(playlistOptionsMenuRef, () => {
     showPlaylistOptionsMenu.value = false;
     selectedPlaylistForMenu.value = null;
@@ -642,117 +626,107 @@ onClickOutside(playlistOptionsMenuRef, () => {
 });
 
 
-// Update dropdown position when main menu opens
 const updateDropdownPosition = () => {
     if (isMenuOpen.value && threeDotsRef.value) {
         nextTick(() => {
             const menuElement = document.querySelector('.dropdown-menu') as HTMLElement
             if (menuElement && threeDotsRef.value) {
                 const rect = (threeDotsRef.value as { $el: HTMLElement }).$el.getBoundingClientRect()
-                // Position dropdown right-aligned with the icon
                 menuElement.style.right = `${window.innerWidth - rect.right}px`
-                // Position above the icon
                 menuElement.style.bottom = `${window.innerHeight - rect.top + 10}px`
             }
         })
     }
 }
 
-// Update dropdown position when track options menu opens
 const updateTrackOptionsMenuPosition = () => {
     if (showTrackOptionsMenu.value && trackMenuAnchorEl.value) {
         nextTick(() => {
-            const menuElement = trackOptionsMenuRef.value as HTMLElement;
+            const menuElement = trackOptionsMenuRef.value as unknown as HTMLElement;
             if (menuElement) {
-                const rect = trackMenuAnchorEl.value.getBoundingClientRect();
-                // Position dropdown aligning its right edge with the icon's right edge
-                menuElement.style.right = `${window.innerWidth - rect.right}px`;
-                // Position below the icon, adjust if it goes off screen
-                let topPosition = rect.bottom + 5;
-                if (topPosition + menuElement.offsetHeight > window.innerHeight) {
-                    topPosition = rect.top - menuElement.offsetHeight - 5; // Position above the icon
-                    if (topPosition < 0) { // If it still goes off screen to the top
-                        topPosition = 0;
+                const rect = trackMenuAnchorEl.value?.getBoundingClientRect();
+                if (rect) {
+                    menuElement.style.right = `${window.innerWidth - rect.right}px`;
+
+                    let topPosition = rect.bottom + 5;
+                    if (topPosition + menuElement.offsetHeight > window.innerHeight) {
+                        topPosition = rect.top - menuElement.offsetHeight - 5;
+                        if (topPosition < 0) {
+                            topPosition = 0;
+                        }
                     }
+                    menuElement.style.top = `${topPosition}px`;
                 }
-                menuElement.style.top = `${topPosition}px`;
             }
         });
     }
 };
 
-// NEW: Update dropdown position when playlist options menu opens
 const updatePlaylistOptionsMenuPosition = () => {
     if (showPlaylistOptionsMenu.value && playlistMenuAnchorEl.value) {
         nextTick(() => {
-            const menuElement = playlistOptionsMenuRef.value as HTMLElement;
+            const menuElement = playlistOptionsMenuRef.value as unknown as HTMLElement;
             if (menuElement) {
-                const rect = playlistMenuAnchorEl.value.getBoundingClientRect();
-                // Position dropdown aligning its right edge with the icon's right edge
-                menuElement.style.right = `${window.innerWidth - rect.right}px`;
-                // Position below the icon, adjust if it goes off screen
-                let topPosition = rect.bottom + 5;
-                if (topPosition + menuElement.offsetHeight > window.innerHeight) {
-                    topPosition = rect.top - menuElement.offsetHeight - 5; // Position above the icon
-                    if (topPosition < 0) { // If it still goes off screen to the top
-                        topPosition = 0;
+                const rect = playlistMenuAnchorEl.value?.getBoundingClientRect();
+                if (rect) {
+                    menuElement.style.right = `${window.innerWidth - rect.right}px`;
+                    let topPosition = rect.bottom + 5;
+                    if (topPosition + menuElement.offsetHeight > window.innerHeight) {
+                        topPosition = rect.top - menuElement.offsetHeight - 5;
+                        if (topPosition < 0) {
+                            topPosition = 0;
+                        }
                     }
+                    menuElement.style.top = `${topPosition}px`;
                 }
-                menuElement.style.top = `${topPosition}px`;
+
             }
         });
     }
 };
 
-// Watch for main menu open state
 watch(isMenuOpen, updateDropdownPosition)
-// Watch for track options menu open state
 watch(showTrackOptionsMenu, updateTrackOptionsMenuPosition);
-// NEW: Watch for playlist options menu open state
 watch(showPlaylistOptionsMenu, updatePlaylistOptionsMenuPosition);
 
 
-// Keep existing openPlaylistModal for main player's three dots, now sets selectedTrackForModal
 const openPlaylistModal = async () => {
-    isMenuOpen.value = false; // Close the main menu
-    selectedTrackForModal.value = musicPlayer.value; // Set the current playing track for the modal
-    showPlaylistModal.value = true; // Open the modal
+    isMenuOpen.value = false;
+    selectedTrackForModal.value = musicPlayer.value ?? null;
+    showPlaylistModal.value = true;
     await fetchUserPlaylists();
 };
 
-// Function to open the track options menu for a specific track
 const openTrackOptionsMenu = (track: Track, event: MouseEvent) => {
     selectedTrackForMenu.value = track;
     trackMenuAnchorEl.value = event.currentTarget as HTMLElement;
     showTrackOptionsMenu.value = true;
-    isMenuOpen.value = false; // Ensure main player menu is closed
-    showPlaylistOptionsMenu.value = false; // Ensure playlist menu is closed
+    isMenuOpen.value = false;
+    showPlaylistOptionsMenu.value = false;
 };
 
-// NEW: Function to open the playlist options menu for a specific playlist
 const openPlaylistOptionsMenu = (playlistItem: typeof playlists.value[0], event: MouseEvent) => {
     selectedPlaylistForMenu.value = playlistItem;
     playlistMenuAnchorEl.value = event.currentTarget as HTMLElement;
     showPlaylistOptionsMenu.value = true;
-    isMenuOpen.value = false; // Ensure main player menu is closed
-    showTrackOptionsMenu.value = false; // Ensure track menu is closed
+    isMenuOpen.value = false;
+    showTrackOptionsMenu.value = false;
 };
 
-// NEW: Placeholder functions for playlist actions
+
 const editPlaylist = (playlistItem: typeof playlists.value[0] | null) => {
-    //TODO
+    console.log('Edit playlist:', playlistItem);
 };
 
 const deletePlaylist = (playlistItem: typeof playlists.value[0] | null) => {
-    //TODO
+    console.log('Delete playlist:', playlistItem);
 };
 
 
-// Function to open the playlist modal from the track context menu
 const openPlaylistModalForTrack = async (track: Track) => {
-    selectedTrackForModal.value = track; // Set the track from the list for the modal
-    showTrackOptionsMenu.value = false; // Close the track context menu
-    showPlaylistModal.value = true; // Open the playlist selection modal
+    selectedTrackForModal.value = track;
+    showTrackOptionsMenu.value = false;
+    showPlaylistModal.value = true;
     await fetchUserPlaylists();
 };
 
@@ -761,7 +735,6 @@ const fetchUserPlaylists = async () => {
     addingTrackStatus.value = null
 
     try {
-        // Use the playlists from useMusicPlayer
         await fetchPlaylists()
         userPlaylists.value = playlists.value
     } catch (error) {
@@ -773,7 +746,6 @@ const fetchUserPlaylists = async () => {
 
 const createNewPlaylist = async () => {
     if (!newPlaylistName.value) {
-        // Show input for playlist name
         return
     }
 
@@ -787,7 +759,6 @@ const createNewPlaylist = async () => {
     }
 }
 
-// MODIFIED: addTrackToPlaylist to use selectedTrackForModal
 const addTrackToPlaylist = async (playlistId: string) => {
     const trackToAdd = selectedTrackForModal.value;
     if (!trackToAdd || !trackToAdd.youtubeId) {
@@ -811,11 +782,10 @@ const addTrackToPlaylist = async (playlistId: string) => {
 
         addingTrackStatus.value = 'success'
 
-        // Close modal after short delay
         setTimeout(() => {
             showPlaylistModal.value = false
             addingTrackStatus.value = null
-            selectedTrackForModal.value = null; // Clear the selected track after successful add
+            selectedTrackForModal.value = null;
         }, 1500)
 
     } catch (error) {
@@ -987,7 +957,6 @@ onMounted(async () => {
     transform: translateX(-50%);
     width: 48px;
     height: 6px;
-    /* background-color handled by bgColorSecondary class in template */
     border-radius: 9999px;
     cursor: grab;
     z-index: 100;
@@ -1001,7 +970,6 @@ onMounted(async () => {
 
 .drag-handle:hover {
     background-color: var(--color-primary);
-    /* Changed to primary for hover */
 }
 
 .full-player-content {
@@ -1017,7 +985,6 @@ onMounted(async () => {
 }
 
 .playButton {
-    /* background-color handled by bgColorPrimary class in template */
     border-radius: 100%;
     height: 40px;
     width: 40px;
@@ -1028,7 +995,6 @@ onMounted(async () => {
 }
 
 .musicControls {
-    /* color handled by textColorSecondary class in template */
     cursor: pointer;
     transition: color 0.3s ease;
 }
@@ -1038,12 +1004,10 @@ onMounted(async () => {
 }
 
 .likeButton {
-    /* color handled by textColorSecondary class in template */
     cursor: pointer;
 }
 
 .threedots {
-    /* color handled by textColorSecondary class in template */
     cursor: pointer;
 }
 

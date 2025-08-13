@@ -239,7 +239,7 @@ const showDeleteModal = ref<boolean>(false);
 const fileToDelete = ref<File | null>(null);
 const menuPositions = ref<{ [key: string]: number }>({});
 const currentPreviewFile = ref<File | null>(null);
-const fileInputRef = ref<HTMLInputElement | null>(null); // Ref for the hidden file input
+const fileInputRef = ref<HTMLInputElement | null>(null);
 const showCreateFolderModal = ref(false);
 const newFolderName = ref<string>('');
 const isLoading = ref<boolean>(false)
@@ -457,7 +457,7 @@ const getFileSize = (size: number) => {
 
 const isLastFile = (file: File) => {
     if (files.length > 2) {
-        return files[files.length - 1].id === file.id || files[files.length - 2].id === file.id;
+        return files.length > 0 && files[files.length - 1]?.id === file.id || (files.length > 1 && files[files.length - 2]?.id === file.id);
     }
     return false;
 };
@@ -483,7 +483,9 @@ const isImage = (file: File) => {
 const handleFileSelect = (event: Event) => {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
-        uploadFile(input.files[0]);
+        if (input.files[0]) {
+            uploadFile(input.files[0]);
+        }
         input.value = '';
     }
 };
@@ -499,13 +501,14 @@ const uploadFile = async (file: globalThis.File) => {
 
         const response = await useAuthFetch(
             currentFolder !== null
-                ? `files/upload/${currentFolder.value.id}?${Date.now()}`
+                ? `files/upload/${currentFolder.id}?${Date.now()}`
                 : 'files/upload',
             {
                 method: 'POST',
                 body: formData,
             },
         );
+
 
         if (response.error.value) {
             console.error('Upload error:', response.error.value);

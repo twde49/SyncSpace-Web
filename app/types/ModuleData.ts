@@ -1,5 +1,4 @@
 export type ModuleData = {
-  position: string;
-  module: string;
+	position: string;
+	module: string;
 };
-

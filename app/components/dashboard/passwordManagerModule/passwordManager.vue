@@ -138,10 +138,10 @@ const getPasswordCount = async () => {
     }
 };
 watch(() => refreshCounter, async (newValue) => {
-  console.log('refreshCounter changed');
-  if (newValue === true) {
-    await getPasswordCount();
-  }
+    console.log('refreshCounter changed');
+    if (newValue === true) {
+        await getPasswordCount();
+    }
 });
 
 onMounted(async () => {

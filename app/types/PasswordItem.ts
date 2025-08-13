@@ -7,6 +7,7 @@ export type PasswordItem = {
 	url?: string;
 	name?: string;
 	email?: string;
+	password?: string;
 	passwordEncrypted: string;
 	notesEncrypted?: string;
 	iv: string;

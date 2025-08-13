@@ -1,6 +1,7 @@
 import { ref } from "vue";
 import useAuthFetch from "~/composables/useAuthFetch";
 import type { PasswordItem } from "~/types/PasswordItem";
+
 const passwords = ref<PasswordItem[]>([]);
 const masterKey = ref<CryptoKey | null>(null);
 
@@ -74,6 +75,7 @@ async function fetchPasswords() {
 }
 
 async function storePassword(passwordData: PasswordItem) {
+	if (!passwordData.password) throw new Error("Mot de passe requis");
 	const encrypted = await encryptPassword(passwordData.password);
 
 	await useAuthFetch(`passwords/add?${Date.now()}`, {
