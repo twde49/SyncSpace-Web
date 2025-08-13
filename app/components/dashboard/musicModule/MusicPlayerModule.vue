@@ -33,15 +33,15 @@
 
                         <div class="enhanced-controls flex items-center justify-center space-x-6">
                             <Icon name="ph:shuffle" class="control-icon textColorSecondary" size="24px" />
-                            <Icon name="ph:skip-back" class="control-icon textColorSecondary" size="32px"
+                            <Icon name="ph:skip-back-fill" class="control-icon textColorSecondary" size="32px"
                                 @click="previousTrack" />
                             <button
                                 class="play-button-large flex justify-center items-center w-16 h-16 bgColorPrimary rounded-full transition duration-300 shadow-lg"
                                 @click.stop="togglePlay">
-                                <Icon :name="isPlaying ? 'ph:pause-bold' : 'ph:play-bold'" class="textColorWhite"
+                                <Icon :name="isPlaying ? 'ph:pause-bold' : 'ph:play-fill'" class="textColorWhite"
                                     size="24px" />
                             </button>
-                            <Icon name="ph:skip-forward" class="control-icon textColorSecondary" size="32px"
+                            <Icon name="ph:skip-forward-fill" class="control-icon textColorSecondary" size="32px"
                                 @click="nextTrack" />
                             <Icon name="ph:repeat" class="control-icon textColorSecondary" size="24px" />
                         </div>
@@ -77,14 +77,14 @@
                                                 size="20px" />
                                             <span class="normalFont textColorWhite">Titres récents</span>
                                             <span class="ml-auto normalFont textColorTritary">{{ playlist.length
-                                            }}</span>
+                                                }}</span>
                                         </div>
                                         <div class="category-item flex items-center p-3 rounded-lg bgColorBlack cursor-pointer hover:border-[var(--color-secondary)] border border-transparent"
                                             @click="displayFavoriteTracks()">
                                             <Icon name="ph:heart-fill" class="textColorPrimary mr-3" size="20px" />
                                             <span class="normalFont textColorWhite">Favoris</span>
                                             <span class="ml-auto normalFont textColorTritary">{{ favoriteQuantity
-                                            }}</span>
+                                                }}</span>
                                         </div>
                                         <div class="category-item flex items-center p-3 rounded-lg bgColorBlack cursor-pointer hover:border-[var(--color-secondary)] border border-transparent"
                                             @click="displayMyPlaylists()">
@@ -92,7 +92,7 @@
                                                 size="20px" />
                                             <span class="normalFont textColorWhite">Mes Playlists</span>
                                             <span class="ml-auto normalFont textColorTritary">{{ playlistQuantity
-                                            }}</span>
+                                                }}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -118,7 +118,7 @@
                                             <div class="track-number w-8 text-center">
                                                 <span v-if="index === currentTrackIndex && isPlaying"
                                                     class="textColorPrimary">
-                                                    <Icon name="ph:play-bold" size="16px" />
+                                                    <Icon name="ph:play-fill" size="16px" />
                                                 </span>
                                                 <span v-else class="textColorWhite miniFont">{{ index + 1 }}</span>
                                             </div>
@@ -425,14 +425,14 @@
 
             <div class="commands flex flex-row items-center justify-between flex-grow">
                 <div class="mainButtons flex items-center space-x-3">
-                    <Icon name="ph:skip-back" class="musicControls textColorSecondary" size="200%"
+                    <Icon name="ph:skip-back-fill" class="musicControls textColorSecondary" size="200%"
                         @click="previousTrack" />
                     <span
                         class="playButton flex justify-center items-center p-2.5 bgColorPrimary rounded-full transition duration-300"
                         @click.stop="togglePlay">
                         <Icon :name="isPlaying ? 'ph:pause-fill' : 'ph:play-fill'" style="color: var(--color-white)" />
                     </span>
-                    <Icon name="ph:skip-forward" class="musicControls textColorSecondary" size="200%"
+                    <Icon name="ph:skip-forward-fill" class="musicControls textColorSecondary" size="200%"
                         @click="nextTrack" />
                     <Icon class="likeButton textColorSecondary hover:textColorPrimary transition duration-300"
                         :name="favoriteTracks.some(favorite => favorite.track.youtubeId === musicPlayer?.youtubeId) ? 'ph:heart-fill' : 'ph:heart'"
@@ -528,7 +528,7 @@
                                 <div class="textColorWhite normalFont font-medium">{{ playlist.name }}</div>
                                 <div class="miniFont textColorTritary mt-1">{{ playlist.tracks ? playlist.tracks.length
                                     : 0
-                                    }}
+                                }}
                                     titres</div>
                             </div>
                         </div>
@@ -569,9 +569,99 @@
                 <span>Modifier</span>
             </div>
             <div class="px-4 py-3 normalFont textColorWhite hover:bgColorCategoryQuaternary hover:bg-opacity-20 cursor-pointer transition-colors duration-200 flex items-center gap-3"
-                @click="deletePlaylist(selectedPlaylistForMenu)">
+                @click="openRemovePlaylistModal(selectedPlaylistForMenu)">
                 <Icon name="ph:trash" size="20px" class="textColorCategoryQuaternary" />
                 <span>Supprimer</span>
+            </div>
+        </div>
+    </Teleport>
+
+    <Teleport to="body">
+        <div v-if="showRemovePlaylistModal"
+            class="z999 fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center z-50">
+            <div
+                class="z999 bgColorBlack rounded-lg border-2 border-[var(--color-secondary)] shadow-xl w-full max-w-md mx-4 animate-modal-fade-in">
+                <div class="p-5 border-b-2 border-[var(--color-secondary)] flex justify-between items-center">
+                    <h2 class="largeFont textColorWhite">Supprimer la playlist</h2>
+                    <button @click="showRemovePlaylistModal = false"
+                        class="textColorSecondary hover:textColorPrimary transition-colors">
+                        <Icon name="ph:x-square" size="24px" />
+                    </button>
+                </div>
+                <div v-if="deletePlaylistStatus === 'success'"
+                    class="py-10 px-8 flex flex-col items-center justify-center">
+                    <Icon name="ph:check-circle" class="textColorCategoryTritary mb-5" size="64px" />
+                    <p class="textColorWhite normalFont text-center">Playlist supprimée avec succès!</p>
+                </div>
+                <div v-else-if="deletePlaylistStatus === 'loading'" class="flex justify-center items-center p-8">
+                    <div class="loader"></div>
+                </div>
+                <div v-else class="p-5">
+                    <p class="textColorWhite normalFont mb-6 text-center">
+                        Êtes-vous sûr de vouloir supprimer la playlist "<span class="font-semibold">{{
+                            playlistToDelete?.name }}</span>" ?
+                        Cette action est irréversible.
+                    </p>
+                    <div v-if="deletePlaylistStatus === 'error'"
+                        class="mt-5 p-4 bgColorCategoryQuaternary bg-opacity-20 border-2 border-[var(--color-category-quaternary)] rounded-lg">
+                        <p class="textColorCategoryQuaternary miniFont">Une erreur est survenue lors de la suppression.
+                            Veuillez réessayer.</p>
+                    </div>
+                </div>
+                <div class="p-5 border-t-2 border-[var(--color-secondary)] flex justify-end gap-3"
+                    v-if="deletePlaylistStatus !== 'success' && deletePlaylistStatus !== 'loading'">
+                    <button @click="showRemovePlaylistModal = false"
+                        class="px-6 py-2 textColorWhite bgColorTritary rounded-lg hover:bgColorSecondary transition-colors normalFont">
+                        Annuler
+                    </button>
+                    <button @click="confirmDeletePlaylist"
+                        class="px-6 py-2 textColorWhite bg-red-600 rounded-lg hover:bg-red-700 transition-colors normalFont">
+                        Supprimer
+                    </button>
+                </div>
+            </div>
+        </div>
+    </Teleport>
+
+    <Teleport to="body">
+        <div v-if="showEditPlaylistModal"
+            class="z999 fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center z-50">
+            <div
+                class="z999 bgColorBlack rounded-lg border-2 border-[var(--color-secondary)] shadow-xl w-full max-w-md mx-4 animate-modal-fade-in">
+                <div class="p-5 border-b-2 border-[var(--color-secondary)] flex justify-between items-center">
+                    <h2 class="largeFont textColorWhite">Modifier la playlist</h2>
+                    <button @click="closeEditPlaylistModal"
+                        class="textColorSecondary hover:textColorPrimary transition-colors">
+                        <Icon name="ph:x-square" size="24px" />
+                    </button>
+                </div>
+                <div v-if="editPlaylistStatus === 'success'"
+                    class="py-10 px-8 flex flex-col items-center justify-center">
+                    <Icon name="ph:check-circle" class="textColorCategoryTritary mb-5" size="64px" />
+                    <p class="textColorWhite normalFont text-center">Playlist modifiée avec succès!</p>
+                </div>
+                <div v-else class="p-5">
+                    <form @submit.prevent="confirmEditPlaylist" class="space-y-4">
+                        <div class="form-group">
+                            <label for="edit-playlist-name" class="textColorWhite block mb-2">Nom de la playlist</label>
+                            <input id="edit-playlist-name" v-model="editingPlaylistName" type="text"
+                                class="w-full p-2 rounded-md bg-[#1A1A1A] border-0 textColorWhite focus:ring-2 focus:ring-[var(--color-primary)] focus:outline-none"
+                                placeholder="Nouveau nom de la playlist" autofocus />
+                            <p v-if="editPlaylistError" class="text-red-500 text-sm mt-1">{{ editPlaylistError }}</p>
+                        </div>
+                        <div class="flex justify-end space-x-3">
+                            <button type="button" @click="closeEditPlaylistModal"
+                                class="px-4 py-2 rounded-md border-0 bg-[#2A2A2A] textColorWhite hover:bg-[#3A3A3A] transition-colors duration-200">
+                                Annuler
+                            </button>
+                            <button type="submit"
+                                class="px-4 py-2 rounded-md bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] textColorWhite hover:opacity-90 transition-opacity duration-200"
+                                :disabled="isUpdatingPlaylist">
+                                {{ isUpdatingPlaylist ? 'Modification...' : 'Modifier' }}
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </Teleport>
@@ -608,6 +698,17 @@ const playlistMenuAnchorEl = ref<HTMLElement | null>(null);
 const selectedPlaylistForMenu = ref<typeof playlists.value[0] | null>(null);
 
 const selectedTrackForModal = ref<Track | null>(null);
+
+const showRemovePlaylistModal = ref(false);
+const playlistToDelete = ref<typeof playlists.value[0] | null>(null);
+const deletePlaylistStatus = ref<string | null>(null);
+
+const showEditPlaylistModal = ref(false);
+const editingPlaylistName = ref('');
+const editPlaylistError = ref('');
+const isUpdatingPlaylist = ref(false);
+const editPlaylistStatus = ref<string | null>(null);
+
 
 onClickOutside(menuRef, () => {
     isMenuOpen.value = false
@@ -715,11 +816,81 @@ const openPlaylistOptionsMenu = (playlistItem: typeof playlists.value[0], event:
 
 
 const editPlaylist = (playlistItem: typeof playlists.value[0] | null) => {
-    console.log('Edit playlist:', playlistItem);
+    if (!playlistItem) return;
+    selectedPlaylistForMenu.value = playlistItem;
+    editingPlaylistName.value = playlistItem.name;
+    editPlaylistError.value = '';
+    isUpdatingPlaylist.value = false;
+    editPlaylistStatus.value = null;
+    showPlaylistOptionsMenu.value = false;
+    showEditPlaylistModal.value = true;
 };
 
-const deletePlaylist = (playlistItem: typeof playlists.value[0] | null) => {
-    console.log('Delete playlist:', playlistItem);
+const closeEditPlaylistModal = () => {
+    showEditPlaylistModal.value = false;
+    selectedPlaylistForMenu.value = null;
+    editingPlaylistName.value = '';
+    editPlaylistError.value = '';
+    isUpdatingPlaylist.value = false;
+    editPlaylistStatus.value = null;
+};
+
+const confirmEditPlaylist = async () => {
+    if (!selectedPlaylistForMenu.value) return;
+    if (!editingPlaylistName.value.trim()) {
+        editPlaylistError.value = 'Veuillez entrer un nom de playlist';
+        return;
+    }
+
+    editPlaylistError.value = '';
+    isUpdatingPlaylist.value = true;
+    editPlaylistStatus.value = 'loading';
+
+    try {
+        await updatePlaylist(selectedPlaylistForMenu.value.id, editingPlaylistName.value.trim());
+        editPlaylistStatus.value = 'success';
+        await fetchPlaylists(); // Refresh playlists after update
+        setTimeout(() => {
+            closeEditPlaylistModal();
+        }, 1500);
+    } catch (error) {
+        console.error('Error updating playlist:', error);
+        editPlaylistError.value = 'Échec de la mise à jour de la playlist. Veuillez réessayer.';
+        editPlaylistStatus.value = 'error';
+    } finally {
+        isUpdatingPlaylist.value = false;
+    }
+};
+
+
+const openRemovePlaylistModal = (playlistItem: typeof playlists.value[0] | null) => {
+    if (!playlistItem) return;
+    playlistToDelete.value = playlistItem;
+    showPlaylistOptionsMenu.value = false;
+    showRemovePlaylistModal.value = true;
+    deletePlaylistStatus.value = null;
+};
+
+const confirmDeletePlaylist = async () => {
+    if (!playlistToDelete.value) return;
+
+    deletePlaylistStatus.value = 'loading';
+    try {
+        await useAuthFetch(`music/playlist/remove/${playlistToDelete.value.id}`, {
+            method: 'DELETE',
+        });
+        deletePlaylistStatus.value = 'success';
+        await fetchPlaylists();
+        await checkPlaylistQuantity();
+        setTimeout(() => {
+            showRemovePlaylistModal.value = false;
+            playlistToDelete.value = null;
+            deletePlaylistStatus.value = null;
+        }, 1500);
+    } catch (error) {
+        console.error('Error deleting playlist:', error);
+        deletePlaylistStatus.value = 'error';
+    }
 };
 
 
@@ -829,6 +1000,7 @@ const {
     fetchPlaylists,
     getPlaylistTracks,
     createPlaylist,
+    updatePlaylist,
     playlistQuantity,
     checkFavoriteQuantity,
     checkPlaylistQuantity,

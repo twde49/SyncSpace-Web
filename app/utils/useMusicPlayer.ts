@@ -581,6 +581,39 @@ export function useMusicPlayer() {
 		}
 	};
 
+	const updatePlaylist = async (
+		playlistId: string,
+		newPlaylistName: string,
+	): Promise<Playlist> => {
+		isLoading.value = true;
+		try {
+			const response = await useAuthFetch(
+				`music/playlist/update/${playlistId}?${Date.now()}`,
+				{
+					method: "PUT",
+					body: {
+						name: newPlaylistName,
+					},
+				},
+			);
+
+			if (response.error.value) {
+				throw new Error(
+					response.error.value?.message || "Failed to update playlist",
+				);
+			}
+
+			await fetchPlaylists();
+
+			return response.data.value as Playlist;
+		} catch (err) {
+			console.error("Error updating playlist:", err);
+			throw err;
+		} finally {
+			isLoading.value = false;
+		}
+	};
+
 	function handleVolumeChange(newVolume: number) {
 		youtubePlayer.value?.setVolume(newVolume);
 	}
@@ -883,6 +916,7 @@ export function useMusicPlayer() {
 		fetchPlaylists,
 		getPlaylistTracks,
 		createPlaylist,
+		updatePlaylist,
 		isLoading,
 	};
 }
