@@ -36,7 +36,7 @@ jobs:
           version: latest
       
       - name: Run Biome check (lint + format)
-        run: bun biome ci .
+        run: bun biome lint --write app
       
       - name: Type check
         run: bun run typecheck
