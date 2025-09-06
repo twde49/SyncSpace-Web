@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.2.3/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.2.2/schema.json",
   "formatter": {
     "enabled": true,
     "indentStyle": "space",
@@ -41,13 +41,8 @@
       "**/*.vue",
       "**/*.json"
     ],
-    "ignores": [
-      ".nuxt/**",
-      ".output/**",
-      "dist/**",
-      "node_modules/**",
-      "coverage/**"
-    ]
+    "ignoreUnknown": true,
+    "maxSize": 1048576
   },
   "javascript": {
     "formatter": {
