@@ -3,7 +3,6 @@
     <Navbar />
     <div class="module-container mt-8">
       <div class="module-content">
-        <!-- Hero Section -->
         <div class="hero-section mb-16">
           <div class="hero-icon mb-6">
             <Icon name="ri:chat-3-line" size="400%" class="textColorTritary" />
@@ -28,7 +27,6 @@
           </div>
         </div>
 
-        <!-- Real-time Demo -->
         <section class="demo-section mb-16">
           <div class="section-header mb-8">
             <h2 class="largeFont textColorWhite mb-4">Communication Instantanée</h2>
@@ -115,7 +113,6 @@
           </div>
         </section>
 
-        <!-- Main Features -->
         <section class="features-section mb-16">
           <div class="section-header mb-8">
             <h2 class="largeFont textColorWhite mb-4">Fonctionnalités Avancées</h2>
@@ -138,7 +135,6 @@
           </div>
         </section>
 
-        <!-- Security Section -->
         <section class="security-section mb-16">
           <div class="section-header mb-8">
             <h2 class="largeFont textColorWhite mb-4">Sécurité & Confidentialité</h2>
@@ -217,7 +213,6 @@
           </div>
         </section>
 
-        <!-- Integration Section -->
         <section class="integration-section mb-16">
           <div class="section-header mb-8">
             <h2 class="largeFont textColorWhite mb-4">Intégration avec SyncSpace</h2>
@@ -279,7 +274,6 @@
           </div>
         </section>
 
-        <!-- Technical Details -->
         <section class="technical-section mb-16">
           <div class="section-header mb-8">
             <h2 class="largeFont textColorWhite mb-4">Architecture Technique</h2>
@@ -319,7 +313,6 @@
           </div>
         </section>
 
-        <!-- Performance Stats -->
         <section class="stats-section mb-16">
           <div class="section-header mb-8">
             <h2 class="largeFont textColorWhite mb-4">Performances</h2>
@@ -345,7 +338,6 @@
           </div>
         </section>
 
-        <!-- CTA Section -->
         <section class="cta-section">
           <div class="cta-content">
             <Icon name="ri:chat-heart-line" size="300%" class="textColorTritary mb-6" />
@@ -354,14 +346,14 @@
               Découvrez la messagerie nouvelle génération qui respecte votre vie privée
             </p>
             <div class="cta-buttons">
-              <a href="/register" class="cta-btn primary">
-                <Icon name="ri:chat-new-line" />
-                Commencer à chatter
-              </a>
-              <a href="/contact" class="cta-btn secondary">
-                <Icon name="ri:question-line" />
-                Questions sur la sécurité
-              </a>
+                <NuxtLink to="/register" class="cta-btn primary">
+                  <Icon name="ri:chat-new-line" />
+                  Commencer à chatter
+                </NuxtLink>
+                <NuxtLink to="/contact" class="cta-btn secondary">
+                  <Icon name="ri:question-line" />
+                  Questions sur la sécurité
+                </NuxtLink>
             </div>
           </div>
         </section>
@@ -475,7 +467,6 @@ const sendMessage = () => {
 </script>
 
 <style scoped>
-/* Réutilisation des styles de base du module Calendar */
 .module-container {
     display: flex;
     justify-content: center;
@@ -488,7 +479,6 @@ const sendMessage = () => {
     max-width: 1200px;
 }
 
-/* Hero Section */
 .hero-section {
     text-align: center;
     padding: 60px 0;
@@ -518,7 +508,6 @@ const sendMessage = () => {
     color: var(--color-white);
 }
 
-/* Section Headers */
 .section-header {
     text-align: center;
 }
@@ -531,7 +520,6 @@ const sendMessage = () => {
     border-radius: 2px;
 }
 
-/* Chat Demo */
 .chat-demo {
     display: grid;
     grid-template-columns: 2fr 1fr;
@@ -709,7 +697,6 @@ const sendMessage = () => {
     gap: 12px;
 }
 
-/* Features Grid */
 .features-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -745,7 +732,6 @@ const sendMessage = () => {
     margin-bottom: 8px;
 }
 
-/* Security Section */
 .security-content {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -791,7 +777,6 @@ const sendMessage = () => {
     gap: 16px;
 }
 
-/* Integration Section */
 .integration-content {
     display: grid;
     grid-template-columns: 2fr 1fr;
@@ -860,7 +845,6 @@ const sendMessage = () => {
     justify-content: center;
 }
 
-/* Technical Section */
 .tech-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -894,7 +878,6 @@ const sendMessage = () => {
     margin-right: 8px;
 }
 
-/* Stats Section */
 .stats-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -915,7 +898,6 @@ const sendMessage = () => {
     font-weight: bold;
 }
 
-/* CTA Section */
 .cta-section {
     text-align: center;
     padding: 60px 0;
@@ -963,7 +945,6 @@ const sendMessage = () => {
     border-color: var(--color-tritary);
 }
 
-/* Responsive */
 @media (max-width: 768px) {
     .chat-demo {
         grid-template-columns: 1fr;

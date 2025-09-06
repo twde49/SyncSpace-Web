@@ -27,6 +27,9 @@
                     Logout
                 </button>
             </ul>
+            <div class="absolute bottom-4 text-[var(--color-primary)] text-sm">
+                Version: {{ version }}
+            </div>
         </div>
     </div>
 
@@ -124,6 +127,8 @@ const { connect, webSocketData, isOnline, isOffline } = useWebSocket();
 
 gsap.registerPlugin(Draggable);
 const { $colorMode } = useNuxtApp();
+import { useRuntimeConfig } from '#app';
+const config = useRuntimeConfig();
 const paramModalVisible = ref(false);
 const initialUser = ref('');
 const componentMounted = ref(false);
@@ -133,6 +138,7 @@ const closed = ref(true);
 const drawerContainer = ref(null);
 const drawer = ref(null);
 const closedButton = ref(null);
+const version = config.public.version
 const menuItems = [
     'Lecteur de musique',
     'Éditeur Markdown',

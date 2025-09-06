@@ -849,7 +849,7 @@ const confirmEditPlaylist = async () => {
     try {
         await updatePlaylist(selectedPlaylistForMenu.value.id, editingPlaylistName.value.trim());
         editPlaylistStatus.value = 'success';
-        await fetchPlaylists(); // Refresh playlists after update
+      await fetchPlaylists();
         setTimeout(() => {
             closeEditPlaylistModal();
         }, 1500);

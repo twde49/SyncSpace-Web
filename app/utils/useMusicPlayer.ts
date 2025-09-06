@@ -439,7 +439,6 @@ export function useMusicPlayer() {
 			await checkPlaylistQuantity();
 			await fetchFavoriteTracks();
 			const responseData = response.data.value as { message: string } | null;
-			console.log(responseData);
 			if (responseData?.message === "Track liked successfully") {
 				$toast.success("Chanson ajoutée aux favoris");
 			} else {

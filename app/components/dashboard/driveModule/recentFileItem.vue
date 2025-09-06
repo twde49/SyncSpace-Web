@@ -319,7 +319,6 @@ const cancelCreateFolder = () => {
 };
 
 const openFolderCreationModal = () => {
-    console.log('Opening folder creation modal module');
     showCreateFolderModal.value = true;
 };
 

@@ -898,7 +898,6 @@ async function updateEvent(): Promise<void> {
             },
         );
 
-        console.log(response.data.value);
         if (response.data.value) {
             await fetchEvents();
             closeEditEventModal();

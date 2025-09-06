@@ -1,7 +1,7 @@
 <template>
     <div v-if="!isNotificationDrawerOpen" @click="toggleNotificationDrawer"
         class="w-fit fixed top-4 left-1/2 transform -translate-x-1/2">
-        <Icon :name="notifications && notifications.length > 0 ? 'ph:bell-simple-ringing-fill' : 'ph:bell-simple-fill'"
+        <Icon name="ph:bell-simple-fill"
             size="2rem" class="textColorWhite hover:animate-bell cursor-pointer" />
         <div v-if="notifications && notifications.length > 0"
             class="absolute bottom-0 right-0 w-3 h-3 bg-red-500 rounded-full"></div>

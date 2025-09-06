@@ -10,25 +10,21 @@
 
     <div v-if="showModal" id="save-markdown-modal" tabindex="-1" aria-hidden="true"
         class="fixed inset-0 z-50 flex justify-center items-center bg-black bg-opacity-50" @click.self="closeModal">
-        <div class="relative w-full max-w-md p-6 bg-white rounded-lg shadow-lg dark:bg-gray-800" @mousedown.stop>
+        <div class="relative w-full max-w-md p-6 bgColorWhite rounded-lg shadow-lg dark:bg-gray-800" @mousedown.stop>
             <div class="flex items-center justify-between border-b pb-4 dark:border-gray-600">
-                <h3 class="text-lg font-semibold text-gray-900 dark:textColorWhite">
+                <h3 class="text-lg font-semibold text-gray-900 textColorBlack">
                     Sauvegarder fichier markdown?
                 </h3>
                 <button @click="closeModal"
-                    class="text-gray-400 hover:bg-gray-200 hover:text-gray-900 p-2 rounded-full dark:hover:bg-gray-600 dark:hover:textColorWhite">
-                    <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                        viewBox="0 0 14 14">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
-                    </svg>
+                    class="rounded-full">
+                    <Icon name="ph:x-square" size="24" class="textColorBlack" />
                     <span class="sr-only">Close modal</span>
                 </button>
             </div>
 
             <form @submit.prevent="saveTitle" class="space-y-4 mt-4">
                 <div>
-                    <label for="title" class="block text-sm font-medium text-gray-700 dark:textColorWhite">
+                    <label for="title" class="block text-sm font-medium textColorBlack dark:textColorWhite">
                         Nom du fichier
                     </label>
                     <input type="text" id="title" v-model="title" required autofocus
@@ -41,7 +37,7 @@
                         Annuler
                     </button>
                     <button type="submit"
-                        class="px-4 py-2 text-sm font-medium textColorWhite bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 dark:bg-blue-500 dark:hover:bg-blue-600 dark:focus:ring-blue-600">
+                        class="px-4 py-2 text-sm font-medium textColorWhite bgColorPrimary rounded-lg focus:ring-4 focus:ring-blue-300">
                         Enregistrer
                     </button>
                 </div>
@@ -85,7 +81,6 @@ const title = ref(titleNote);
 const { $toast } = useNuxtApp();
 const emit = defineEmits(["openMarkdownCenter"]);
 
-// Ref for the MdEditor component
 const mdEditorRef = ref<InstanceType<typeof MdEditor> | null>(null);
 
 const getRandomPlaceholder = () => {

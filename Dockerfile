@@ -1,17 +1,17 @@
-FROM node:23
+FROM oven/bun:latest
 
 WORKDIR /var/www/html
 
 COPY package.json package-lock.json ./
-RUN npm install
+RUN bun install
 
 COPY . .
 
-RUN npm run build
+RUN bun run build
 
-EXPOSE 3000
+EXPOSE 4000
 
 ENV NITRO_HOST=0.0.0.0
-ENV NITRO_PORT=3000
+ENV NITRO_PORT=4000
 
-CMD ["npm", "run", "dev"]
+CMD ["bun", "run", "dev"]

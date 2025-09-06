@@ -12,4 +12,5 @@ export type Message = {
 	attachment?: string;
 	isDeleted?: boolean;
 	conversation?: Conversation;
+	fileSize?: string;
 };

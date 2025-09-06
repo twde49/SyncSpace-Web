@@ -3,7 +3,6 @@
         <Navbar />
         <div class="about-container mt-8">
             <div class="about-content">
-                <!-- Hero Section -->
                 <div class="hero-section mb-16">
                     <h1 class="megaFont textColorWhite mb-4">À Propos de SyncSpace</h1>
                     <p class="largeFont textColorWhite mb-6 opacity-90">
@@ -11,7 +10,6 @@
                     </p>
                 </div>
 
-                <!-- Mission Section -->
                 <section class="mission-section mb-16">
                     <div class="section-header mb-8">
                         <h2 class="largeFont textColorWhite mb-4">Notre Mission</h2>
@@ -35,16 +33,16 @@
                             </p>
                             <div class="mission-goals">
                                 <div class="goal-item">
-                                    <Icon name="ri:target-line" class="textColorTritary" />
+                                    <Icon name="ph:target" class="textColorTritary" />
                                     <span class="textColorWhite">Réduire le temps de basculement entre applications de
                                         25%</span>
                                 </div>
                                 <div class="goal-item">
-                                    <Icon name="ri:shield-keyhole-line" class="textColorTritary" />
+                                    <Icon name="ph:shield-check" class="textColorTritary" />
                                     <span class="textColorWhite">Centraliser la gestion sécurisée des données</span>
                                 </div>
                                 <div class="goal-item">
-                                    <Icon name="ri:team-line" class="textColorTritary" />
+                                    <Icon name="ph:users-three" class="textColorTritary" />
                                     <span class="textColorWhite">Optimiser la collaboration en temps réel</span>
                                 </div>
                             </div>
@@ -52,13 +50,12 @@
                         <div class="mission-visual">
                             <div class="feature-preview">
                                 <Icon name="ph:plus-circle" size="200%" class="textColorTritary" />
-                                <p class="smallFont textColorWhite text-center mt-4">Un seul espace, tous vos outils</p>
+                                <p class="miniFont textColorWhite text-center mt-4">Un seul espace, tous vos outils</p>
                             </div>
                         </div>
                     </div>
                 </section>
 
-                <!-- Modules Section -->
                 <section class="modules-section mb-16">
                     <div class="section-header mb-8">
                         <h2 class="largeFont textColorWhite mb-4">Nos Modules</h2>
@@ -72,8 +69,8 @@
                             <div class="module-icon">
                                 <Icon :name="module.icon" size="200%" class="textColorTritary" />
                             </div>
-                            <h3 class="mediumFont textColorWhite mb-2">{{ module.name }}</h3>
-                            <p class="smallFont textColorWhite opacity-80 mb-4">{{ module.description }}</p>
+                            <h3 class="normalFont textColorWhite mb-2">{{ module.name }}</h3>
+                            <p class="miniFont textColorWhite opacity-80 mb-4">{{ module.description }}</p>
                             <div class="module-features">
                                 <span v-for="feature in module.features" :key="feature" class="feature-tag">
                                     {{ feature }}
@@ -83,7 +80,6 @@
                     </div>
                 </section>
 
-                <!-- Technology Section -->
                 <section class="tech-section mb-16">
                     <div class="section-header mb-8">
                         <h2 class="largeFont textColorWhite mb-4">Technologies & Sécurité</h2>
@@ -92,44 +88,44 @@
                     <div class="tech-content">
                         <div class="tech-stack">
                             <div class="tech-category">
-                                <h3 class="mediumFont textColorTritary mb-4">Frontend</h3>
+                                <h3 class="normalFont textColorTritary mb-4">Frontend</h3>
                                 <div class="tech-items">
                                     <div class="tech-item">
-                                        <Icon name="ph:question" />
+                                        <Icon name="ph:browsers" />
                                         <span>Nuxt 4 / Vue.js</span>
                                     </div>
                                     <div class="tech-item">
-                                        <Icon name="ri:code-line" />
+                                        <Icon name="ph:code" />
                                         <span>TypeScript</span>
                                     </div>
                                     <div class="tech-item">
-                                        <Icon name="ri:palette-line" />
+                                        <Icon name="ph:palette" />
                                         <span>TailwindCSS</span>
                                     </div>
                                 </div>
                             </div>
                             <div class="tech-category">
-                                <h3 class="mediumFont textColorTritary mb-4">Backend</h3>
+                                <h3 class="normalFont textColorTritary mb-4">Backend</h3>
                                 <div class="tech-items">
                                     <div class="tech-item">
-                                        <Icon name="ri:server-line" />
+                                        <Icon name="ph:database" />
                                         <span>Symfony 7.2</span>
                                     </div>
                                     <div class="tech-item">
-                                        <Icon name="ri:database-line" />
+                                        <Icon name="ph:cylinder" />
                                         <span>PostgreSQL</span>
                                     </div>
                                     <div class="tech-item">
-                                        <Icon name="ri-swap-line" />
+                                        <Icon name="ph:arrows-clockwise" />
                                         <span>REST API</span>
                                     </div>
                                 </div>
                             </div>
                             <div class="tech-category">
-                                <h3 class="mediumFont textColorTritary mb-4">Sécurité</h3>
+                                <h3 class="normalFont textColorTritary mb-4">Sécurité</h3>
                                 <div class="tech-items">
                                     <div class="tech-item">
-                                        <Icon name="ri:shield-check-line" />
+                                        <Icon name="ph:shield-check" />
                                         <span>Chiffrement AES-256</span>
                                     </div>
                                     <div class="tech-item">
@@ -137,7 +133,7 @@
                                         <span>PBKDF2</span>
                                     </div>
                                     <div class="tech-item">
-                                        <Icon name="ri:lock-line" />
+                                        <Icon name="ph:lock" />
                                         <span>JWT Authentication</span>
                                     </div>
                                 </div>
@@ -146,7 +142,6 @@
                     </div>
                 </section>
 
-                <!-- Roadmap Section -->
                 <section class="roadmap-section mb-16">
                     <div class="section-header mb-8">
                         <h2 class="largeFont textColorWhite mb-4">Roadmap 2025</h2>
@@ -156,18 +151,17 @@
                         <div v-for="milestone in roadmap" :key="milestone.month" class="timeline-item"
                             :class="{ 'completed': milestone.completed }">
                             <div class="timeline-marker">
-                                <Icon :name="milestone.completed ? 'ri:check-line' : 'ri:time-line'"
+                                <Icon :name="milestone.completed ? 'ph:check' : 'ph:clock'"
                                     :class="milestone.completed ? 'textColorTritary' : 'textColorWhite'" />
                             </div>
                             <div class="timeline-content">
-                                <h3 class="mediumFont textColorWhite mb-2">{{ milestone.month }}</h3>
-                                <p class="smallFont textColorWhite opacity-80">{{ milestone.description }}</p>
+                                <h3 class="normalFont textColorWhite mb-2">{{ milestone.month }}</h3>
+                                <p class="miniFont textColorWhite opacity-80">{{ milestone.description }}</p>
                             </div>
                         </div>
                     </div>
                 </section>
 
-                <!-- Team Section -->
                 <section class="team-section mb-16">
                     <div class="section-header mb-8">
                         <h2 class="largeFont textColorWhite mb-4">Notre Engagement</h2>
@@ -176,30 +170,29 @@
                     <div class="engagement-grid">
                         <div class="engagement-item">
                             <Icon name="ph:code" size="150%" class="textColorTritary mb-4" />
-                            <h3 class="mediumFont textColorWhite mb-2">Centré Utilisateur</h3>
-                            <p class="smallFont textColorWhite opacity-80">
+                            <h3 class="normalFont textColorWhite mb-2">Centré Utilisateur</h3>
+                            <p class="miniFont textColorWhite opacity-80">
                                 Chaque fonctionnalité est pensée pour améliorer votre expérience quotidienne
                             </p>
                         </div>
                         <div class="engagement-item">
                             <Icon name="ph:calendar" size="400%" class="textColorTritary" />
-                            <h3 class="mediumFont textColorWhite mb-2">Sécurité d'abord</h3>
-                            <p class="smallFont textColorWhite opacity-80">
+                            <h3 class="normalFont textColorWhite mb-2">Sécurité d'abord</h3>
+                            <p class="miniFont textColorWhite opacity-80">
                                 Vos données sont protégées par les plus hauts standards de sécurité et stockées en
                                 France
                             </p>
                         </div>
                         <div class="engagement-item">
                             <Icon name="ph:users-three" size="200%" class="textColorTritary" />
-                            <h3 class="mediumFont textColorWhite mb-2">Innovation Continue</h3>
-                            <p class="smallFont textColorWhite opacity-80">
+                            <h3 class="normalFont textColorWhite mb-2">Innovation Continue</h3>
+                            <p class="miniFont textColorWhite opacity-80">
                                 Nous évoluons constamment pour répondre à vos besoins futurs
                             </p>
                         </div>
                     </div>
                 </section>
 
-                <!-- CTA Section -->
                 <section class="cta-section">
                     <div class="cta-content">
                         <h2 class="largeFont textColorWhite mb-4">Prêt à Synchroniser Votre Espace de Travail ?</h2>
@@ -229,49 +222,49 @@ const modules = ref([
         id: 1,
         name: "Gestionnaire de Mots de Passe",
         description: "Coffre-fort sécurisé avec chiffrement AES-256 et génération automatique",
-        icon: "ri:key-2-line",
+        icon: "ph:key",
         features: ["Chiffrement AES-256", "Générateur intégré", "Partage sécurisé"]
     },
     {
         id: 2,
         name: "Drive Personnel",
         description: "Stockage et partage de fichiers avec gestion fine des permissions",
-        icon: "ri:folder-cloud-line",
+        icon: "ph:folder-open",
         features: ["Stockage sécurisé", "Partage collaboratif", "Prévisualisation"]
     },
     {
         id: 3,
         name: "Calendrier",
         description: "Organisation d'événements avec rappels et synchronisation externe",
-        icon: "ri:calendar-line",
+        icon: "ph:calendar",
         features: ["Vues multiples", "Rappels intelligents", "Sync externe"]
     },
     {
         id: 4,
         name: "Messagerie Temps Réel",
         description: "Communication instantanée sécurisée basée sur WebSocket",
-        icon: "ri:chat-3-line",
+        icon: "ph:chat-circle-text",
         features: ["Temps réel", "Chiffrement E2E", "Notifications push"]
     },
     {
         id: 5,
         name: "Lecteur de Musique",
         description: "Gestion de playlists et lecture en streaming intégrée",
-        icon: "ri:music-line",
+        icon: "ph:music-note",
         features: ["Playlists custom", "Streaming"]
     },
     {
         id: 6,
         name: "Module Météo",
         description: "Prévisions météorologiques localisées et alertes personnalisées",
-        icon: "ri:sun-cloudy-line",
+        icon: "ph:cloud-sun",
         features: ["Géolocalisation", "Alertes météo"]
     },
     {
         id: 7,
         name: "Bientôt plus de modules...",
         description: "De nouvelles fonctionnalités et intégrations sont en cours de développement pour enrichir votre espace de travail.",
-        icon: "ri:add-circle-line",
+        icon: "ph:plus-circle",
         features: ["En développement", "Surprises à venir"]
     }
 ]);
@@ -323,7 +316,6 @@ const roadmap = ref([
     max-width: 1200px;
 }
 
-/* Hero Section */
 .hero-section {
     text-align: center;
     padding: 60px 0;
@@ -348,7 +340,6 @@ const roadmap = ref([
     font-weight: bold;
 }
 
-/* Section Headers */
 .section-header {
     text-align: center;
 }
@@ -361,7 +352,6 @@ const roadmap = ref([
     border-radius: 2px;
 }
 
-/* Mission Section */
 .mission-content {
     display: grid;
     grid-template-columns: 2fr 1fr;
@@ -394,7 +384,6 @@ const roadmap = ref([
     border: 1px solid rgba(255, 127, 80, 0.2);
 }
 
-/* Modules Grid */
 .modules-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
@@ -435,7 +424,6 @@ const roadmap = ref([
     border: 1px solid rgba(255, 127, 80, 0.3);
 }
 
-/* Technology Section */
 .tech-stack {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -458,25 +446,20 @@ const roadmap = ref([
     color: var(--color-white);
 }
 
-/* Roadmap */
 .roadmap-timeline {
     display: flex;
     flex-direction: column;
     gap: 30px;
     position: relative;
     max-width: 600px;
-    /* Added to constrain and center the timeline block */
     margin: 0 auto;
-    /* Added to center the roadmap block */
     padding-left: 0;
-    /* Removed original padding-left */
 }
 
 .roadmap-timeline::before {
     content: '';
     position: absolute;
     left: 20px;
-    /* Stays relative to the centered roadmap-timeline block's left */
     top: 0;
     bottom: 0;
     width: 2px;
@@ -489,13 +472,11 @@ const roadmap = ref([
     align-items: flex-start;
     gap: 20px;
     margin-left: 40px;
-    /* Added to push content right, effectively replacing original roadmap-timeline padding */
 }
 
 .timeline-marker {
     position: absolute;
     left: -32px;
-    /* Positions the marker relative to the timeline-item's new margin-left */
     width: 24px;
     height: 24px;
     background: rgba(255, 255, 255, 0.1);
@@ -515,7 +496,6 @@ const roadmap = ref([
     border-color: rgba(255, 255, 255, 0.3);
 }
 
-/* Engagement Grid */
 .engagement-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -530,7 +510,6 @@ const roadmap = ref([
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* CTA Section */
 .cta-section {
     text-align: center;
     padding: 60px 0;
@@ -577,7 +556,6 @@ const roadmap = ref([
     border-color: var(--color-tritary);
 }
 
-/* Responsive */
 @media (max-width: 768px) {
     .hero-stats {
         flex-direction: column;
@@ -606,12 +584,10 @@ const roadmap = ref([
 
     .timeline-item {
         margin-left: 30px;
-        /* Adjusted for smaller screens */
     }
 
     .timeline-marker {
         left: -22px;
-        /* Adjusted to align with line given new timeline-item margin-left */
     }
 }
 </style>

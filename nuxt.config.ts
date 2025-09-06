@@ -1,54 +1,66 @@
 export default defineNuxtConfig({
-  devServer: {
-    port: 4000,
-  },
+	devServer: {
+		port: 4000,
+	},
 
-  runtimeConfig: {
-    public: {
-      apiUrl: process.env.API_URL || 'https://localhost:8000/api/',
-      webSocketUrl: process.env.WEBSOCKET_URL || 'http://localhost:6969',
-      baseUrlWithoutApi: process.env.API_URL_WITHOUT_API || 'https://localhost:8000/',
-      giphyApiKey: process.env.GIPHY_API_KEY 
-    },
-  },
+	watch: ["**/*(*.vue|*.js|*.ts|*.tsx|*.jsx)"],
 
-  app: {
-    head: {
-      title: 'SyncSpace',
-      meta: [
-        {
-          name: 'description',
-          content: 'SyncSpace est votre espace de travail concentré',
-        },
-      ],
-      script: [
-        {
-          src: 'https://cdn.jsdelivr.net/npm/flowbite/dist/flowbite.min.js',
-          defer: true,
-        },
-      ],
-    },
-  },
+	vite: {
+		server: {
+			watch: {
+				usePolling: true,
+				interval: 1000,
+			},
+		},
+	},
 
-  compatibilityDate: '2025-08-01',
-  devtools: { enabled: true },
-  css: ['vue3-toastify/dist/index.css', '~/assets/css/main.css'],
+	runtimeConfig: {
+		public: {
+			apiUrl: process.env.API_URL || "https://localhost:8000/api/",
+			webSocketUrl: process.env.WEBSOCKET_URL || "http://localhost:6969",
+			baseUrlWithoutApi:
+				process.env.API_URL_WITHOUT_API || "https://localhost:8000/",
+			giphyApiKey: process.env.GIPHY_API_KEY,
+			version: process.env.VERSION,
+		},
+	},
 
+	app: {
+		head: {
+			title: "SyncSpace",
+			meta: [
+				{
+					name: "description",
+					content: "SyncSpace est votre espace de travail concentré",
+				},
+			],
+			script: [
+				{
+					src: "https://cdn.jsdelivr.net/npm/flowbite/dist/flowbite.min.js",
+					defer: true,
+				},
+			],
+		},
+	},
 
-  postcss: {
-    plugins: {
-      tailwindcss: {},
-      autoprefixer: {},
-      plugins: ['~/plugins/formatDate', '~/plugins/swiper.client'],
-    },
-  },
+	compatibilityDate: "2025-08-01",
+	devtools: { enabled: true },
+	css: ["vue3-toastify/dist/index.css", "~/assets/css/main.css"],
 
-  modules: [
-    '@nuxt/icon',
-    '@vee-validate/nuxt',
-    '@pinia/nuxt',
-    '@nuxt/eslint',
-    '@nuxtjs/color-mode',
-    '@nuxt/ui',
-  ],
+	postcss: {
+		plugins: {
+			tailwindcss: {},
+			autoprefixer: {},
+			plugins: ["~/plugins/formatDate", "~/plugins/swiper.client"],
+		},
+	},
+
+	modules: [
+		"@nuxt/icon",
+		"@vee-validate/nuxt",
+		"@pinia/nuxt",
+		"@nuxt/eslint",
+		"@nuxtjs/color-mode",
+		"@nuxt/ui",
+	],
 });

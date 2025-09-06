@@ -3,51 +3,51 @@
         <Navbar />
 
         <div class="verification-container">
-            <div class="gradient-border"></div>
+                <div class="gradient-border"></div>
 
-            <div class="logo">
-                <Icon name="ph:lock-open" size="48" />
-            </div>
-
-            <h1 class="title">Vérification de Code</h1>
-            <p class="subtitle">
-                Nous avons envoyé un code de vérification à votre email
-            </p>
-
-            <Form @submit="verifyCode" class="form-container">
-                <div class="code-inputs-container">
-                    <div class="code-inputs">
-                        <input v-for="(digit, index) in codeDigits" :key="index"
-                            :ref="el => setInputRef(el as HTMLInputElement | null, index)" v-model="codeDigits[index]"
-                            type="text" class="code-input" :class="{
-                                'filled': digit,
-                                'error': hasError,
-                                'animate-shake': hasError && index === currentFocus
-                            }" maxlength="1" pattern="[0-9]" inputmode="numeric" autocomplete="off"
-                            @input="handleInput(index, $event)" @keydown="handleKeydown(index, $event)"
-                            @paste="handlePaste($event)" @focus="currentFocus = index" />
-                    </div>
-
-                    <div v-if="errorMessage" class="error-message show">
-                        {{ errorMessage }}
-                    </div>
+                <div class="logo">
+                    <Icon name="ph:lock-open" size="48" />
                 </div>
 
-                <button type="submit" class="verify-button" :class="{ 'loading': isLoading }"
-                    :disabled="!isCodeComplete || isLoading">
-                    <div v-if="isLoading" class="loading-spinner"></div>
-                    <span>{{ isLoading ? 'Vérification...' : 'Vérifier le Code' }}</span>
-                </button>
-            </Form>
+                <h1 class="title">Vérification de Code</h1>
+                <p class="subtitle">
+                    Nous avons envoyé un code de vérification à votre email
+                </p>
 
-            <div class="resend-section">
-                <p class="resend-text">Vous n'avez pas reçu le code ?</p>
-                <button class="resend-button" :disabled="resendCountdown > 0" @click="resendCode">
-                    <span v-if="resendCountdown === 0">Renvoyer le code</span>
-                    <span v-else class="timer">Renvoyer dans {{ resendCountdown }}s</span>
-                </button>
+                <Form @submit="verifyCode" class="form-container">
+                    <div class="code-inputs-container">
+                        <div class="code-inputs">
+                            <input v-for="(digit, index) in codeDigits" :key="index"
+                                :ref="el => setInputRef(el as HTMLInputElement | null, index)"
+                                v-model="codeDigits[index]" type="text" class="code-input" :class="{
+                                    'filled': digit,
+                                    'error': hasError,
+                                    'animate-shake': hasError && index === currentFocus
+                                }" maxlength="1" pattern="[0-9]" inputmode="numeric" autocomplete="off"
+                                @input="handleInput(index, $event)" @keydown="handleKeydown(index, $event)"
+                                @paste="handlePaste($event)" @focus="currentFocus = index" />
+                        </div>
+
+                        <div v-if="errorMessage" class="error-message show">
+                            {{ errorMessage }}
+                        </div>
+                    </div>
+
+                    <button type="submit" class="verify-button" :class="{ 'loading': isLoading }"
+                        :disabled="!isCodeComplete || isLoading">
+                        <div v-if="isLoading" class="loading-spinner"></div>
+                        <span>{{ isLoading ? 'Vérification...' : 'Vérifier le Code' }}</span>
+                    </button>
+                </Form>
+
+                <div class="resend-section">
+                    <p class="resend-text">Vous n'avez pas reçu le code ?</p>
+                    <button class="resend-button" :disabled="resendCountdown > 0" @click="resendCode">
+                        <span v-if="resendCountdown === 0">Renvoyer le code</span>
+                        <span v-else class="timer">Renvoyer dans {{ resendCountdown }}s</span>
+                    </button>
+                </div>
             </div>
-        </div>
     </div>
 </template>
 

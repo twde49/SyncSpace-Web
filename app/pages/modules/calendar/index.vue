@@ -27,7 +27,6 @@
           </div>
         </div>
 
-        <!-- Main Features -->
         <section class="features-section mb-16">
           <div class="section-header mb-8">
             <h2 class="largeFont textColorWhite mb-4">Fonctionnalités Principales</h2>
@@ -50,7 +49,6 @@
           </div>
         </section>
 
-        <!-- Views Section -->
         <section class="views-section mb-16">
           <div class="section-header mb-8">
             <h2 class="largeFont textColorWhite mb-4">Vues Multiples</h2>
@@ -108,7 +106,6 @@
           </div>
         </section>
 
-        <!-- Integration Section -->
         <section class="integration-section mb-16">
           <div class="section-header mb-8">
             <h2 class="largeFont textColorWhite mb-4">Synchronisation & Intégrations</h2>
@@ -160,7 +157,6 @@
           </div>
         </section>
 
-        <!-- Technical Details -->
         <section class="technical-section mb-16">
           <div class="section-header mb-8">
             <h2 class="largeFont textColorWhite mb-4">Spécifications Techniques</h2>
@@ -200,7 +196,6 @@
           </div>
         </section>
 
-        <!-- CTA Section -->
         <section class="cta-section">
           <div class="cta-content">
             <Icon name="ri:calendar-check-line" size="300%" class="textColorTritary mb-6" />
@@ -209,14 +204,14 @@
               Découvrez comment le module Calendrier peut transformer votre gestion du temps
             </p>
             <div class="cta-buttons">
-              <a href="/register" class="cta-btn primary">
+              <NuxtLink to="/register" class="cta-btn primary">
                 <Icon name="ri:play-circle-line" />
                 Essayer gratuitement
-              </a>
-              <a href="/contact" class="cta-btn secondary">
+              </NuxtLink>
+              <NuxtLink to="/contact" class="cta-btn secondary">
                 <Icon name="ri:question-line" />
                 Poser une question
-              </a>
+              </NuxtLink>
             </div>
           </div>
         </section>
@@ -330,7 +325,6 @@ const getCurrentView = () => {
     max-width: 1200px;
 }
 
-/* Hero Section */
 .hero-section {
     text-align: center;
     padding: 60px 0;
@@ -360,7 +354,6 @@ const getCurrentView = () => {
     color: var(--color-white);
 }
 
-/* Section Headers */
 .section-header {
     text-align: center;
 }
@@ -373,7 +366,6 @@ const getCurrentView = () => {
     border-radius: 2px;
 }
 
-/* Features Grid */
 .features-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -409,7 +401,6 @@ const getCurrentView = () => {
     margin-bottom: 8px;
 }
 
-/* Views Section */
 .views-tabs {
     display: flex;
     justify-content: center;
@@ -513,7 +504,6 @@ const getCurrentView = () => {
     display: inline-block;
 }
 
-/* Integration Section */
 .integration-content {
     display: grid;
     grid-template-columns: 2fr 1fr;
@@ -555,7 +545,6 @@ const getCurrentView = () => {
     border: 1px solid rgba(255, 127, 80, 0.3);
 }
 
-/* Technical Section */
 .tech-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -589,7 +578,6 @@ const getCurrentView = () => {
     margin-right: 8px;
 }
 
-/* CTA Section */
 .cta-section {
     text-align: center;
     padding: 60px 0;
@@ -637,7 +625,6 @@ const getCurrentView = () => {
     border-color: var(--color-tritary);
 }
 
-/* Responsive */
 @media (max-width: 768px) {
     .hero-badges {
         flex-direction: column;

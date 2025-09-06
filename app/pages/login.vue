@@ -24,11 +24,11 @@
                     <span class="divider-line"></span>
                 </div>
                 <div class="social-login textColorWhite">
-                    <a :href="googleLoginUrl"
+                    <NuxtLink :to="googleLoginUrl"
                         class="google-login-btn flex items-center justify-center space-x-2 w-full">
                         <Icon name="ri:google-fill" size="150%" />
                         <span>Google</span>
-                    </a>
+                    </NuxtLink>
                 </div>
             </form>
         </div>
@@ -127,23 +127,20 @@ const loginUser = async () => {
 };
 
 onMounted(() => {
-    // Récupère le jeton et les données de l'utilisateur des paramètres d'URL (s'ils existent)
     const token = route.query.token as string | undefined;
     const encodedUserData = route.query.user as string | undefined;
     const error = route.query.error as string | undefined;
 
     if (error) {
         $toast.error("Erreur lors de la connexion via Google.");
-        router.replace({ path: route.path, query: {} }); // Nettoyer l'URL
+        router.replace({ path: route.path, query: {} });
         return;
     }
 
     if (token && encodedUserData) {
         try {
-            // Décoder les données utilisateur de la Base64
             const decodedUserData = JSON.parse(atob(encodedUserData));
 
-            // Initialiser le store de l'utilisateur avec toutes les données reçues
             userStore.setUser({
                 firstName: decodedUserData.firstName,
                 lastName: decodedUserData.lastName,
@@ -164,14 +161,13 @@ onMounted(() => {
         } catch (e) {
             console.error("Failed to parse user data from URL:", e);
             $toast.error("Données de connexion Google invalides.");
-            router.replace({ path: route.path, query: {} }); // Nettoyer l'URL en cas d'échec
+            router.replace({ path: route.path, query: {} });
         }
     }
 });
 </script>
 
 <style scoped>
-/* Vos styles existants, pas de changements majeurs */
 .registration-container {
     display: flex;
     justify-content: center;

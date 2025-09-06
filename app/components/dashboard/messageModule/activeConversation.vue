@@ -1,8 +1,10 @@
 <template>
     <div class="header flex items-center justify-between border-b p-4 pb-2 mb-4 z-20">
         <h2 class="textColorWhite miniFont font-bold">{{ getConversationName() }}</h2>
-        <Icon name="ph:phone-call" size="24px" />
-        <Icon name="ph:video-camera" size="24px" />
+        <div class="flex items-center">
+            <Icon name="ph:phone-call" size="24px" class="mr-2" />
+            <Icon name="ph:video-camera" size="24px" class="ml-2" />
+        </div>
     </div>
 
     <div ref="chatContainer" class="chatArea p-4 flex-grow overflow-y-auto flex flex-col-reverse">
@@ -26,7 +28,22 @@
                 }}
             </div>
             <div class="message-bubble bgColorWhite">
-                <div v-if="isImageMessage(message.content)" class="image-message">
+                <div v-if="message.type === 'note'" class="note-message bgColorWhite globalRadius p-3">
+                    <div class="note-container flex items-center justify-between w-full">
+                        <div class="note-icon bg-yellow-500 p-2 rounded-full flex items-center justify-center mr-3">
+                            <Icon name="ph:note-pencil" size="24px" class="textColorWhite" />
+                        </div>
+                        <div class="note-details flex-grow">
+                            <div class="note-name normalFont font-medium textColorBlack mb-1">{{ message.content || 'Note partagée' }}</div>
+                            <div class="note-summary miniFont textColorBlack opacity-75">Cliquez pour voir la note complète</div>
+                        </div>
+                        <NuxtLink :to="`/notes/${message.content}`" target="_blank"
+                            class="ml-2 note-open-btn bgColorPrimary textColorWhite p-2 rounded-full hover:scale-105 transition-transform flex items-center justify-center">
+                            <Icon name="ph:arrow-right" size="18px" />
+                        </NuxtLink>
+                    </div>
+                </div>
+                <div v-else-if="isImageMessage(message.content)" class="image-message">
                     <img :src="message.content?.includes('.gif') ? message.content : baseUrlWithoutApi + message.content"
                         alt="Shared image" class="message-image"
                         @click="openImageModal(message.content?.includes('.gif') ? message.content : baseUrlWithoutApi + message.content)" />
@@ -51,6 +68,20 @@
                                 {{ formatTime(audioStates[message.id]?.duration || 0) }}
                             </div>
                         </div>
+                    </div>
+                </div>
+                <div v-else-if="isFileMessage(message.content)" class="file-message bgColorWhite globalRadius p-3 ">
+                    <div class="file-container flex items-center justify-between w-full">
+                        <div class="file-icon bgColorSecondary p-2 rounded-full flex items-center justify-center mr-3">
+                            <Icon name="ph:file-text" size="24px" class="textColorWhite" />
+                        </div>
+                        <div class="file-details flex-grow">
+                            <div class="file-name normalFont font-medium textColorBlack mb-1">{{ getFileName(message.content) }}</div>
+                            <div class="file-size miniFont textColorBlack opacity-75" v-if="message.fileSize">{{ formatFileSize(Number(message.fileSize)) }}</div>
+                        </div>
+                        <NuxtLink :href="baseUrlWithoutApi + message.content" target="_blank" class="ml-2 file-download-btn bgColorPrimary textColorWhite p-2 rounded-full hover:scale-105 transition-transform flex items-center justify-center">
+                            <Icon name="ph:download-simple" size="18px" />
+                        </NuxtLink>
                     </div>
                 </div>
                 <span v-else class="textColorBlack">{{ message.content }}</span>
@@ -225,6 +256,35 @@
         </div>
     </div>
 
+    <!-- New Note Modal -->
+    <div v-if="showNewNoteModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-lg p-6 w-11/12 max-w-md">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-semibold text-gray-900">Créer une nouvelle note partagée</h3>
+                <button @click="closeNewNoteModal" class="text-gray-500 hover:text-gray-700">
+                    <Icon name="ph:x-square" size="24" />
+                </button>
+            </div>
+            <div class="mb-4">
+                <label for="note-title" class="block text-sm font-medium text-gray-700 mb-2">Titre de la note</label>
+                <input type="text" id="note-title" v-model="newNoteTitle"
+                    class="w-full p-2 border border-gray-300 rounded-md focus:ring-yellow-500 focus:border-yellow-500 text-gray-900"
+                    placeholder="Ex: Liste de courses, Idées de projet..." />
+            </div>
+            <div class="flex justify-end gap-2">
+                <button @click="closeNewNoteModal"
+                    class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300">
+                    Annuler
+                </button>
+                <button @click="submitNewNote"
+                    class="px-4 py-2 bg-yellow-500 textColorWhite rounded-md hover:bg-yellow-600"
+                    :disabled="!newNoteTitle.trim()">
+                    Créer la note
+                </button>
+            </div>
+        </div>
+    </div>
+
     <div class="messageInput bgColorWhite flex items-center">
         <div class="flex utilsZone items-center justify-between relative">
             <div class="media-menu-container relative flex">
@@ -236,7 +296,7 @@
                     class="media-menu absolute bottom-full left-0 mb-2 bg-white rounded-lg shadow-xl border overflow-hidden grid grid-cols-2 gap-x-4 gap-y-2"
                     :class="{ 'menu-enter-active': showMediaMenu }">
 
-                    <div class="menu-item photo-item" @click="selectMediaType('photo')">
+                    <div class="menu-item photo-item globalRadius" @click="selectMediaType('photo')">
                         <div class="menu-icon bgColorSecondary">
                             <Icon name="ph:camera" size="18px" class="text-white" />
                         </div>
@@ -246,7 +306,7 @@
                         </div>
                     </div>
 
-                    <div class="menu-item gif-item" @click="selectMediaType('gif')">
+                    <div class="menu-item gif-item globalRadius" @click="selectMediaType('gif')">
                         <div class="menu-icon bgColorCategoryPrimary">
                             <Icon name="ph:gif" size="18px" class="text-white" />
                         </div>
@@ -256,7 +316,7 @@
                         </div>
                     </div>
 
-                    <div class="menu-item password-item" @click="selectMediaType('password')">
+                    <div class="menu-item password-item globalRadius" @click="selectMediaType('password')">
                         <div class="menu-icon bg-red-500">
                             <Icon name="ph:key" size="18px" class="text-white" />
                         </div>
@@ -266,7 +326,7 @@
                         </div>
                     </div>
 
-                    <div class="menu-item note-item" @click="selectMediaType('note')">
+                    <div class="menu-item note-item globalRadius" @click="selectMediaType('note')">
                         <div class="menu-icon bg-yellow-500">
                             <Icon name="ph:note-pencil" size="18px" class="text-white" />
                         </div>
@@ -276,7 +336,7 @@
                         </div>
                     </div>
 
-                    <div class="menu-item event-item" @click="selectMediaType('event')">
+                    <div class="menu-item event-item globalRadius" @click="selectMediaType('event')">
                         <div class="menu-icon bg-blue-500">
                             <Icon name="ph:calendar-plus" size="18px" class="text-white" />
                         </div>
@@ -286,7 +346,7 @@
                         </div>
                     </div>
 
-                    <div class="menu-item file-item" @click="selectMediaType('file')">
+                    <div class="menu-item file-item globalRadius" @click="selectMediaType('file')">
                         <div class="menu-icon bg-gray-600">
                             <Icon name="ph:file-arrow-up" size="18px" class="text-white" />
                         </div>
@@ -296,7 +356,7 @@
                         </div>
                     </div>
 
-                    <div class="menu-item music-item" @click="selectMediaType('music')">
+                    <div class="menu-item music-item globalRadius" @click="selectMediaType('music')">
                         <div class="menu-icon bg-green-500">
                             <Icon name="ph:music-note" size="18px" class="text-white" />
                         </div>
@@ -391,6 +451,9 @@ const previewAudioState = reactive({
     progress: 0
 });
 
+const showNewNoteModal = ref(false);
+const newNoteTitle = ref('');
+
 const props = defineProps<{ conversation: Conversation }>();
 
 const reactiveConversation = reactive({ ...props.conversation });
@@ -447,19 +510,32 @@ const selectMediaType = (type: 'photo' | 'gif' | 'password' | 'note' | 'event' |
     } else if (type === 'gif') {
         openGiphyModal();
     } else if (type === 'password') {
-        console.log('Share password functionality');
         $toast.info('Fonctionnalité de partage de mot de passe à implémenter.');
     } else if (type === 'note') {
-        console.log('Share note functionality');
-        $toast.info('Fonctionnalité de partage de note à implémenter.');
+        openNewNoteModal();
     } else if (type === 'event') {
-        console.log('Plan event functionality');
         $toast.info('Fonctionnalité de planification d\'événement à implémenter.');
     } else if (type === 'file') {
-        console.log('Share file functionality');
-        $toast.info('Fonctionnalité de partage de fichier à implémenter.');
+      const fileInput = ref<HTMLInputElement | null>(null);
+      nextTick(() => {
+        if (!fileInput.value) {
+          fileInput.value = document.createElement('input');
+          fileInput.value.type = 'file';
+          fileInput.value.style.display = 'none';
+          fileInput.value.multiple = false;
+          fileInput.value.addEventListener('change', (event) => {
+            const target = event.target as HTMLInputElement;
+            const file = target.files?.[0];
+            if (file) {
+              uploadFile(file);
+            }
+            target.value = '';
+          });
+          document.body.appendChild(fileInput.value);
+        }
+        fileInput.value?.click();
+      });
     } else if (type === 'music') {
-        console.log('Share music functionality');
         $toast.info('Fonctionnalité de partage de musique à implémenter.');
     }
     showMediaMenu.value = false;
@@ -613,6 +689,113 @@ const uploadMedia = async (file: File, type: 'image' | 'gif') => {
     }
 };
 
+const uploadFile = async (file: File) => {
+    if (isUploadingMedia.value) return;
+    const fileType = file.type;
+    if (fileType.startsWith('image/')) {
+        await uploadMedia(file, 'image');
+        return;
+    }
+
+    try {
+        isUploadingMedia.value = true;
+        const formData = new FormData();
+        formData.append('file', file);
+
+        await useAuthFetch(`conversation/${reactiveConversation.id}/message/new/file?${Date.now()}`, {
+            method: 'POST',
+            body: formData,
+        });
+
+        emits('message-sent');
+    } catch (error) {
+        console.error('Error uploading media:', error);
+    } finally {
+        isUploadingMedia.value = false;
+    }
+};
+
+const isFileMessage = (content: string | undefined) => {
+    if (!content) return false;
+    const fileExtensions = ['.pdf', '.doc', '.docx', '.xls', '.xlsx', '.txt', '.zip', '.rar', '.ppt', '.pptx'];
+    return fileExtensions.some(ext => content.toLowerCase().includes(ext));
+};
+
+const getFileName = (content: string | undefined): string => {
+    if (!content) return 'Unknown file';
+    const pathParts = content.split('/');
+    const fileName = pathParts[pathParts.length - 1] || 'Unknown file';
+
+    try {
+        return decodeURIComponent(fileName);
+    } catch (e) {
+        console.error(e)
+        return fileName;
+    }
+};
+
+const formatFileSize = (sizeInBytes: number): string => {
+    if (!sizeInBytes || sizeInBytes === 0) return '0 KB';
+
+    if (sizeInBytes < 1024) {
+        return sizeInBytes + ' B';
+    } else if (sizeInBytes < 1024 * 1024) {
+        return (sizeInBytes / 1024).toFixed(1) + ' KB';
+    } else if (sizeInBytes < 1024 * 1024 * 1024) {
+        return (sizeInBytes / (1024 * 1024)).toFixed(1) + ' MB';
+    } else {
+        return (sizeInBytes / (1024 * 1024 * 1024)).toFixed(1) + ' GB';
+    }
+};
+
+// New Note Modal functions
+const openNewNoteModal = () => {
+    newNoteTitle.value = ''; // Clear previous title
+    showNewNoteModal.value = true;
+};
+
+const closeNewNoteModal = () => {
+    showNewNoteModal.value = false;
+    newNoteTitle.value = '';
+};
+
+const submitNewNote = async () => {
+    if (!newNoteTitle.value.trim()) {
+        $toast.error('Le titre de la note ne peut pas être vide.');
+        return;
+    }
+    await createNewSharedNote(newNoteTitle.value);
+    closeNewNoteModal();
+};
+
+const createNewSharedNote = async (noteTitle: string) => {
+    try {
+      let userIds = <number[]>[];
+      if (reactiveConversation.users){
+        reactiveConversation.users.forEach(user => {
+          userIds.push(user.id);
+        });
+      }
+
+      await useAuthFetch(`note/new/share/${reactiveConversation.id}`,{
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userIds,
+          title: noteTitle,
+        })
+      })
+
+      $toast.success('Note partagée créée avec succès!');
+      emits('message-sent'); // Potentially trigger a message update/refresh
+    } catch (error) {
+        console.error('Error sharing note:', error);
+        $toast.error('Erreur lors de la création de la note partagée.');
+    }
+};
+
 const openImageModal = (imageSrc: string) => {
     selectedImage.value = imageSrc;
     showImageModal.value = true;
@@ -756,12 +939,22 @@ onMounted(() => {
             showMediaMenu.value = false;
         }
 
+        // Close Giphy modal if clicking outside
         if (
             showGiphyModal.value &&
-            !target?.closest?.('.bg-white') &&
-            target?.closest?.('.fixed')
+            !target?.closest?.('.bg-white') && // Adjusted to target the modal's content area
+            (target as HTMLElement).classList.contains('fixed') // Check if clicked on the modal overlay
         ) {
             closeGiphyModal();
+        }
+
+        // Close new note modal if clicking outside
+        if (
+            showNewNoteModal.value &&
+            !target?.closest?.('.bg-white') && // Assuming the modal content has .bg-white
+            (target as HTMLElement).classList.contains('fixed') // Check if clicked on the modal overlay
+        ) {
+            closeNewNoteModal();
         }
     });
 });
@@ -901,7 +1094,7 @@ watch(webSocketData.value, async data => {
                 }
             } else {
                 if (reactiveConversation.messages !== undefined && reactiveConversation.messages !== null) {
-                    reactiveConversation.messages.push(data.newMessage);
+                    reactiveConversation.messages.push(data.newMessage as Message);
                 }
             }
         }
