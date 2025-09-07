@@ -4,6 +4,10 @@
         <NotificationDrawer />
         <ProfileModule />
         <MusicPlayerModule />
+        <div class="debug-panel"
+            style="position: fixed; bottom: 10px; left: 10px; z-index: 9999; background: rgba(0,0,0,0.8); color: white; padding: 5px 10px; border-radius: 5px; font-size: 12px; display: none;">
+            Open console for debugging (F12)
+        </div>
 
         <div class="module-slider">
             <Swiper :slides-per-view="1" :centered-slides="true" direction="vertical" loop grabCursor

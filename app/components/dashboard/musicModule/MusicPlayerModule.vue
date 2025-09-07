@@ -37,7 +37,7 @@
                                 @click="previousTrack" />
                             <button
                                 class="play-button-large flex justify-center items-center w-16 h-16 bgColorPrimary rounded-full transition duration-300 shadow-lg"
-                                @click.stop="togglePlay">
+                                @click.stop="togglePlay();">
                                 <Icon :name="isPlaying ? 'ph:pause-bold' : 'ph:play-fill'" class="textColorWhite"
                                     size="24px" />
                             </button>
@@ -675,6 +675,7 @@ import YouTubeAudioPlayer from '~/components/dashboard/musicModule/YoutubeAudioP
 import type { Track } from '~/types/Track'
 import useAuthFetch from '~/composables/useAuthFetch'
 
+
 const isMenuOpen = ref(false)
 const menuRef = ref(null)
 const threeDotsRef = ref(null)
@@ -849,7 +850,7 @@ const confirmEditPlaylist = async () => {
     try {
         await updatePlaylist(selectedPlaylistForMenu.value.id, editingPlaylistName.value.trim());
         editPlaylistStatus.value = 'success';
-      await fetchPlaylists();
+        await fetchPlaylists();
         setTimeout(() => {
             closeEditPlaylistModal();
         }, 1500);

@@ -242,7 +242,9 @@ const openClose = () => {
 };
 
 const openNewConvModal = async () => {
-    if (!newConvButton.value) return;
+    if (!newConvButton.value) {
+        return;
+    }
 
     const buttonRect = (newConvButton.value as HTMLElement).getBoundingClientRect();
     const buttonCenterX = buttonRect.left + buttonRect.width / 2;
@@ -391,7 +393,6 @@ const createConversation = async () => {
 const getConversations = async () => {
     try {
         const response = await useAuthFetch(`conversations?${Date.now()}`);
-
         conversations.value = response.data.value as Conversation[];
     } catch (error: unknown) {
         const err = error as Error;
@@ -466,7 +467,7 @@ onMounted(async () => {
 });
 
 watch(webSocketData.value, async (newData) => {
-    if (newData.type === "refreshConversations") {
+    if (newData && typeof newData === 'object' && 'type' in newData && newData.type === "refreshConversations") {
         await getConversations();
     }
 });

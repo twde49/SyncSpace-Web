@@ -239,9 +239,12 @@ watch(componentMounted, mounted => {
 });
 
 watch(webSocketData.value, async newData => {
-    if (newData.type === 'checkUser') {
-        userStore.setSocketId(newData.socketId.id);
-        isOnline(userStore.email, userStore.token);
+    if (newData && typeof newData === 'object' && 'type' in newData && newData.type === 'checkUser') {
+        if ('socketId' in newData && newData.socketId && typeof newData.socketId === 'object' && 'id' in newData.socketId) {
+            const socketId = String(newData.socketId.id);
+            userStore.setSocketId(socketId);
+            isOnline(userStore.email, userStore.token);
+        }
     }
 });
 
