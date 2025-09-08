@@ -34,8 +34,10 @@
                             <Icon name="ph:note-pencil" size="24px" class="textColorWhite" />
                         </div>
                         <div class="note-details flex-grow">
-                            <div class="note-name normalFont font-medium textColorBlack mb-1">{{ message.content || 'Note partagée' }}</div>
-                            <div class="note-summary miniFont textColorBlack opacity-75">Cliquez pour voir la note complète</div>
+                            <div class="note-name normalFont font-medium textColorBlack mb-1">{{ message.content ||
+                                'Note partagée' }}</div>
+                            <div class="note-summary miniFont textColorBlack opacity-75">Cliquez pour voir la note
+                                complète</div>
                         </div>
                         <NuxtLink :to="`/notes/${message.content}`" target="_blank"
                             class="ml-2 note-open-btn bgColorPrimary textColorWhite p-2 rounded-full hover:scale-105 transition-transform flex items-center justify-center">
@@ -76,10 +78,13 @@
                             <Icon name="ph:file-text" size="24px" class="textColorWhite" />
                         </div>
                         <div class="file-details flex-grow">
-                            <div class="file-name normalFont font-medium textColorBlack mb-1">{{ getFileName(message.content) }}</div>
-                            <div class="file-size miniFont textColorBlack opacity-75" v-if="message.fileSize">{{ formatFileSize(Number(message.fileSize)) }}</div>
+                            <div class="file-name normalFont font-medium textColorBlack mb-1">{{
+                                getFileName(message.content) }}</div>
+                            <div class="file-size miniFont textColorBlack opacity-75" v-if="message.fileSize">{{
+                                formatFileSize(Number(message.fileSize)) }}</div>
                         </div>
-                        <NuxtLink :href="baseUrlWithoutApi + message.content" target="_blank" class="ml-2 file-download-btn bgColorPrimary textColorWhite p-2 rounded-full hover:scale-105 transition-transform flex items-center justify-center">
+                        <NuxtLink :href="baseUrlWithoutApi + message.content" target="_blank"
+                            class="ml-2 file-download-btn bgColorPrimary textColorWhite p-2 rounded-full hover:scale-105 transition-transform flex items-center justify-center">
                             <Icon name="ph:download-simple" size="18px" />
                         </NuxtLink>
                     </div>
@@ -516,25 +521,25 @@ const selectMediaType = (type: 'photo' | 'gif' | 'password' | 'note' | 'event' |
     } else if (type === 'event') {
         $toast.info('Fonctionnalité de planification d\'événement à implémenter.');
     } else if (type === 'file') {
-      const fileInput = ref<HTMLInputElement | null>(null);
-      nextTick(() => {
-        if (!fileInput.value) {
-          fileInput.value = document.createElement('input');
-          fileInput.value.type = 'file';
-          fileInput.value.style.display = 'none';
-          fileInput.value.multiple = false;
-          fileInput.value.addEventListener('change', (event) => {
-            const target = event.target as HTMLInputElement;
-            const file = target.files?.[0];
-            if (file) {
-              uploadFile(file);
+        const fileInput = ref<HTMLInputElement | null>(null);
+        nextTick(() => {
+            if (!fileInput.value) {
+                fileInput.value = document.createElement('input');
+                fileInput.value.type = 'file';
+                fileInput.value.style.display = 'none';
+                fileInput.value.multiple = false;
+                fileInput.value.addEventListener('change', (event) => {
+                    const target = event.target as HTMLInputElement;
+                    const file = target.files?.[0];
+                    if (file) {
+                        uploadFile(file);
+                    }
+                    target.value = '';
+                });
+                document.body.appendChild(fileInput.value);
             }
-            target.value = '';
-          });
-          document.body.appendChild(fileInput.value);
-        }
-        fileInput.value?.click();
-      });
+            fileInput.value?.click();
+        });
     } else if (type === 'music') {
         $toast.info('Fonctionnalité de partage de musique à implémenter.');
     }
@@ -770,26 +775,26 @@ const submitNewNote = async () => {
 
 const createNewSharedNote = async (noteTitle: string) => {
     try {
-      let userIds = <number[]>[];
-      if (reactiveConversation.users){
-        reactiveConversation.users.forEach(user => {
-          userIds.push(user.id);
-        });
-      }
+        let userIds = <number[]>[];
+        if (reactiveConversation.users) {
+            reactiveConversation.users.forEach(user => {
+                userIds.push(user.id);
+            });
+        }
 
-      await useAuthFetch(`note/new/share/${reactiveConversation.id}`,{
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          userIds,
-          title: noteTitle,
+        await useAuthFetch(`note/new/share/${reactiveConversation.id}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                userIds,
+                title: noteTitle,
+            })
         })
-      })
 
-      $toast.success('Note partagée créée avec succès!');
-      emits('message-sent'); // Potentially trigger a message update/refresh
+        $toast.success('Note partagée créée avec succès!');
+        emits('message-sent'); // Potentially trigger a message update/refresh
     } catch (error) {
         console.error('Error sharing note:', error);
         $toast.error('Erreur lors de la création de la note partagée.');

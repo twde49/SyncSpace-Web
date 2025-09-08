@@ -15,8 +15,7 @@
                 <h3 class="text-lg font-semibold text-gray-900 textColorBlack">
                     Sauvegarder fichier markdown?
                 </h3>
-                <button @click="closeModal"
-                    class="rounded-full">
+                <button @click="closeModal" class="rounded-full">
                     <Icon name="ph:x-square" size="24" class="textColorBlack" />
                     <span class="sr-only">Close modal</span>
                 </button>

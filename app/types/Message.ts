@@ -13,4 +13,5 @@ export type Message = {
 	isDeleted?: boolean;
 	conversation?: Conversation;
 	fileSize?: string;
+	noteId?: string;
 };
