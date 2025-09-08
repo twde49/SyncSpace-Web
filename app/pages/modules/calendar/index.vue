@@ -1,227 +1,221 @@
 <template>
-  <div>
-    <Navbar />
-    <div class="module-container mt-8">
-      <div class="module-content">
-        <div class="hero-section mb-16">
-          <div class="hero-icon mb-6">
-            <Icon name="ri:calendar-line" size="400%" class="textColorTritary" />
-          </div>
-          <h1 class="megaFont textColorWhite mb-4">Module Calendrier</h1>
-          <p class="largeFont textColorWhite mb-6 opacity-90">
-            Organisez votre temps et ne manquez plus jamais un événement important
-          </p>
-          <div class="hero-badges">
-            <span class="badge">
-              <Icon name="ri:time-line" />
-              Rappels intelligents
-            </span>
-            <span class="badge">
-              <Icon name="ri:refresh-line" />
-              Synchronisation externe
-            </span>
-            <span class="badge">
-              <Icon name="ri:share-line" />
-              Partage collaboratif
-            </span>
-          </div>
+    <div>
+        <Navbar />
+        <div class="module-container mt-8">
+            <div class="module-content">
+                <div class="hero-section mb-16">
+                    <div class="hero-icon mb-6">
+                        <Icon name="ri:calendar-line" size="400%" class="textColorTritary" />
+                    </div>
+                    <h1 class="megaFont textColorWhite mb-4">Module Calendrier</h1>
+                    <p class="largeFont textColorWhite mb-6 opacity-90">
+                        Organisez votre temps et ne manquez plus jamais un événement important
+                    </p>
+                    <div class="hero-badges">
+                        <span class="badge">
+                            <Icon name="ri:time-line" />
+                            Rappels intelligents
+                        </span>
+                        <span class="badge">
+                            <Icon name="ri:refresh-line" />
+                            Synchronisation externe
+                        </span>
+                        <span class="badge">
+                            <Icon name="ri:share-line" />
+                            Partage collaboratif
+                        </span>
+                    </div>
+                </div>
+
+                <section class="features-section mb-16">
+                    <div class="section-header mb-8">
+                        <h2 class="largeFont textColorWhite mb-4">Fonctionnalités Principales</h2>
+                        <div class="section-divider"></div>
+                    </div>
+                    <div class="features-grid">
+                        <div class="feature-card" v-for="feature in mainFeatures" :key="feature.id">
+                            <div class="feature-icon">
+                                <Icon :name="feature.icon" size="200%" class="textColorTritary" />
+                            </div>
+                            <h3 class="mediumFont textColorWhite mb-3">{{ feature.title }}</h3>
+                            <p class="normalFont textColorWhite opacity-80 mb-4">{{ feature.description }}</p>
+                            <ul class="feature-benefits">
+                                <li v-for="benefit in feature.benefits" :key="benefit" class="benefit-item">
+                                    <Icon name="ri:check-line" class="textColorTritary" />
+                                    <span class="smallFont textColorWhite">{{ benefit }}</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="views-section mb-16">
+                    <div class="section-header mb-8">
+                        <h2 class="largeFont textColorWhite mb-4">Vues Multiples</h2>
+                        <div class="section-divider"></div>
+                        <p class="normalFont textColorWhite opacity-80">
+                            Adaptez l'affichage selon vos besoins et votre façon de travailler
+                        </p>
+                    </div>
+                    <div class="views-tabs">
+                        <button v-for="view in calendarViews" :key="view.id" @click="activeView = view.id"
+                            :class="['view-tab', { active: activeView === view.id }]">
+                            <Icon :name="view.icon" />
+                            {{ view.name }}
+                        </button>
+                    </div>
+                    <div class="view-showcase">
+                        <div class="view-preview">
+                            <div class="calendar-mockup">
+                                <div class="calendar-header">
+                                    <div class="month-nav">
+                                        <Icon name="ri:arrow-left-s-line" class="textColorWhite" />
+                                        <span class="mediumFont textColorWhite">{{ getCurrentView()?.title }}</span>
+                                        <Icon name="ri:arrow-right-s-line" class="textColorWhite" />
+                                    </div>
+                                </div>
+                                <div class="calendar-grid">
+                                    <div v-for="day in getCurrentView()?.days" :key="day"
+                                        :class="['calendar-day', { 'has-event': Math.random() > 0.7 }]">
+                                        <span class="day-number">{{ day }}</span>
+                                        <div v-if="Math.random() > 0.8" class="event-dot"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="view-description">
+                            <h3 class="mediumFont textColorWhite mb-3">{{ getCurrentView()?.name }}</h3>
+                            <p class="normalFont textColorWhite opacity-80 mb-4">{{ getCurrentView()?.description }}</p>
+                            <div class="view-benefits">
+                                <div v-for="benefit in getCurrentView()?.benefits" :key="benefit" class="benefit-tag">
+                                    {{ benefit }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="integration-section mb-16">
+                    <div class="section-header mb-8">
+                        <h2 class="largeFont textColorWhite mb-4">Synchronisation & Intégrations</h2>
+                        <div class="section-divider"></div>
+                    </div>
+                    <div class="integration-content">
+                        <div class="integration-text">
+                            <p class="normalFont textColorWhite mb-6">
+                                Le module Calendrier se synchronise parfaitement avec vos calendriers existants
+                                et s'intègre aux autres modules de SyncSpace pour une expérience unifiée.
+                            </p>
+                            <div class="sync-features">
+                                <div class="sync-item">
+                                    <Icon name="ri:google-line" class="textColorTritary" />
+                                    <div>
+                                        <h4 class="mediumFont textColorWhite">Google Calendar</h4>
+                                        <p class="smallFont textColorWhite opacity-70">Synchronisation bidirectionnelle
+                                            en temps réel</p>
+                                    </div>
+                                </div>
+                                <div class="sync-item">
+                                    <Icon name="ri:microsoft-line" class="textColorTritary" />
+                                    <div>
+                                        <h4 class="mediumFont textColorWhite">Outlook</h4>
+                                        <p class="smallFont textColorWhite opacity-70">Import/export automatique des
+                                            événements</p>
+                                    </div>
+                                </div>
+                                <div class="sync-item">
+                                    <Icon name="ri:chat-3-line" class="textColorTritary" />
+                                    <div>
+                                        <h4 class="mediumFont textColorWhite">Module Chat</h4>
+                                        <p class="smallFont textColorWhite opacity-70">Création d'événements depuis les
+                                            conversations</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="integration-visual">
+                            <div class="sync-diagram">
+                                <div class="center-node">
+                                    <Icon name="ri:calendar-line" size="150%" class="textColorTritary" />
+                                    <span class="smallFont textColorWhite">Calendrier</span>
+                                </div>
+                                <div class="sync-nodes">
+                                    <div class="sync-node" v-for="i in 4" :key="i">
+                                        <Icon name="ri:arrow-left-right-line" class="textColorWhite opacity-50" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="technical-section mb-16">
+                    <div class="section-header mb-8">
+                        <h2 class="largeFont textColorWhite mb-4">Spécifications Techniques</h2>
+                        <div class="section-divider"></div>
+                    </div>
+                    <div class="tech-grid">
+                        <div class="tech-card">
+                            <Icon name="ri:notification-line" size="150%" class="textColorTritary mb-4" />
+                            <h3 class="mediumFont textColorWhite mb-3">Notifications</h3>
+                            <ul class="tech-list">
+                                <li>WebSocket temps réel</li>
+                                <li>Notifications push</li>
+                                <li>Rappels personnalisables</li>
+                                <li>Alertes par email</li>
+                            </ul>
+                        </div>
+                        <div class="tech-card">
+                            <Icon name="ri:database-line" size="150%" class="textColorTritary mb-4" />
+                            <h3 class="mediumFont textColorWhite mb-3">Stockage</h3>
+                            <ul class="tech-list">
+                                <li>PostgreSQL</li>
+                                <li>Chiffrement des données</li>
+                                <li>Sauvegarde automatique</li>
+                                <li>Historique des modifications</li>
+                            </ul>
+                        </div>
+                        <div class="tech-card">
+                            <Icon name="ri:code-line" size="150%" class="textColorTritary mb-4" />
+                            <h3 class="mediumFont textColorWhite mb-3">API</h3>
+                            <ul class="tech-list">
+                                <li>REST API complète</li>
+                                <li>Authentification JWT</li>
+                                <li>Rate limiting</li>
+                                <li>Documentation OpenAPI</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="cta-section">
+                    <div class="cta-content">
+                        <Icon name="ri:calendar-check-line" size="300%" class="textColorTritary mb-6" />
+                        <h2 class="largeFont textColorWhite mb-4">Prêt à Organiser Votre Temps ?</h2>
+                        <p class="normalFont textColorWhite opacity-90 mb-6">
+                            Découvrez comment le module Calendrier peut transformer votre gestion du temps
+                        </p>
+                        <div class="cta-buttons">
+                            <NuxtLink to="/register" class="cta-btn primary">
+                                <Icon name="ri:play-circle-line" />
+                                Essayer gratuitement
+                            </NuxtLink>
+                            <NuxtLink to="/contact" class="cta-btn secondary">
+                                <Icon name="ri:question-line" />
+                                Poser une question
+                            </NuxtLink>
+                        </div>
+                    </div>
+                </section>
+            </div>
         </div>
-
-        <section class="features-section mb-16">
-          <div class="section-header mb-8">
-            <h2 class="largeFont textColorWhite mb-4">Fonctionnalités Principales</h2>
-            <div class="section-divider"></div>
-          </div>
-          <div class="features-grid">
-            <div class="feature-card" v-for="feature in mainFeatures" :key="feature.id">
-              <div class="feature-icon">
-                <Icon :name="feature.icon" size="200%" class="textColorTritary" />
-              </div>
-              <h3 class="mediumFont textColorWhite mb-3">{{ feature.title }}</h3>
-              <p class="normalFont textColorWhite opacity-80 mb-4">{{ feature.description }}</p>
-              <ul class="feature-benefits">
-                <li v-for="benefit in feature.benefits" :key="benefit" class="benefit-item">
-                  <Icon name="ri:check-line" class="textColorTritary" />
-                  <span class="smallFont textColorWhite">{{ benefit }}</span>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </section>
-
-        <section class="views-section mb-16">
-          <div class="section-header mb-8">
-            <h2 class="largeFont textColorWhite mb-4">Vues Multiples</h2>
-            <div class="section-divider"></div>
-            <p class="normalFont textColorWhite opacity-80">
-              Adaptez l'affichage selon vos besoins et votre façon de travailler
-            </p>
-          </div>
-          <div class="views-tabs">
-            <button
-              v-for="view in calendarViews"
-              :key="view.id"
-              @click="activeView = view.id"
-              :class="['view-tab', { active: activeView === view.id }]"
-            >
-              <Icon :name="view.icon" />
-              {{ view.name }}
-            </button>
-          </div>
-          <div class="view-showcase">
-            <div class="view-preview">
-              <div class="calendar-mockup">
-                <div class="calendar-header">
-                  <div class="month-nav">
-                    <Icon name="ri:arrow-left-s-line" class="textColorWhite" />
-                    <span class="mediumFont textColorWhite">{{ getCurrentView()?.title }}</span>
-                    <Icon name="ri:arrow-right-s-line" class="textColorWhite" />
-                  </div>
-                </div>
-                <div class="calendar-grid">
-                  <div
-                    v-for="day in getCurrentView()?.days"
-                    :key="day"
-                    :class="['calendar-day', { 'has-event': Math.random() > 0.7 }]"
-                  >
-                    <span class="day-number">{{ day }}</span>
-                    <div v-if="Math.random() > 0.8" class="event-dot"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="view-description">
-              <h3 class="mediumFont textColorWhite mb-3">{{ getCurrentView()?.name }}</h3>
-              <p class="normalFont textColorWhite opacity-80 mb-4">{{ getCurrentView()?.description }}</p>
-              <div class="view-benefits">
-                <div
-                  v-for="benefit in getCurrentView()?.benefits"
-                  :key="benefit"
-                  class="benefit-tag"
-                >
-                  {{ benefit }}
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section class="integration-section mb-16">
-          <div class="section-header mb-8">
-            <h2 class="largeFont textColorWhite mb-4">Synchronisation & Intégrations</h2>
-            <div class="section-divider"></div>
-          </div>
-          <div class="integration-content">
-            <div class="integration-text">
-              <p class="normalFont textColorWhite mb-6">
-                Le module Calendrier se synchronise parfaitement avec vos calendriers existants
-                et s'intègre aux autres modules de SyncSpace pour une expérience unifiée.
-              </p>
-              <div class="sync-features">
-                <div class="sync-item">
-                  <Icon name="ri:google-line" class="textColorTritary" />
-                  <div>
-                    <h4 class="mediumFont textColorWhite">Google Calendar</h4>
-                    <p class="smallFont textColorWhite opacity-70">Synchronisation bidirectionnelle en temps réel</p>
-                  </div>
-                </div>
-                <div class="sync-item">
-                  <Icon name="ri:microsoft-line" class="textColorTritary" />
-                  <div>
-                    <h4 class="mediumFont textColorWhite">Outlook</h4>
-                    <p class="smallFont textColorWhite opacity-70">Import/export automatique des événements</p>
-                  </div>
-                </div>
-                <div class="sync-item">
-                  <Icon name="ri:chat-3-line" class="textColorTritary" />
-                  <div>
-                    <h4 class="mediumFont textColorWhite">Module Chat</h4>
-                    <p class="smallFont textColorWhite opacity-70">Création d'événements depuis les conversations</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="integration-visual">
-              <div class="sync-diagram">
-                <div class="center-node">
-                  <Icon name="ri:calendar-line" size="150%" class="textColorTritary" />
-                  <span class="smallFont textColorWhite">Calendrier</span>
-                </div>
-                <div class="sync-nodes">
-                  <div class="sync-node" v-for="i in 4" :key="i">
-                    <Icon name="ri:arrow-left-right-line" class="textColorWhite opacity-50" />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section class="technical-section mb-16">
-          <div class="section-header mb-8">
-            <h2 class="largeFont textColorWhite mb-4">Spécifications Techniques</h2>
-            <div class="section-divider"></div>
-          </div>
-          <div class="tech-grid">
-            <div class="tech-card">
-              <Icon name="ri:notification-line" size="150%" class="textColorTritary mb-4" />
-              <h3 class="mediumFont textColorWhite mb-3">Notifications</h3>
-              <ul class="tech-list">
-                <li>WebSocket temps réel</li>
-                <li>Notifications push</li>
-                <li>Rappels personnalisables</li>
-                <li>Alertes par email</li>
-              </ul>
-            </div>
-            <div class="tech-card">
-              <Icon name="ri:database-line" size="150%" class="textColorTritary mb-4" />
-              <h3 class="mediumFont textColorWhite mb-3">Stockage</h3>
-              <ul class="tech-list">
-                <li>PostgreSQL</li>
-                <li>Chiffrement des données</li>
-                <li>Sauvegarde automatique</li>
-                <li>Historique des modifications</li>
-              </ul>
-            </div>
-            <div class="tech-card">
-              <Icon name="ri:code-line" size="150%" class="textColorTritary mb-4" />
-              <h3 class="mediumFont textColorWhite mb-3">API</h3>
-              <ul class="tech-list">
-                <li>REST API complète</li>
-                <li>Authentification JWT</li>
-                <li>Rate limiting</li>
-                <li>Documentation OpenAPI</li>
-              </ul>
-            </div>
-          </div>
-        </section>
-
-        <section class="cta-section">
-          <div class="cta-content">
-            <Icon name="ri:calendar-check-line" size="300%" class="textColorTritary mb-6" />
-            <h2 class="largeFont textColorWhite mb-4">Prêt à Organiser Votre Temps ?</h2>
-            <p class="normalFont textColorWhite opacity-90 mb-6">
-              Découvrez comment le module Calendrier peut transformer votre gestion du temps
-            </p>
-            <div class="cta-buttons">
-              <NuxtLink to="/register" class="cta-btn primary">
-                <Icon name="ri:play-circle-line" />
-                Essayer gratuitement
-              </NuxtLink>
-              <NuxtLink to="/contact" class="cta-btn secondary">
-                <Icon name="ri:question-line" />
-                Poser une question
-              </NuxtLink>
-            </div>
-          </div>
-        </section>
-      </div>
+        <Footer />
     </div>
-  </div>
 </template>
 
 <script setup lang="ts">
 import Navbar from "~/components/notLogged/Navbar.vue";
+import Footer from "~/components/shared/Footer.vue";
 import { ref } from "vue";
 
 const activeView = ref(1);

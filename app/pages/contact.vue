@@ -1,29 +1,32 @@
 <template>
     <div>
         <Navbar />
-        <div class="contact-container mt-8">
-            <form class="contact-form" @submit.prevent="sendMessage">
-                <h2 class="megaFont textColorWhite">Contactez SyncSpace</h2>
-                <p class="normalFont textColorWhite mt-1">
+        <div class="flex justify-center items-center px-4 sm:px-6 md:px-8 mt-8">
+            <form class="w-full max-w-md sm:max-w-lg md:max-w-xl lg:max-w-2xl" @submit.prevent="sendMessage">
+                <h2 class="megaFont textColorWhite text-center">Contactez SyncSpace</h2>
+                <p class="normalFont textColorWhite mt-1 text-center">
                     Une question, une suggestion ou besoin d'aide?
                     <br>
                     <span class="textColorTritary">Nous sommes là pour vous accompagner</span>
                 </p>
 
-                <div class="form-group mb-3 mt-12">
-                    <input v-model="firstName" type="text" placeholder="Prénom" class="form-input textColorBlack" />
+                <div class="mt-8 sm:mt-12">
+                    <input v-model="firstName" type="text" placeholder="Prénom"
+                        class="form-input w-full textColorBlack rounded-md p-2 mb-3" />
                 </div>
 
-                <div class="form-group mb-3">
-                    <input v-model="lastName" type="text" placeholder="Nom" class="form-input textColorBlack" />
+                <div>
+                    <input v-model="lastName" type="text" placeholder="Nom"
+                        class="form-input w-full textColorBlack rounded-md p-2 mb-3" />
                 </div>
 
-                <div class="form-group mb-3">
-                    <input v-model="email" type="email" placeholder="Email" class="form-input textColorBlack" />
+                <div>
+                    <input v-model="email" type="email" placeholder="Email"
+                        class="form-input w-full textColorBlack rounded-md p-2 mb-3" />
                 </div>
 
-                <div class="form-group mb-3">
-                    <select v-model="subject" class="form-input textColorBlack">
+                <div>
+                    <select v-model="subject" class="form-input w-full textColorBlack rounded-md p-2 mb-3 bg-white">
                         <option value="" disabled>Choisissez un sujet</option>
                         <option value="support">Support technique</option>
                         <option value="billing">Facturation</option>
@@ -33,26 +36,22 @@
                     </select>
                 </div>
 
-                <div class="form-group mb-3">
-                    <textarea v-model="message" placeholder="Votre message..." class="form-textarea textColorBlack"
-                        rows="5"></textarea>
+                <div>
+                    <textarea v-model="message" placeholder="Votre message..."
+                        class="form-textarea w-full textColorBlack rounded-md p-2 mb-3" rows="5"></textarea>
                 </div>
 
-								<button
-										:disabled="isLoading || !isValidForm()"
-										type="submit"
-										class="send-message-btn mt-6 w-full"
-								>
-										{{ isLoading ? 'Envoi en cours...' : 'Envoyer le message' }}
-								</button>
-						</form>
-				</div>
-		</div>
+                <button :disabled="isLoading || !isValidForm()" type="submit"
+                    class="send-message-btn w-full py-3 rounded-md mt-6">
+                    {{ isLoading ? 'Envoi en cours...' : 'Envoyer le message' }}
+                </button>
+            </form>
+        </div>
+    </div>
 </template>
 
 <script setup lang="ts">
 import Navbar from "~/components/notLogged/Navbar.vue";
-import { useRouter } from "vue-router";
 import { ref } from "vue";
 import "vue3-toastify/dist/index.css";
 import { useRuntimeConfig } from "#app";
@@ -64,7 +63,6 @@ const email = ref("");
 const subject = ref("");
 const message = ref("");
 const isLoading = ref(false);
-const route = useRouter();
 
 const config = useRuntimeConfig();
 
@@ -124,38 +122,10 @@ const sendMessage = async () => {
 </script>
 
 <style scoped>
-.contact-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    padding: 20px;
-    color: #fff;
-}
-
-.contact-form {
-    padding: 20px;
-    width: 100%;
-    max-width: 60vw;
-}
-
-.contact-form h2 {
-    margin-bottom: 10px;
-    color: #3a3a3a;
-}
-
-.form-group {
-    display: flex;
-    flex-direction: column;
-}
-
 .form-input,
 .form-textarea {
     background-color: var(--color-white);
-    padding: 10px;
-    font-size: 14px;
     border: 1px solid #ccc;
-    border-radius: 4px;
     font-family: inherit;
 }
 
@@ -174,15 +144,12 @@ const sendMessage = async () => {
     outline: none;
     border-color: #ff7f50;
     box-shadow: none;
-
 }
 
 .send-message-btn {
     background-color: #ff7f50;
     color: #fff;
-    padding: 10px;
     border: none;
-    border-radius: 4px;
     cursor: pointer;
     font-size: 14px;
     transition: background-color 0.2s;
@@ -195,85 +162,5 @@ const sendMessage = async () => {
 .send-message-btn:disabled {
     background-color: #ff9079;
     cursor: not-allowed;
-}
-
-.divider {
-    text-align: center;
-    margin: 20px 0;
-    font-size: 14px;
-    color: #555;
-}
-
-.divider-section {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 20px 0;
-}
-
-.divider-line {
-    flex: 1;
-    height: 1px;
-    background-color: #ccc;
-}
-
-.divider-text {
-    padding: 0 10px;
-    font-size: 14px;
-    color: #555;
-    font-weight: 500;
-}
-
-.contact-methods {
-    display: flex;
-    justify-content: space-between;
-    gap: 10px;
-}
-
-.contact-method-btn {
-    padding: 10px;
-    border-radius: 5px;
-    font-size: 14px;
-    flex: 1;
-    text-align: center;
-    border: 1px solid var(--color-white);
-    text-decoration: none;
-    color: inherit;
-    transition: all 0.2s;
-}
-
-.contact-method-btn:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-    transform: translateY(-1px);
-}
-
-.contact-info {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    padding: 15px 0;
-    border-top: 1px solid #ccc;
-}
-
-.info-item {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 14px;
-}
-
-@media (max-width: 768px) {
-    .contact-form {
-        max-width: 90vw;
-    }
-
-    .contact-methods {
-        flex-direction: column;
-    }
-
-    .contact-info {
-        flex-direction: column;
-        gap: 10px;
-    }
 }
 </style>
