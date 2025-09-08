@@ -6,6 +6,9 @@ import type { FavoriteTrack } from '~/types/FavoriteTrack'
 import type { Playlist } from '~/types/Playlist'
 import type { Track } from '~/types/Track'
 
+/**
+ * Interface representing the YouTube player API methods used by the music player.
+ */
 interface YouTubePlayer {
   loadVideoById: (videoId: string) => void
   cueVideoById: (videoId: string) => void
@@ -19,6 +22,11 @@ interface YouTubePlayer {
   setVolume: (volume: number) => void
 }
 
+/**
+ * Composable for managing music player state and actions.
+ * Handles playlist, track selection, playback, search, favorites, and UI interactions.
+ * @returns Object containing music player state, computed properties, and methods.
+ */
 export function useMusicPlayer() {
   const userStore = useUserStore()
   const { $toast } = useNuxtApp()
@@ -31,8 +39,7 @@ export function useMusicPlayer() {
         try {
           const playlist = JSON.parse(savedPlaylist)
           return playlist
-        } catch (e) {
-        }
+        } catch (e) {}
       }
     }
     return []
@@ -166,7 +173,10 @@ export function useMusicPlayer() {
         })
         const serverCurrentTrack = response.data.value as Track
 
-        if (serverCurrentTrack?.youtubeId && serverCurrentTrack.youtubeId !== userStore.currentTrack?.youtubeId) {
+        if (
+          serverCurrentTrack?.youtubeId &&
+          serverCurrentTrack.youtubeId !== userStore.currentTrack?.youtubeId
+        ) {
           userStore.setCurrentTrack(serverCurrentTrack)
         } else if (!serverCurrentTrack?.youtubeId && userStore.currentTrack?.youtubeId) {
         } else {
@@ -259,12 +269,20 @@ export function useMusicPlayer() {
   watch(
     () => userStore.currentTrack,
     (newTrack) => {
-      if (newTrack?.youtubeId && (playlist.value.length === 0 || playlist.value[currentTrackIndex.value]?.youtubeId !== newTrack.youtubeId)) {
-        initialized.value = false;
+      if (
+        newTrack?.youtubeId &&
+        (playlist.value.length === 0 ||
+          playlist.value[currentTrackIndex.value]?.youtubeId !== newTrack.youtubeId)
+      ) {
+        initialized.value = false
         initializePlaylist()
-      } else if (!newTrack?.youtubeId && playlist.value.length > 0 && playlist.value[currentTrackIndex.value]?.youtubeId) {
-        initialized.value = false;
-        initializePlaylist();
+      } else if (
+        !newTrack?.youtubeId &&
+        playlist.value.length > 0 &&
+        playlist.value[currentTrackIndex.value]?.youtubeId
+      ) {
+        initialized.value = false
+        initializePlaylist()
       }
     },
     { immediate: true }
@@ -769,25 +787,26 @@ export function useMusicPlayer() {
   }
 
   function initializePlaylist() {
-
     if (initialized.value) {
       return
     }
     initialized.value = true
 
     if (playlist.value.length > 0 && playlist.value[currentTrackIndex.value]?.youtubeId) {
-      canPlay.value = true;
+      canPlay.value = true
       return
     }
 
-    let trackToInitialize: Track | null = null;
+    let trackToInitialize: Track | null = null
 
     if (userStore.currentTrack?.youtubeId) {
       trackToInitialize = {
         youtubeId: userStore.currentTrack.youtubeId,
         title: userStore.currentTrack.title,
         artist: (userStore.currentTrack.artist || '').replace(/VEVO/gi, ''),
-        coverUrl: userStore.currentTrack.coverUrl || `https://img.youtube.com/vi/${userStore.currentTrack.youtubeId}/hqdefault.jpg`,
+        coverUrl:
+          userStore.currentTrack.coverUrl ||
+          `https://img.youtube.com/vi/${userStore.currentTrack.youtubeId}/hqdefault.jpg`,
       }
     }
 

@@ -453,11 +453,13 @@
                 </section>
             </div>
         </div>
+        <Footer />
     </div>
 </template>
 
 <script setup lang="ts">
 import Navbar from "~/components/notLogged/Navbar.vue";
+import Footer from "~/components/shared/Footer.vue";
 import { ref } from "vue";
 
 const mainFeatures = ref([

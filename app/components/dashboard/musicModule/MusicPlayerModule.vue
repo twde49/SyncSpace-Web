@@ -1,382 +1,380 @@
 <template>
-    <div ref="playerElement" class="player flex flex-col" :class="{
+    <div ref="playerElement" class="player flex flex-col relative" :class="{
         'flex-row': playerMode === 'mini',
         'flex-col': playerMode === 'full'
     }">
-        <div ref="dragHandle" class="drag-handle mx-auto mb-1 w-12 h-1.5 rounded bgColorSecondary cursor-pointer"
-            @click="togglePlayerMode" @mousedown="startDrag" @touchstart="startDrag"></div>
+        <!-- Drag Handle - Made more prominent on mobile -->
+        <div ref="dragHandle" 
+             class="drag-handle mx-auto mb-1 w-12 h-1.5 sm:w-16 sm:h-2 rounded bgColorSecondary cursor-pointer transition-all duration-200 hover:scale-105"
+             @click="togglePlayerMode" @mousedown="startDrag" @touchstart="startDrag">
+        </div>
 
+        <!-- Full Player Mode - Completely redesigned for mobile -->
         <div v-if="playerMode === 'full' && musicPlayer !== undefined"
-            class="full-player-content flex-1 overflow-hidden">
-            <div class="full-player-layout flex h-full">
-                <div class="bgColorWhite w-2/5 p-6 flex flex-col">
+             class="full-player-content flex-1 overflow-hidden">
+            <div class="full-player-layout flex flex-col lg:flex-row h-full">
+                <!-- Left Panel - Stacked on mobile -->
+                <div class="bgColorWhite w-full lg:w-2/5 p-4 sm:p-6 flex flex-col">
                     <div class="flex-1 flex flex-col justify-center items-center text-center bgColorWhite">
-                        <div class="current-cover mb-6">
+                        <!-- Album Cover - Responsive sizing -->
+                        <div class="current-cover mb-4 sm:mb-6">
                             <img :src="coverUrl" alt="Album Cover"
-                                class="w-64 h-64 rounded-2xl shadow-2xl object-cover mx-auto" />
+                                 class="w-48 h-48 sm:w-56 sm:h-56 md:w-64 md:h-64 rounded-2xl shadow-2xl object-cover mx-auto transition-transform duration-300 hover:scale-105" />
                         </div>
 
-                        <div class="track-info mb-8">
-                            <h1 class="text-3xl font-bold textColorBlack mb-2">{{ musicPlayer.title }}</h1>
-                            <h2 class="text-xl textColorTritary mb-1">{{ musicPlayer.artist }}</h2>
+                        <!-- Track Info - Responsive text sizing -->
+                        <div class="track-info mb-6 sm:mb-8 px-2">
+                            <h1 class="text-xl sm:text-2xl lg:text-3xl font-bold textColorBlack mb-2 line-clamp-2">
+                                {{ musicPlayer.title }}
+                            </h1>
+                            <h2 class="text-base sm:text-lg lg:text-xl textColorTritary mb-1 line-clamp-1">
+                                {{ musicPlayer.artist }}
+                            </h2>
                         </div>
 
-                        <div class="full-progress-section w-full max-w-md mb-6">
-                            <input type="range" class="track-progress-slider w-full" :value="progress" :max="duration"
-                                @input="seek"
-                                :style="{ '--progress-percentage': (progress / duration * 100 || 0) + '%' }" />
-                            <div class="flex justify-between text-sm textColorBlack mt-2">
+                        <!-- Progress Section - Mobile optimized -->
+                        <div class="full-progress-section w-full max-w-sm sm:max-w-md mb-4 sm:mb-6 px-4">
+                            <input type="range" 
+                                   class="track-progress-slider w-full h-2 sm:h-3" 
+                                   :value="progress" 
+                                   :max="duration"
+                                   @input="seek"
+                                   :style="{ '--progress-percentage': (progress / duration * 100 || 0) + '%' }" />
+                            <div class="flex justify-between text-xs sm:text-sm textColorBlack mt-2">
                                 <span>{{ formatTime(progress) }}</span>
                                 <span>{{ formatTime(duration) }}</span>
                             </div>
                         </div>
 
-                        <div class="enhanced-controls flex items-center justify-center space-x-6">
-                            <Icon name="ph:shuffle" class="control-icon textColorSecondary" size="24px" />
-                            <Icon name="ph:skip-back-fill" class="control-icon textColorSecondary" size="32px"
-                                @click="previousTrack" />
+                        <!-- Enhanced Controls - Mobile friendly sizing -->
+                        <div class="enhanced-controls flex items-center justify-center space-x-4 sm:space-x-6">
+                            <Icon name="ph:shuffle" class="control-icon textColorSecondary hover:textColorPrimary transition-colors cursor-pointer" 
+                                  size="20px" />
+                            <Icon name="ph:skip-back-fill" class="control-icon textColorSecondary hover:textColorPrimary transition-colors cursor-pointer" 
+                                  size="28px" @click="previousTrack" />
                             <button
-                                class="play-button-large flex justify-center items-center w-16 h-16 bgColorPrimary rounded-full transition duration-300 shadow-lg"
-                                @click.stop="togglePlay();">
-                                <Icon :name="isPlaying ? 'ph:pause-bold' : 'ph:play-fill'" class="textColorWhite"
-                                    size="24px" />
+                                class="play-button-large flex justify-center items-center w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 bgColorPrimary rounded-full transition duration-300 shadow-lg hover:shadow-xl active:scale-95">
+                                <Icon :name="isPlaying ? 'ph:pause-bold' : 'ph:play-fill'" 
+                                      class="textColorWhite" size="20px" @click.stop="togglePlay();" />
                             </button>
-                            <Icon name="ph:skip-forward-fill" class="control-icon textColorSecondary" size="32px"
-                                @click="nextTrack" />
-                            <Icon name="ph:repeat" class="control-icon textColorSecondary" size="24px" />
+                            <Icon name="ph:skip-forward-fill" class="control-icon textColorSecondary hover:textColorPrimary transition-colors cursor-pointer" 
+                                  size="28px" @click="nextTrack" />
+                            <Icon name="ph:repeat" class="control-icon textColorSecondary hover:textColorPrimary transition-colors cursor-pointer" 
+                                  size="20px" />
                         </div>
                     </div>
                 </div>
 
-                <div class="right-panel w-3/5 flex flex-col globalRadius">
-                    <div class="tab-headers mb-3 globalRadius flex bgColorBlack">
-                        <button v-for="tab in tabs" :key="tab.id" @click="activeTab = tab.id" :class="[
-                            'tab-header px-6 py-4 normalFont transition-colors duration-200',
-                            activeTab === tab.id
-                                ? 'textColorSecondary border-b-2 border-[var(--color-secondary)] bgColorWhite'
-                                : 'textColorWhite hover:textColorPrimary hover:bgColorWhite'
-                        ]">
-                            {{ tab.name }}
-                        </button>
+                <!-- Right Panel - Full width on mobile, tabs become horizontal scrollable -->
+                <div class="right-panel w-full lg:w-3/5 flex flex-col globalRadius mt-4 lg:mt-0">
+                    <!-- Tab Headers - Horizontal scroll on mobile -->
+                    <div class="tab-headers mb-3 globalRadius overflow-x-auto">
+                        <div class="flex bgColorBlack min-w-max lg:min-w-0">
+                            <button v-for="tab in tabs" :key="tab.id" 
+                                    @click="activeTab = tab.id" 
+                                    :class="[
+                                        'tab-header px-4 sm:px-6 py-3 sm:py-4 normalFont transition-colors duration-200 whitespace-nowrap',
+                                        activeTab === tab.id
+                                            ? 'textColorSecondary border-b-2 border-[var(--color-secondary)] bgColorWhite'
+                                            : 'textColorWhite hover:textColorPrimary hover:bgColorWhite'
+                                    ]">
+                                {{ tab.name }}
+                            </button>
+                        </div>
                     </div>
 
+                    <!-- Tab Content - Mobile optimized scrolling -->
                     <div class="tab-content globalRadius flex-1 overflow-hidden bgColorBlack">
-                        <div v-if="activeTab === 'library'" class="tab-panel h-full overflow-y-auto p-6">
+                        <!-- Library Tab -->
+                        <div v-if="activeTab === 'library'" class="tab-panel h-full overflow-y-auto p-4 sm:p-6">
                             <div v-if="isLoading" class="loading-state text-center py-8">
-                                <Icon name="ph:circle-notch" class="textColorSecondary mx-auto mb-4 animate-spin"
-                                    size="48px" />
+                                <Icon name="ph:circle-notch" class="textColorSecondary mx-auto mb-4 animate-spin" size="48px" />
                                 <p class="normalFont textColorWhite">Chargement des données...</p>
                             </div>
                             <template v-else>
+                                <!-- Library Categories - Mobile grid layout -->
                                 <div v-if="activeLibrarySection === 'categories'" class="library-section">
-                                    <h3 class="largeFont mb-4 textColorWhite">Ma Bibliothèque</h3>
-                                    <div class="library-categories space-y-3">
-                                        <div class="category-item flex items-center p-3 rounded-lg bgColorBlack cursor-pointer hover:border-[var(--color-secondary)] border border-transparent"
-                                            @click="displayRecentTracks()">
-                                            <Icon name="ph:music-notes-fill" class="textColorSecondary mr-3"
-                                                size="20px" />
-                                            <span class="normalFont textColorWhite">Titres récents</span>
-                                            <span class="ml-auto normalFont textColorTritary">{{ playlist.length
-                                                }}</span>
+                                    <h3 class="text-lg sm:text-xl lg:text-2xl font-bold mb-4 textColorWhite">Ma Bibliothèque</h3>
+                                    <div class="library-categories space-y-2 sm:space-y-3">
+                                        <div class="category-item flex items-center p-3 sm:p-4 rounded-lg bgColorBlack cursor-pointer hover:border-[var(--color-secondary)] border border-transparent transition-all duration-200 active:scale-95"
+                                             @click="displayRecentTracks()">
+                                            <Icon name="ph:music-notes-fill" class="textColorSecondary mr-3 flex-shrink-0" size="20px" />
+                                            <span class="normalFont textColorWhite flex-1">Titres récents</span>
+                                            <span class="ml-auto normalFont textColorTritary">{{ playlist.length }}</span>
                                         </div>
-                                        <div class="category-item flex items-center p-3 rounded-lg bgColorBlack cursor-pointer hover:border-[var(--color-secondary)] border border-transparent"
-                                            @click="displayFavoriteTracks()">
-                                            <Icon name="ph:heart-fill" class="textColorPrimary mr-3" size="20px" />
-                                            <span class="normalFont textColorWhite">Favoris</span>
-                                            <span class="ml-auto normalFont textColorTritary">{{ favoriteQuantity
-                                                }}</span>
+                                        <div class="category-item flex items-center p-3 sm:p-4 rounded-lg bgColorBlack cursor-pointer hover:border-[var(--color-secondary)] border border-transparent transition-all duration-200 active:scale-95"
+                                             @click="displayFavoriteTracks()">
+                                            <Icon name="ph:heart-fill" class="textColorPrimary mr-3 flex-shrink-0" size="20px" />
+                                            <span class="normalFont textColorWhite flex-1">Favoris</span>
+                                            <span class="ml-auto normalFont textColorTritary">{{ favoriteQuantity }}</span>
                                         </div>
-                                        <div class="category-item flex items-center p-3 rounded-lg bgColorBlack cursor-pointer hover:border-[var(--color-secondary)] border border-transparent"
-                                            @click="displayMyPlaylists()">
-                                            <Icon name="ph:playlist-fill" class="textColorCategoryTritary mr-3"
-                                                size="20px" />
-                                            <span class="normalFont textColorWhite">Mes Playlists</span>
-                                            <span class="ml-auto normalFont textColorTritary">{{ playlistQuantity
-                                                }}</span>
+                                        <div class="category-item flex items-center p-3 sm:p-4 rounded-lg bgColorBlack cursor-pointer hover:border-[var(--color-secondary)] border border-transparent transition-all duration-200 active:scale-95"
+                                             @click="displayMyPlaylists()">
+                                            <Icon name="ph:playlist-fill" class="textColorCategoryTritary mr-3 flex-shrink-0" size="20px" />
+                                            <span class="normalFont textColorWhite flex-1">Mes Playlists</span>
+                                            <span class="ml-auto normalFont textColorTritary">{{ playlistQuantity }}</span>
                                         </div>
                                     </div>
                                 </div>
 
+                                <!-- Recent Tracks - Mobile optimized list -->
                                 <div v-else-if="activeLibrarySection === 'recent'" class="library-recent-tracks">
-                                    <div class="flex justify-between items-center mb-6">
-                                        <h3 class="largeFont textColorWhite">Titres récents</h3>
+                                    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 sm:mb-6 gap-2">
+                                        <h3 class="text-lg sm:text-xl font-bold textColorWhite">Titres récents</h3>
                                         <button
-                                            class="miniFont textColorPrimary hover:textColorSecondary transition-colors duration-200 flex justify-center items-center"
+                                            class="self-start sm:self-auto text-sm textColorPrimary hover:textColorSecondary transition-colors duration-200 flex items-center"
                                             @click="goToLibraryCategories">
-                                            <Icon name="ph:arrow-left" class="mr-1" size="24px" />
-                                            Retour
-                                            à la bibliothèque
+                                            <Icon name="ph:arrow-left" class="mr-1" size="16px" />
+                                            Retour à la bibliothèque
                                         </button>
                                     </div>
-                                    <div class="playlist-items space-y-2">
+                                    <div class="playlist-items space-y-1 sm:space-y-2">
                                         <div v-for="(track, index) in playlist" :key="index" :class="[
-                                            'playlist-item flex items-center p-3 rounded-lg cursor-pointer transition-all duration-200',
+                                            'playlist-item flex items-center p-2 sm:p-3 rounded-lg cursor-pointer transition-all duration-200 active:scale-95',
                                             index === currentTrackIndex
                                                 ? 'bg-opacity-20 bgColorSecondary border border-[var(--color-secondary)]'
                                                 : 'bg-opacity-10 hover:bg-opacity-20 bgColorBlack hover:bgColorSecondary border border-transparent hover:border-[var(--color-secondary)]'
                                         ]" @click="currentTrackIndex = index">
-                                            <div class="track-number w-8 text-center">
-                                                <span v-if="index === currentTrackIndex && isPlaying"
-                                                    class="textColorPrimary">
-                                                    <Icon name="ph:play-fill" size="16px" />
+                                            <!-- Track number - Smaller on mobile -->
+                                            <div class="track-number w-6 sm:w-8 text-center flex-shrink-0">
+                                                <span v-if="index === currentTrackIndex && isPlaying" class="textColorPrimary">
+                                                    <Icon name="ph:play-fill" size="12px" />
                                                 </span>
-                                                <span v-else class="textColorWhite miniFont">{{ index + 1 }}</span>
+                                                <span v-else class="textColorWhite text-xs sm:text-sm">{{ index + 1 }}</span>
                                             </div>
+                                            <!-- Track image - Smaller on mobile -->
                                             <img :src="`https://img.youtube.com/vi/${track.youtubeId}/default.jpg`"
-                                                alt="Track cover"
-                                                class="w-12 h-12 rounded-lg mr-4 object-cover border border-[var(--color-secondary)]" />
-                                            <div class="track-details flex-1 min-w-0">
-                                                <div class="track-name normalFont textColorWhite truncate">{{
-                                                    track.title }}</div>
-                                                <div class="track-artist miniFont textColorTritary truncate">{{
-                                                    track.artist }}</div>
+                                                 alt="Track cover"
+                                                 class="w-10 h-10 sm:w-12 sm:h-12 rounded-lg mr-3 object-cover border border-[var(--color-secondary)] flex-shrink-0" />
+                                            <!-- Track details -->
+                                            <div class="track-details flex-1 min-w-0 mr-2">
+                                                <div class="track-name text-sm sm:text-base textColorWhite truncate">{{ track.title }}</div>
+                                                <div class="track-artist text-xs sm:text-sm textColorTritary truncate">{{ track.artist }}</div>
                                             </div>
-                                            <div class="track-actions flex items-center space-x-2">
-                                                <Icon
-                                                    :name="favoriteTracks.some(favorite => favorite.track.youtubeId === track.youtubeId) ? 'ph:heart-fill' : 'ph:heart'"
-                                                    class="textColorWhite hover:textColorPrimary cursor-pointer transition-colors duration-200"
-                                                    size="18px" @click.stop="likeTrack(track)" />
+                                            <!-- Track actions -->
+                                            <div class="track-actions flex items-center space-x-1 sm:space-x-2 flex-shrink-0">
+                                                <Icon :name="favoriteTracks.some(favorite => favorite.track.youtubeId === track.youtubeId) ? 'ph:heart-fill' : 'ph:heart'"
+                                                      class="textColorWhite hover:textColorPrimary cursor-pointer transition-colors duration-200"
+                                                      size="16px" @click.stop="likeTrack(track)" />
                                                 <Icon name="ph:dots-three-vertical"
-                                                    class="textColorWhite hover:textColorSecondary cursor-pointer transition-colors duration-200"
-                                                    size="32px" @click.stop="openTrackOptionsMenu(track, $event)" />
+                                                      class="textColorWhite hover:textColorSecondary cursor-pointer transition-colors duration-200"
+                                                      size="20px" @click.stop="openTrackOptionsMenu(track, $event)" />
                                             </div>
                                         </div>
                                     </div>
-                                    <div v-if="playlist.length === 0"
-                                        class="empty-state text-center py-8 textColorTritary">
+                                    <div v-if="playlist.length === 0" class="empty-state text-center py-8 textColorTritary">
                                         <Icon name="ph:music-note-bold" class="mx-auto mb-4" size="48px" />
                                         <p class="normalFont">Aucun titre récent dans la file d'attente.</p>
                                     </div>
                                 </div>
 
+                                <!-- Favorites - Similar mobile optimizations -->
                                 <div v-else-if="activeLibrarySection === 'favorites'" class="library-favorites-tracks">
-                                    <div class="flex justify-between items-center mb-6">
-                                        <h3 class="largeFont textColorWhite">Favoris</h3>
+                                    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 sm:mb-6 gap-2">
+                                        <h3 class="text-lg sm:text-xl font-bold textColorWhite">Favoris</h3>
                                         <button
-                                            class="miniFont textColorPrimary hover:textColorSecondary transition-colors duration-200 flex justify-center items-center"
+                                            class="self-start sm:self-auto text-sm textColorPrimary hover:textColorSecondary transition-colors duration-200 flex items-center"
                                             @click="goToLibraryCategories">
-                                            <Icon name="ph:arrow-left" class="mr-1" size="16px" /> Retour
-                                            à la bibliothèque
+                                            <Icon name="ph:arrow-left" class="mr-1" size="16px" />
+                                            Retour à la bibliothèque
                                         </button>
                                     </div>
-                                    <div class="playlist-items space-y-2">
+                                    <!-- Similar structure to recent tracks with mobile optimizations -->
+                                    <div class="playlist-items space-y-1 sm:space-y-2">
                                         <div v-for="(favoriteTrack, index) in favoriteTracks" :key="index"
-                                            class="playlist-item flex items-center p-3 rounded-lg cursor-pointer transition-all duration-200 bg-opacity-10 hover:bg-opacity-20 bgColorBlack hover:bgColorSecondary border border-transparent hover:border-[var(--color-secondary)]"
-                                            @click="addToPlaylist(favoriteTrack.track)">
-                                            <div class="track-number w-8 text-center">
-                                                <span class="textColorWhite miniFont">{{ index + 1 }}</span>
+                                             class="playlist-item flex items-center p-2 sm:p-3 rounded-lg cursor-pointer transition-all duration-200 bg-opacity-10 hover:bg-opacity-20 bgColorBlack hover:bgColorSecondary border border-transparent hover:border-[var(--color-secondary)] active:scale-95"
+                                             @click="addToPlaylist(favoriteTrack.track)">
+                                            <div class="track-number w-6 sm:w-8 text-center flex-shrink-0">
+                                                <span class="textColorWhite text-xs sm:text-sm">{{ index + 1 }}</span>
                                             </div>
                                             <img :src="`https://img.youtube.com/vi/${favoriteTrack.track.youtubeId}/default.jpg`"
-                                                alt="Track cover"
-                                                class="w-12 h-12 rounded-lg mr-4 object-cover border border-[var(--color-secondary)]" />
-                                            <div class="track-details flex-1 min-w-0">
-                                                <div class="track-name normalFont textColorWhite truncate">{{
-                                                    favoriteTrack.track.title }}</div>
-                                                <div class="track-artist miniFont textColorTritary truncate">{{
-                                                    favoriteTrack.track.artist }}</div>
+                                                 alt="Track cover"
+                                                 class="w-10 h-10 sm:w-12 sm:h-12 rounded-lg mr-3 object-cover border border-[var(--color-secondary)] flex-shrink-0" />
+                                            <div class="track-details flex-1 min-w-0 mr-2">
+                                                <div class="track-name text-sm sm:text-base textColorWhite truncate">{{ favoriteTrack.track.title }}</div>
+                                                <div class="track-artist text-xs sm:text-sm textColorTritary truncate">{{ favoriteTrack.track.artist }}</div>
                                             </div>
-                                            <div class="track-actions flex items-center space-x-2">
-                                                <Icon name="ph:heart-fill" class="textColorPrimary cursor-pointer"
-                                                    size="18px" @click.stop="likeTrack(favoriteTrack.track)" />
+                                            <div class="track-actions flex items-center space-x-1 sm:space-x-2 flex-shrink-0">
+                                                <Icon name="ph:heart-fill" class="textColorPrimary cursor-pointer" size="16px" 
+                                                      @click.stop="likeTrack(favoriteTrack.track)" />
                                                 <Icon name="ph:dots-three-vertical"
-                                                    class="textColorWhite hover:textColorSecondary cursor-pointer transition-colors duration-200"
-                                                    size="32px"
-                                                    @click.stop="openTrackOptionsMenu(favoriteTrack.track, $event)" />
+                                                      class="textColorWhite hover:textColorSecondary cursor-pointer transition-colors duration-200"
+                                                      size="20px" @click.stop="openTrackOptionsMenu(favoriteTrack.track, $event)" />
                                             </div>
                                         </div>
                                     </div>
-                                    <div v-if="favoriteTracks.length === 0"
-                                        class="empty-state text-center py-8 textColorTritary">
+                                    <div v-if="favoriteTracks.length === 0" class="empty-state text-center py-8 textColorTritary">
                                         <Icon name="ph:heart-fill" class="textColorPrimary mx-auto mb-4" size="48px" />
                                         <p class="normalFont">Vous n'avez pas encore de favoris.</p>
                                     </div>
                                 </div>
 
-                                <div v-else-if="activeLibrarySection === 'playlist-tracks'"
-                                    class="library-playlist-tracks">
-                                    <div class="flex justify-between items-center mb-6">
-                                        <h3 class="largeFont textColorWhite">{{ selectedPlaylist?.name }}
-                                        </h3>
+                                <!-- Playlist Tracks - Mobile optimized -->
+                                <div v-else-if="activeLibrarySection === 'playlist-tracks'" class="library-playlist-tracks">
+                                    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 sm:mb-6 gap-2">
+                                        <h3 class="text-lg sm:text-xl font-bold textColorWhite truncate">{{ selectedPlaylist?.name }}</h3>
                                         <button
-                                            class="flex justify-center items-center miniFont textColorPrimary hover:textColorSecondary transition-colors duration-200"
+                                            class="self-start sm:self-auto text-sm textColorPrimary hover:textColorSecondary transition-colors duration-200 flex items-center"
                                             @click="activeLibrarySection = 'playlists'">
-                                            <Icon name="ph:arrow-left" class="mr-1" size="16px" /> Retour
-                                            aux playlists
+                                            <Icon name="ph:arrow-left" class="mr-1" size="16px" />
+                                            Retour aux playlists
                                         </button>
                                     </div>
-                                    <div v-if="playlistTracks.length === 0 && !isLoading"
-                                        class="empty-state text-center py-8 textColorTritary">
+                                    <!-- Similar mobile-optimized track list -->
+                                    <div v-if="playlistTracks.length === 0 && !isLoading" class="empty-state text-center py-8 textColorTritary">
                                         <Icon name="ph:music-note" class="mx-auto mb-4" size="48px" />
-                                        <p class="normalFont">Cette playlist ne contient pas encore de
-                                            musiques.</p>
+                                        <p class="normalFont">Cette playlist ne contient pas encore de musiques.</p>
                                     </div>
                                     <div v-else-if="isLoading" class="empty-state text-center py-8 textColorTritary">
                                         <p class="normalFont">Chargement des musiques...</p>
                                     </div>
-                                    <div class="playlist-items space-y-2">
+                                    <div class="playlist-items space-y-1 sm:space-y-2">
                                         <div v-for="(track, index) in playlistTracks" :key="track.youtubeId"
-                                            class="playlist-item flex items-center p-3 rounded-lg cursor-pointer transition-all duration-200 bg-opacity-10 hover:bg-opacity-20 bgColorBlack hover:bgColorSecondary border border-transparent hover:border-[var(--color-secondary)]"
-                                            @click="addToPlaylist(track)">
-                                            <div class="track-number w-8 text-center">
-                                                <span class="textColorWhite miniFont">{{ index + 1 }}</span>
+                                             class="playlist-item flex items-center p-2 sm:p-3 rounded-lg cursor-pointer transition-all duration-200 bg-opacity-10 hover:bg-opacity-20 bgColorBlack hover:bgColorSecondary border border-transparent hover:border-[var(--color-secondary)] active:scale-95"
+                                             @click="addToPlaylist(track)">
+                                            <div class="track-number w-6 sm:w-8 text-center flex-shrink-0">
+                                                <span class="textColorWhite text-xs sm:text-sm">{{ index + 1 }}</span>
                                             </div>
                                             <img :src="track.coverUrl || `https://img.youtube.com/vi/${track.youtubeId}/default.jpg`"
-                                                alt="Track Cover" class="w-12 h-12 rounded mr-3 object-cover" />
-                                            <div class="track-details flex-1 min-w-0">
-                                                <div class="track-name normalFont textColorWhite truncate">
-                                                    {{ track.title }}</div>
-                                                <div class="track-artist miniFont textColorTritary truncate">
-                                                    {{ track.artist }}</div>
+                                                 alt="Track Cover" class="w-10 h-10 sm:w-12 sm:h-12 rounded mr-3 object-cover flex-shrink-0" />
+                                            <div class="track-details flex-1 min-w-0 mr-2">
+                                                <div class="track-name text-sm sm:text-base textColorWhite truncate">{{ track.title }}</div>
+                                                <div class="track-artist text-xs sm:text-sm textColorTritary truncate">{{ track.artist }}</div>
                                             </div>
-                                            <div class="track-actions flex items-center space-x-4">
-                                                <Icon
-                                                    :name="favoriteTracks.some(favorite => favorite.track.youtubeId === track.youtubeId) ? 'ph:heart-fill' : 'ph:heart'"
-                                                    class="textColorWhite hover:textColorSecondary cursor-pointer transition-colors duration-200"
-                                                    size="20px" @click.stop="likeTrack(track)" />
+                                            <div class="track-actions flex items-center space-x-1 sm:space-x-2 flex-shrink-0">
+                                                <Icon :name="favoriteTracks.some(favorite => favorite.track.youtubeId === track.youtubeId) ? 'ph:heart-fill' : 'ph:heart'"
+                                                      class="textColorWhite hover:textColorSecondary cursor-pointer transition-colors duration-200"
+                                                      size="16px" @click.stop="likeTrack(track)" />
                                                 <Icon name="ph:dots-three-vertical"
-                                                    class="textColorWhite hover:textColorSecondary cursor-pointer transition-colors duration-200"
-                                                    size="32px" @click.stop="openTrackOptionsMenu(track, $event)" />
+                                                      class="textColorWhite hover:textColorSecondary cursor-pointer transition-colors duration-200"
+                                                      size="20px" @click.stop="openTrackOptionsMenu(track, $event)" />
                                             </div>
                                         </div>
                                     </div>
                                 </div>
 
+                                <!-- Playlists - Mobile grid layout -->
                                 <div v-else-if="activeLibrarySection === 'playlists'" class="library-playlists">
-                                    <div class="flex justify-between items-center mb-6">
-                                        <div class="flex items-center">
-                                            <h3 class="largeFont textColorWhite">Mes Playlists</h3>
-                                        </div>
+                                    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 sm:mb-6 gap-2">
+                                        <h3 class="text-lg sm:text-xl font-bold textColorWhite">Mes Playlists</h3>
                                         <button
-                                            class="miniFont textColorPrimary hover:textColorSecondary transition-colors duration-200 flex justify-center items-center"
+                                            class="self-start sm:self-auto text-sm textColorPrimary hover:textColorSecondary transition-colors duration-200 flex items-center"
                                             @click="goToLibraryCategories">
-                                            <Icon name="ph:arrow-left" class="mr-1" size="16px" /> Retour
-                                            à la bibliothèque
+                                            <Icon name="ph:arrow-left" class="mr-1" size="16px" />
+                                            Retour à la bibliothèque
                                         </button>
                                     </div>
-                                    <div v-if="playlists.length === 0"
-                                        class="empty-state text-center py-8 textColorTritary">
+                                    <div v-if="playlists.length === 0" class="empty-state text-center py-8 textColorTritary">
                                         <Icon name="ph:playlist-bold" class="mx-auto mb-4" size="48px" />
                                         <p class="normalFont mb-3">Vous n'avez pas encore créé de playlists.</p>
-                                        <div class="flex justify-center scale-125">
+                                        <div class="flex justify-center">
                                             <PlaylistForm @playlist-created="fetchPlaylists" />
                                         </div>
                                     </div>
-                                    <div v-else class="playlist-items space-y-2">
+                                    <div v-else class="playlist-items space-y-1 sm:space-y-2">
                                         <div v-for="(playlistItem, index) in playlists" :key="playlistItem.id"
-                                            class="playlist-item flex items-center p-3 rounded-lg cursor-pointer transition-all duration-200 bg-opacity-10 hover:bg-opacity-20 bgColorBlack hover:bgColorSecondary"
-                                            @click="openPlaylist(playlistItem)">
-                                            <div class="playlist-number w-8 text-center">
-                                                <span class="textColorWhite miniFont">{{ index + 1 }}</span>
+                                             class="playlist-item flex items-center p-2 sm:p-3 rounded-lg cursor-pointer transition-all duration-200 bg-opacity-10 hover:bg-opacity-20 bgColorBlack hover:bgColorSecondary active:scale-95"
+                                             @click="openPlaylist(playlistItem)">
+                                            <div class="playlist-number w-6 sm:w-8 text-center flex-shrink-0">
+                                                <span class="textColorWhite text-xs sm:text-sm">{{ index + 1 }}</span>
                                             </div>
-                                            <Icon name="ph:playlist-bold" class="textColorCategoryTritary mr-3"
-                                                size="32px" />
-                                            <div class="playlist-details flex-1 min-w-0">
-                                                <div class="playlist-name normalFont textColorWhite truncate">{{
-                                                    playlistItem.name }}</div>
-                                                <div class="playlist-track-count miniFont textColorTritary truncate">{{
-                                                    playlistItem.tracks.length }} titres</div>
+                                            <Icon name="ph:playlist-bold" class="textColorCategoryTritary mr-3 flex-shrink-0" size="24px" />
+                                            <div class="playlist-details flex-1 min-w-0 mr-2">
+                                                <div class="playlist-name text-sm sm:text-base textColorWhite truncate">{{ playlistItem.name }}</div>
+                                                <div class="playlist-track-count text-xs sm:text-sm textColorTritary truncate">{{ playlistItem.tracks.length }} titres</div>
                                             </div>
-                                            <div class="playlist-actions flex items-center space-x-2">
+                                            <div class="playlist-actions flex items-center">
                                                 <Icon name="ph:dots-three-vertical"
-                                                    class="textColorWhite hover:textColorSecondary cursor-pointer transition-colors duration-200"
-                                                    size="32px"
-                                                    @click.stop="openPlaylistOptionsMenu(playlistItem, $event)" />
+                                                      class="textColorWhite hover:textColorSecondary cursor-pointer transition-colors duration-200"
+                                                      size="20px" @click.stop="openPlaylistOptionsMenu(playlistItem, $event)" />
                                             </div>
                                         </div>
-                                        <div class="ml-3 scale-90 flex justify-center items-center">
-                                            <PlaylistForm v-if="playlists.length > 0"
-                                                @playlist-created="fetchPlaylists" />
+                                        <div class="flex justify-center mt-4">
+                                            <PlaylistForm v-if="playlists.length > 0" @playlist-created="fetchPlaylists" />
                                         </div>
                                     </div>
                                 </div>
                             </template>
                         </div>
 
-                        <div v-if="activeTab === 'queue'" class="tab-panel h-full overflow-y-auto p-6">
-                            <div class="playlist-header flex justify-between items-center mb-6">
-                                <h3 class="largeFont textColorWhite">File d'attente</h3>
-                                <button
-                                    class="miniFont textColorPrimary hover:textColorSecondary transition-colors duration-200">
+                        <!-- Queue Tab - Mobile optimized -->
+                        <div v-if="activeTab === 'queue'" class="tab-panel h-full overflow-y-auto p-4 sm:p-6">
+                            <div class="playlist-header flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 sm:mb-6 gap-2">
+                                <h3 class="text-lg sm:text-xl font-bold textColorWhite">File d'attente</h3>
+                                <button class="self-start sm:self-auto text-sm textColorPrimary hover:textColorSecondary transition-colors duration-200">
                                     Effacer tout
                                 </button>
                             </div>
-
-                            <div class="playlist-items space-y-2">
+                            <!-- Similar mobile-optimized track list as above -->
+                            <div class="playlist-items space-y-1 sm:space-y-2">
                                 <div v-for="(track, index) in playlist" :key="index" :class="[
-                                    'playlist-item flex items-center p-3 rounded-lg cursor-pointer transition-all duration-200',
+                                    'playlist-item flex items-center p-2 sm:p-3 rounded-lg cursor-pointer transition-all duration-200 active:scale-95',
                                     index === currentTrackIndex
                                         ? 'bg-opacity-20 bgColorSecondary border border-[var(--color-secondary)]'
                                         : 'bg-opacity-10 hover:bg-opacity-20 bgColorBlack hover:bgColorSecondary border border-transparent hover:border-[var(--color-secondary)]'
                                 ]" @click="currentTrackIndex = index">
-                                    <div class="track-number w-8 text-center">
+                                    <div class="track-number w-6 sm:w-8 text-center flex-shrink-0">
                                         <span v-if="index === currentTrackIndex && isPlaying" class="textColorPrimary">
-                                            <Icon name="solar:play-bold" size="16px" />
+                                            <Icon name="solar:play-bold" size="12px" />
                                         </span>
-                                        <span v-else class="textColorWhite miniFont">{{ index + 1 }}</span>
+                                        <span v-else class="textColorWhite text-xs sm:text-sm">{{ index + 1 }}</span>
                                     </div>
-
                                     <img :src="`https://img.youtube.com/vi/${track.youtubeId}/default.jpg`"
-                                        alt="Track cover"
-                                        class="w-12 h-12 rounded-lg mr-4 object-cover border border-[var(--color-secondary)]" />
-
-                                    <div class="track-details flex-1 min-w-0">
-                                        <div class="track-name normalFont textColorWhite truncate">{{ track.title }}
-                                        </div>
-                                        <div class="track-artist miniFont textColorTritary truncate">{{ track.artist }}
-                                        </div>
+                                         alt="Track cover"
+                                         class="w-10 h-10 sm:w-12 sm:h-12 rounded-lg mr-3 object-cover border border-[var(--color-secondary)] flex-shrink-0" />
+                                    <div class="track-details flex-1 min-w-0 mr-2">
+                                        <div class="track-name text-sm sm:text-base textColorWhite truncate">{{ track.title }}</div>
+                                        <div class="track-artist text-xs sm:text-sm textColorTritary truncate">{{ track.artist }}</div>
                                     </div>
-
-                                    <div class="track-actions flex items-center space-x-2">
-                                        <Icon
-                                            :name="favoriteTracks.some(favorite => favorite.track.youtubeId === track.youtubeId) ? 'solar:heart-fill' : 'solar:heart'"
-                                            class="textColorWhite hover:textColorPrimary cursor-pointer transition-colors duration-200"
-                                            size="18px" @click.stop="likeTrack(track)" />
+                                    <div class="track-actions flex items-center space-x-1 sm:space-x-2 flex-shrink-0">
+                                        <Icon :name="favoriteTracks.some(favorite => favorite.track.youtubeId === track.youtubeId) ? 'solar:heart-fill' : 'solar:heart'"
+                                              class="textColorWhite hover:textColorPrimary cursor-pointer transition-colors duration-200"
+                                              size="16px" @click.stop="likeTrack(track)" />
                                         <Icon name="entypo:dots-three-vertical"
-                                            class="textColorWhite hover:textColorSecondary cursor-pointer transition-colors duration-200"
-                                            size="32px" @click.stop="openTrackOptionsMenu(track, $event)" />
+                                              class="textColorWhite hover:textColorSecondary cursor-pointer transition-colors duration-200"
+                                              size="20px" @click.stop="openTrackOptionsMenu(track, $event)" />
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div v-if="activeTab === 'search'" class="tab-panel h-full overflow-y-auto p-6">
+                        <!-- Search Tab - Mobile optimized -->
+                        <div v-if="activeTab === 'search'" class="tab-panel h-full overflow-y-auto p-4 sm:p-6">
                             <div class="search-section">
-                                <h3 class="largeFont mb-4 textColorWhite">Rechercher</h3>
+                                <h3 class="text-lg sm:text-xl font-bold mb-4 textColorWhite">Rechercher</h3>
 
+                                <!-- Search Input - Mobile optimized -->
                                 <div class="search-input-container mb-6">
                                     <div class="relative">
                                         <Icon name="ph:magnifying-glass"
-                                            class="absolute left-3 top-1/2 transform -translate-y-1/2 textColorSecondary"
-                                            size="20px" />
+                                              class="absolute left-3 top-1/2 transform -translate-y-1/2 textColorSecondary"
+                                              size="18px" />
                                         <input v-model="searchQuery" type="text"
-                                            placeholder="Rechercher des titres, artistes, albums..."
-                                            class="w-full pl-10 pr-4 py-3 border border-[var(--color-secondary)] bgColorBlack textColorWhite rounded-xl focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent transition-all duration-200"
-                                            @input="performSearch()" />
+                                               placeholder="Rechercher des titres, artistes, albums..."
+                                               class="w-full pl-10 pr-4 py-3 text-sm sm:text-base border border-[var(--color-secondary)] bgColorBlack textColorWhite rounded-xl focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent transition-all duration-200"
+                                               @input="performSearch()" />
                                     </div>
                                 </div>
 
                                 <div v-if="isLoading" class="loading-state text-center py-8">
-                                    <Icon name="ph:circle-notch" class="textColorSecondary mx-auto mb-4 animate-spin"
-                                        size="48px" />
+                                    <Icon name="ph:circle-notch" class="textColorSecondary mx-auto mb-4 animate-spin" size="48px" />
                                     <p class="normalFont textColorWhite">Recherche en cours...</p>
                                 </div>
 
                                 <div v-else-if="searchResults.length > 0" class="search-results">
-                                    <h4 class="normalFont mb-3 textColorWhite">Résultats</h4>
+                                    <h4 class="text-base sm:text-lg font-semibold mb-3 textColorWhite">Résultats</h4>
                                     <div class="search-items space-y-2">
                                         <div v-for="(result, index) in searchResults" :key="index"
-                                            class="search-item flex items-center p-3 rounded-lg bgColorBlack border border-[var(--color-secondary)] hover:border-[var(--color-primary)] cursor-pointer transition-all duration-200">
+                                             class="search-item flex items-center p-3 rounded-lg bgColorBlack border border-[var(--color-secondary)] hover:border-[var(--color-primary)] cursor-pointer transition-all duration-200 active:scale-95">
                                             <img :src="`https://img.youtube.com/vi/${result.youtubeId}/default.jpg`"
-                                                alt="Track cover"
-                                                class="w-12 h-12 rounded-lg mr-4 object-cover border border-[var(--color-tritary)]" />
-                                            <div class="result-details flex-1 min-w-0">
-                                                <div class="result-name normalFont textColorWhite truncate">{{
-                                                    result.title }}</div>
-                                                <div class="result-artist miniFont textColorTritary truncate">{{
-                                                    result.artist }}</div>
+                                                 alt="Track cover"
+                                                 class="w-10 h-10 sm:w-12 sm:h-12 rounded-lg mr-3 object-cover border border-[var(--color-tritary)] flex-shrink-0" />
+                                            <div class="result-details flex-1 min-w-0 mr-3">
+                                                <div class="result-name text-sm sm:text-base textColorWhite truncate">{{ result.title }}</div>
+                                                <div class="result-artist text-xs sm:text-sm textColorTritary truncate">{{ result.artist }}</div>
                                             </div>
                                             <button
-                                                class="add-button px-3 py-1 miniFont bgColorPrimary textColorWhite rounded-lg hover:bgColorSecondary transition-colors duration-200"
+                                                class="add-button px-3 py-1.5 text-xs sm:text-sm bgColorPrimary textColorWhite rounded-lg hover:bgColorSecondary transition-colors duration-200 flex-shrink-0 active:scale-95"
                                                 @click="addToPlaylist(result)">
                                                 Ajouter
                                             </button>
@@ -385,17 +383,16 @@
                                 </div>
 
                                 <div v-else-if="searchQuery" class="empty-search text-center py-8">
-                                    <Icon name="ph:magnifying-glass" class="textColorSecondary mx-auto mb-4"
-                                        size="48px" />
+                                    <Icon name="ph:magnifying-glass" class="textColorSecondary mx-auto mb-4" size="48px" />
                                     <p class="normalFont textColorWhite">Aucun résultat trouvé</p>
                                 </div>
 
                                 <div v-else class="search-suggestions">
-                                    <h4 class="normalFont mb-3 textColorWhite">Suggestions</h4>
+                                    <h4 class="text-base sm:text-lg font-semibold mb-3 textColorWhite">Suggestions</h4>
                                     <div class="suggestion-tags flex flex-wrap gap-2">
                                         <span v-for="suggestion in suggestions" :key="suggestion"
-                                            class="suggestion-tag px-3 py-2 bgColorBlack border border-[var(--color-secondary)] rounded-full miniFont textColorWhite cursor-pointer hover:bgColorSecondary transition-all duration-200"
-                                            @click="() => { searchQuery = suggestion; performSearch(); }">
+                                              class="suggestion-tag px-3 py-2 bgColorBlack border border-[var(--color-secondary)] rounded-full text-xs sm:text-sm textColorWhite cursor-pointer hover:bgColorSecondary transition-all duration-200 active:scale-95"
+                                              @click="() => { searchQuery = suggestion; performSearch(); }">
                                             {{ suggestion }}
                                         </span>
                                     </div>
@@ -471,192 +468,235 @@
         <YouTubeAudioPlayer ref="youtubePlayer" :youtubeId="currentYoutubeId" @ready="onYouTubeReady" />
     </div>
 
+    <!-- Playlist Modal - Add to Playlist -->
     <Teleport to="body">
         <div v-if="showPlaylistModal"
-            class="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center z-50">
-            <div
-                class="bgColorBlack rounded-lg border-2 border-[var(--color-secondary)] shadow-xl w-full max-w-md mx-4 animate-modal-fade-in">
-                <div class="p-5 border-b-2 border-[var(--color-secondary)] flex justify-between items-center">
-                    <h2 class="largeFont textColorWhite">Ajouter à une playlist</h2>
+             class="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+            <div class="bgColorBlack rounded-lg border-2 border-[var(--color-secondary)] shadow-xl w-full max-w-md animate-modal-fade-in">
+                <!-- Header -->
+                <div class="p-4 sm:p-5 border-b-2 border-[var(--color-secondary)] flex justify-between items-center">
+                    <h2 class="text-lg sm:text-xl font-bold textColorWhite">Ajouter à une playlist</h2>
                     <button @click="showPlaylistModal = false"
-                        class="textColorSecondary hover:textColorPrimary transition-colors">
+                            class="textColorSecondary hover:textColorPrimary transition-colors">
                         <Icon name="ph:x-square" size="24px" />
                     </button>
                 </div>
+                
+                <!-- Success State -->
                 <div v-if="addingTrackStatus === 'success'"
-                    class="py-10 px-8 flex flex-col items-center justify-center">
-                    <Icon name="ph:check-circle" class="textColorCategoryTritary mb-5" size="64px" />
-                    <p class="textColorWhite normalFont text-center">Titre ajouté à la playlist avec succès!</p>
+                     class="py-8 sm:py-10 px-6 sm:px-8 flex flex-col items-center justify-center">
+                    <Icon name="ph:check-circle" class="textColorCategoryTritary mb-4 sm:mb-5" size="48px" />
+                    <p class="textColorWhite text-sm sm:text-base text-center">Titre ajouté à la playlist avec succès!</p>
                 </div>
+                
+                <!-- Loading State -->
                 <div v-else-if="isLoadingPlaylists || addingTrackStatus === 'loading'"
-                    class="flex justify-center items-center p-8">
+                     class="flex justify-center items-center p-6 sm:p-8">
                     <div class="loader"></div>
                 </div>
-                <div v-else-if="userPlaylists.length === 0" class="p-4 py-8 text-center">
-                    <p class="textColorTritary normalFont">Vous n'avez pas encore créé de playlist</p>
+                
+                <!-- Empty State -->
+                <div v-else-if="userPlaylists.length === 0" class="p-4 sm:p-6 py-6 sm:py-8 text-center">
+                    <p class="textColorTritary text-sm sm:text-base">Vous n'avez pas encore créé de playlist</p>
                     <div v-if="showNewPlaylistInput" class="mt-4">
                         <input v-model="newPlaylistName"
-                            class="w-full p-2 mb-3 bgColorBlack border-2 border-[var(--color-secondary)] rounded-lg textColorWhite"
-                            placeholder="Nom de la playlist" @keyup.enter="createNewPlaylist" />
-                        <div class="flex space-x-2">
+                               class="w-full p-2 sm:p-3 mb-3 bgColorBlack border-2 border-[var(--color-secondary)] rounded-lg textColorWhite text-sm sm:text-base"
+                               placeholder="Nom de la playlist" 
+                               @keyup.enter="createNewPlaylist" />
+                        <div class="flex flex-col sm:flex-row gap-2 sm:gap-3">
                             <button @click="createNewPlaylist"
-                                class="px-4 py-2 bgColorPrimary textColorWhite rounded-lg hover:bgColorSecondary transition-colors normalFont">
+                                    class="px-4 py-2 bgColorPrimary textColorWhite rounded-lg hover:bgColorSecondary transition-colors text-sm sm:text-base font-medium order-2 sm:order-1">
                                 Créer
                             </button>
                             <button @click="showNewPlaylistInput = false"
-                                class="px-4 py-2 bgColorTritary textColorWhite rounded-lg hover:bgColorSecondary transition-colors normalFont">
+                                    class="px-4 py-2 bgColorTritary textColorWhite rounded-lg hover:bgColorSecondary transition-colors text-sm sm:text-base font-medium order-1 sm:order-2">
                                 Annuler
                             </button>
                         </div>
                     </div>
                     <button v-else @click="showNewPlaylistInput = true"
-                        class="mt-4 px-4 py-2 bgColorPrimary textColorWhite rounded-lg hover:bgColorSecondary transition-colors normalFont">
+                            class="mt-4 px-4 py-2 bgColorPrimary textColorWhite rounded-lg hover:bgColorSecondary transition-colors text-sm sm:text-base font-medium">
                         Créer une playlist
                     </button>
                 </div>
-                <div v-else class="p-5">
-                    <div class="max-h-80 overflow-y-auto custom-scrollbar">
+                
+                <!-- Playlist List -->
+                <div v-else class="p-4 sm:p-5">
+                    <div class="max-h-64 sm:max-h-80 overflow-y-auto custom-scrollbar">
                         <div v-for="(playlist, i) in userPlaylists" :key="i"
-                            class="playlist-item flex items-center p-4 rounded-lg cursor-pointer transition-all duration-200 hover:bgColorSecondary hover:bg-opacity-20 border-2 border-transparent hover:border-[var(--color-secondary)] mb-3"
-                            :class="{ 'opacity-50 pointer-events-none': addingTrackStatus === 'loading' }"
-                            @click="addTrackToPlaylist(playlist.id)">
-                            <div
-                                class="w-12 h-12 rounded-lg bgColorBlack border-2 border-[var(--color-secondary)] flex items-center justify-center mr-4">
-                                <Icon name="ph:playlist" class="textColorPrimary" size="24px" />
+                             class="playlist-item flex items-center p-3 sm:p-4 rounded-lg cursor-pointer transition-all duration-200 hover:bgColorSecondary hover:bg-opacity-20 border-2 border-transparent hover:border-[var(--color-secondary)] mb-2 sm:mb-3 active:scale-95"
+                             :class="{ 'opacity-50 pointer-events-none': addingTrackStatus === 'loading' }"
+                             @click="addTrackToPlaylist(playlist.id)">
+                            <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-lg bgColorBlack border-2 border-[var(--color-secondary)] flex items-center justify-center mr-3 sm:mr-4 flex-shrink-0">
+                                <Icon name="ph:playlist" class="textColorPrimary" size="20px" />
                             </div>
-                            <div>
-                                <div class="textColorWhite normalFont font-medium">{{ playlist.name }}</div>
-                                <div class="miniFont textColorTritary mt-1">{{ playlist.tracks ? playlist.tracks.length
-                                    : 0
-                                }}
-                                    titres</div>
+                            <div class="flex-1 min-w-0">
+                                <div class="textColorWhite text-sm sm:text-base font-medium truncate">{{ playlist.name }}</div>
+                                <div class="text-xs sm:text-sm textColorTritary mt-1">
+                                    {{ playlist.tracks ? playlist.tracks.length : 0 }} titres
+                                </div>
                             </div>
                         </div>
                     </div>
+                    
+                    <!-- Error State -->
                     <div v-if="addingTrackStatus === 'error'"
-                        class="mt-5 p-4 bgColorCategoryQuaternary bg-opacity-20 border-2 border-[var(--color-category-quaternary)] rounded-lg">
-                        <p class="textColorCategoryQuaternary miniFont">Une erreur est survenue. Veuillez réessayer.</p>
+                         class="mt-4 sm:mt-5 p-3 sm:p-4 bgColorCategoryQuaternary bg-opacity-20 border-2 border-[var(--color-category-quaternary)] rounded-lg">
+                        <p class="textColorCategoryQuaternary text-xs sm:text-sm">Une erreur est survenue. Veuillez réessayer.</p>
                     </div>
                 </div>
-                <div class="p-5 border-t-2 border-[var(--color-secondary)] flex justify-end"
-                    v-if="addingTrackStatus !== 'success' && addingTrackStatus !== 'loading'">
+                
+                <!-- Footer -->
+                <div class="p-4 sm:p-5 border-t-2 border-[var(--color-secondary)] flex justify-end"
+                     v-if="addingTrackStatus !== 'success' && addingTrackStatus !== 'loading'">
                     <button @click="showPlaylistModal = false"
-                        class="px-6 py-2 textColorWhite bgColorTritary rounded-lg hover:bgColorSecondary transition-colors normalFont">
+                            class="px-4 sm:px-6 py-2 textColorWhite bgColorTritary rounded-lg hover:bgColorSecondary transition-colors text-sm sm:text-base font-medium">
                         Annuler
                     </button>
                 </div>
             </div>
         </div>
     </Teleport>
-
+    
+    <!-- Track Options Menu -->
     <Teleport to="body">
         <div v-if="showTrackOptionsMenu && selectedTrackForMenu" ref="trackOptionsMenuRef"
-            class="dropdown-menu fixed w-52 bgColorBlack border-2 border-[var(--color-secondary)] rounded-lg shadow-lg z-50 py-2 animate-fadeIn">
-            <div class="px-4 py-3 normalFont textColorWhite hover:bgColorSecondary hover:bg-opacity-20 cursor-pointer transition-colors duration-200 flex items-center gap-3"
-                @click="openPlaylistModalForTrack(selectedTrackForMenu)">
-                <Icon name="ph:list-plus" size="20px" class="textColorPrimary" />
+             class="dropdown-menu fixed w-44 sm:w-52 bgColorBlack border-2 border-[var(--color-secondary)] rounded-lg shadow-lg z-50 py-2 animate-fadeIn">
+            <div class="px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base textColorWhite hover:bgColorSecondary hover:bg-opacity-20 cursor-pointer transition-colors duration-200 flex items-center gap-2 sm:gap-3 active:scale-95"
+                 @click="openPlaylistModalForTrack(selectedTrackForMenu)">
+                <Icon name="ph:list-plus" size="18px" class="textColorPrimary flex-shrink-0" />
                 <span>Ajouter à une playlist</span>
             </div>
         </div>
     </Teleport>
-
+    
+    <!-- Playlist Options Menu -->
     <Teleport to="body">
         <div v-if="showPlaylistOptionsMenu && selectedPlaylistForMenu" ref="playlistOptionsMenuRef"
-            class="dropdown-menu fixed w-52 bgColorBlack border-2 border-[var(--color-secondary)] rounded-lg shadow-lg z-50 py-2 animate-fadeIn">
-            <div class="px-4 py-3 normalFont textColorWhite hover:bgColorSecondary hover:bg-opacity-20 cursor-pointer transition-colors duration-200 flex items-center gap-3"
-                @click="editPlaylist(selectedPlaylistForMenu)">
-                <Icon name="ph:pencil-simple" size="20px" class="textColorPrimary" />
+             class="dropdown-menu fixed w-44 sm:w-52 bgColorBlack border-2 border-[var(--color-secondary)] rounded-lg shadow-lg z-50 py-2 animate-fadeIn">
+            <div class="px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base textColorWhite hover:bgColorSecondary hover:bg-opacity-20 cursor-pointer transition-colors duration-200 flex items-center gap-2 sm:gap-3 active:scale-95"
+                 @click="editPlaylist(selectedPlaylistForMenu)">
+                <Icon name="ph:pencil-simple" size="18px" class="textColorPrimary flex-shrink-0" />
                 <span>Modifier</span>
             </div>
-            <div class="px-4 py-3 normalFont textColorWhite hover:bgColorCategoryQuaternary hover:bg-opacity-20 cursor-pointer transition-colors duration-200 flex items-center gap-3"
-                @click="openRemovePlaylistModal(selectedPlaylistForMenu)">
-                <Icon name="ph:trash" size="20px" class="textColorCategoryQuaternary" />
+            <div class="px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base textColorWhite hover:bgColorCategoryQuaternary hover:bg-opacity-20 cursor-pointer transition-colors duration-200 flex items-center gap-2 sm:gap-3 active:scale-95"
+                 @click="openRemovePlaylistModal(selectedPlaylistForMenu)">
+                <Icon name="ph:trash" size="18px" class="textColorCategoryQuaternary flex-shrink-0" />
                 <span>Supprimer</span>
             </div>
         </div>
     </Teleport>
-
+    
+    <!-- Remove Playlist Modal -->
     <Teleport to="body">
         <div v-if="showRemovePlaylistModal"
-            class="z999 fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center z-50">
-            <div
-                class="z999 bgColorBlack rounded-lg border-2 border-[var(--color-secondary)] shadow-xl w-full max-w-md mx-4 animate-modal-fade-in">
-                <div class="p-5 border-b-2 border-[var(--color-secondary)] flex justify-between items-center">
-                    <h2 class="largeFont textColorWhite">Supprimer la playlist</h2>
+             class="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+            <div class="bgColorBlack rounded-lg border-2 border-[var(--color-secondary)] shadow-xl w-full max-w-md animate-modal-fade-in">
+                <!-- Header -->
+                <div class="p-4 sm:p-5 border-b-2 border-[var(--color-secondary)] flex justify-between items-center">
+                    <h2 class="text-lg sm:text-xl font-bold textColorWhite">Supprimer la playlist</h2>
                     <button @click="showRemovePlaylistModal = false"
-                        class="textColorSecondary hover:textColorPrimary transition-colors">
+                            class="textColorSecondary hover:textColorPrimary transition-colors">
                         <Icon name="ph:x-square" size="24px" />
                     </button>
                 </div>
+                
+                <!-- Success State -->
                 <div v-if="deletePlaylistStatus === 'success'"
-                    class="py-10 px-8 flex flex-col items-center justify-center">
-                    <Icon name="ph:check-circle" class="textColorCategoryTritary mb-5" size="64px" />
-                    <p class="textColorWhite normalFont text-center">Playlist supprimée avec succès!</p>
+                     class="py-8 sm:py-10 px-6 sm:px-8 flex flex-col items-center justify-center">
+                    <Icon name="ph:check-circle" class="textColorCategoryTritary mb-4 sm:mb-5" size="48px" />
+                    <p class="textColorWhite text-sm sm:text-base text-center">Playlist supprimée avec succès!</p>
                 </div>
-                <div v-else-if="deletePlaylistStatus === 'loading'" class="flex justify-center items-center p-8">
+                
+                <!-- Loading State -->
+                <div v-else-if="deletePlaylistStatus === 'loading'" 
+                     class="flex justify-center items-center p-6 sm:p-8">
                     <div class="loader"></div>
                 </div>
-                <div v-else class="p-5">
-                    <p class="textColorWhite normalFont mb-6 text-center">
-                        Êtes-vous sûr de vouloir supprimer la playlist "<span class="font-semibold">{{
-                            playlistToDelete?.name }}</span>" ?
-                        Cette action est irréversible.
+                
+                <!-- Confirmation Content -->
+                <div v-else class="p-4 sm:p-5">
+                    <p class="textColorWhite text-sm sm:text-base mb-4 sm:mb-6 text-center leading-relaxed">
+                        Êtes-vous sûr de vouloir supprimer la playlist 
+                        "<span class="font-semibold">{{ playlistToDelete?.name }}</span>" ?
+                        <br class="hidden sm:block">
+                        <span class="block mt-2 sm:inline sm:mt-0">Cette action est irréversible.</span>
                     </p>
+                    
+                    <!-- Error State -->
                     <div v-if="deletePlaylistStatus === 'error'"
-                        class="mt-5 p-4 bgColorCategoryQuaternary bg-opacity-20 border-2 border-[var(--color-category-quaternary)] rounded-lg">
-                        <p class="textColorCategoryQuaternary miniFont">Une erreur est survenue lors de la suppression.
-                            Veuillez réessayer.</p>
+                         class="p-3 sm:p-4 bgColorCategoryQuaternary bg-opacity-20 border-2 border-[var(--color-category-quaternary)] rounded-lg">
+                        <p class="textColorCategoryQuaternary text-xs sm:text-sm">
+                            Une erreur est survenue lors de la suppression. Veuillez réessayer.
+                        </p>
                     </div>
                 </div>
-                <div class="p-5 border-t-2 border-[var(--color-secondary)] flex justify-end gap-3"
-                    v-if="deletePlaylistStatus !== 'success' && deletePlaylistStatus !== 'loading'">
+                
+                <!-- Footer -->
+                <div class="p-4 sm:p-5 border-t-2 border-[var(--color-secondary)] flex flex-col-reverse sm:flex-row justify-end gap-2 sm:gap-3"
+                     v-if="deletePlaylistStatus !== 'success' && deletePlaylistStatus !== 'loading'">
                     <button @click="showRemovePlaylistModal = false"
-                        class="px-6 py-2 textColorWhite bgColorTritary rounded-lg hover:bgColorSecondary transition-colors normalFont">
+                            class="px-4 sm:px-6 py-2 textColorWhite bgColorTritary rounded-lg hover:bgColorSecondary transition-colors text-sm sm:text-base font-medium">
                         Annuler
                     </button>
                     <button @click="confirmDeletePlaylist"
-                        class="px-6 py-2 textColorWhite bg-red-600 rounded-lg hover:bg-red-700 transition-colors normalFont">
+                            class="px-4 sm:px-6 py-2 textColorWhite bg-red-600 rounded-lg hover:bg-red-700 transition-colors text-sm sm:text-base font-medium">
                         Supprimer
                     </button>
                 </div>
             </div>
         </div>
     </Teleport>
-
+    
+    <!-- Edit Playlist Modal -->
     <Teleport to="body">
         <div v-if="showEditPlaylistModal"
-            class="z999 fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center z-50">
-            <div
-                class="z999 bgColorBlack rounded-lg border-2 border-[var(--color-secondary)] shadow-xl w-full max-w-md mx-4 animate-modal-fade-in">
-                <div class="p-5 border-b-2 border-[var(--color-secondary)] flex justify-between items-center">
-                    <h2 class="largeFont textColorWhite">Modifier la playlist</h2>
+             class="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+            <div class="bgColorBlack rounded-lg border-2 border-[var(--color-secondary)] shadow-xl w-full max-w-md animate-modal-fade-in">
+                <!-- Header -->
+                <div class="p-4 sm:p-5 border-b-2 border-[var(--color-secondary)] flex justify-between items-center">
+                    <h2 class="text-lg sm:text-xl font-bold textColorWhite">Modifier la playlist</h2>
                     <button @click="closeEditPlaylistModal"
-                        class="textColorSecondary hover:textColorPrimary transition-colors">
+                            class="textColorSecondary hover:textColorPrimary transition-colors">
                         <Icon name="ph:x-square" size="24px" />
                     </button>
                 </div>
+                
+                <!-- Success State -->
                 <div v-if="editPlaylistStatus === 'success'"
-                    class="py-10 px-8 flex flex-col items-center justify-center">
-                    <Icon name="ph:check-circle" class="textColorCategoryTritary mb-5" size="64px" />
-                    <p class="textColorWhite normalFont text-center">Playlist modifiée avec succès!</p>
+                     class="py-8 sm:py-10 px-6 sm:px-8 flex flex-col items-center justify-center">
+                    <Icon name="ph:check-circle" class="textColorCategoryTritary mb-4 sm:mb-5" size="48px" />
+                    <p class="textColorWhite text-sm sm:text-base text-center">Playlist modifiée avec succès!</p>
                 </div>
-                <div v-else class="p-5">
+                
+                <!-- Edit Form -->
+                <div v-else class="p-4 sm:p-5">
                     <form @submit.prevent="confirmEditPlaylist" class="space-y-4">
                         <div class="form-group">
-                            <label for="edit-playlist-name" class="textColorWhite block mb-2">Nom de la playlist</label>
-                            <input id="edit-playlist-name" v-model="editingPlaylistName" type="text"
-                                class="w-full p-2 rounded-md bg-[#1A1A1A] border-0 textColorWhite focus:ring-2 focus:ring-[var(--color-primary)] focus:outline-none"
-                                placeholder="Nouveau nom de la playlist" autofocus />
-                            <p v-if="editPlaylistError" class="text-red-500 text-sm mt-1">{{ editPlaylistError }}</p>
+                            <label for="edit-playlist-name" class="textColorWhite block mb-2 text-sm sm:text-base">
+                                Nom de la playlist
+                            </label>
+                            <input id="edit-playlist-name" 
+                                   v-model="editingPlaylistName" 
+                                   type="text"
+                                   class="w-full p-2 sm:p-3 rounded-md bg-[#1A1A1A] border-0 textColorWhite focus:ring-2 focus:ring-[var(--color-primary)] focus:outline-none text-sm sm:text-base"
+                                   placeholder="Nouveau nom de la playlist" 
+                                   autofocus />
+                            <p v-if="editPlaylistError" class="text-red-500 text-xs sm:text-sm mt-1">
+                                {{ editPlaylistError }}
+                            </p>
                         </div>
-                        <div class="flex justify-end space-x-3">
-                            <button type="button" @click="closeEditPlaylistModal"
-                                class="px-4 py-2 rounded-md border-0 bg-[#2A2A2A] textColorWhite hover:bg-[#3A3A3A] transition-colors duration-200">
+                        
+                        <!-- Form Actions -->
+                        <div class="flex flex-col-reverse sm:flex-row justify-end gap-2 sm:gap-3 pt-2">
+                            <button type="button" 
+                                    @click="closeEditPlaylistModal"
+                                    class="px-4 py-2 rounded-md border-0 bg-[#2A2A2A] textColorWhite hover:bg-[#3A3A3A] transition-colors duration-200 text-sm sm:text-base font-medium">
                                 Annuler
                             </button>
                             <button type="submit"
-                                class="px-4 py-2 rounded-md bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] textColorWhite hover:opacity-90 transition-opacity duration-200"
-                                :disabled="isUpdatingPlaylist">
+                                    class="px-4 py-2 rounded-md bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] textColorWhite hover:opacity-90 transition-opacity duration-200 text-sm sm:text-base font-medium"
+                                    :disabled="isUpdatingPlaylist">
                                 {{ isUpdatingPlaylist ? 'Modification...' : 'Modifier' }}
                             </button>
                         </div>
@@ -665,7 +705,9 @@
             </div>
         </div>
     </Teleport>
+
 </template>
+
 
 <script setup lang="ts">
 import { ref, onMounted, nextTick, watch, type Ref } from 'vue'

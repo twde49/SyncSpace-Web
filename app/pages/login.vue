@@ -1,32 +1,36 @@
 <template>
     <div>
         <Navbar />
-        <div class="registration-container mt-8">
-            <form class="registration-form" @submit.prevent="loginUser">
-                <h2 class="megaFont textColorWhite">Connectez-vous à SyncSpace</h2>
-                <p class="normalFont textColorWhite mt-1">
+        <div class="flex justify-center items-center px-4 sm:px-6 md:px-8 mt-8">
+            <form class="w-full max-w-md sm:max-w-lg md:max-w-xl" @submit.prevent="loginUser">
+                <h2 class="megaFont textColorWhite text-center">Connectez-vous à SyncSpace</h2>
+                <p class="normalFont textColorWhite mt-1 text-center">
                     Pas encore de compte?
                     <NuxtLink to="/register" class="textColorTritary">Inscrivez-vous</NuxtLink>
                 </p>
-                <div class="form-group mb-3 mt-12">
-                    <input v-model="email" type="email" placeholder="Email" class="form-input textColorBlack" />
+                <div class="mt-8 sm:mt-12">
+                    <input v-model="email" type="email" placeholder="Email"
+                        class="form-input w-full textColorBlack rounded-md p-2 mb-3" />
                 </div>
-                <div class="form-group mb-3">
+                <div>
                     <input v-model="password" type="password" placeholder="Mot de passe"
-                        class="form-input textColorBlack" />
+                        class="form-input w-full textColorBlack rounded-md p-2 mb-3" />
                 </div>
-                <button :disabled="isLoading || !isValidForm()" type="submit" class="create-account-btn mt-6 w-full">
+                <button :disabled="isLoading || !isValidForm()" type="submit"
+                    class="create-account-btn w-full py-3 rounded-md mt-6">
                     {{ isLoading ? 'Connexion...' : 'Se connecter' }}
                 </button>
-                <div class="divider-section">
-                    <span class="divider-line"></span>
-                    <span class="divider-text textColorWhite">ou</span>
-                    <span class="divider-line"></span>
+
+                <div class="flex items-center justify-center my-6">
+                    <span class="h-px bg-gray-400 flex-grow"></span>
+                    <span class="textColorWhite px-4">ou</span>
+                    <span class="h-px bg-gray-400 flex-grow"></span>
                 </div>
-                <div class="social-login textColorWhite">
+
+                <div class="social-login">
                     <NuxtLink :to="googleLoginUrl"
-                        class="google-login-btn flex items-center justify-center space-x-2 w-full">
-                        <Icon name="ri:google-fill" size="150%" />
+                        class="google-login-btn flex items-center justify-center space-x-2 py-3 rounded-md">
+                        <Icon name="ri:google-fill" size="24px" />
                         <span>Google</span>
                     </NuxtLink>
                 </div>
@@ -66,7 +70,6 @@ const isValidForm = () => {
 
 const loginUser = async () => {
     if (isLoading.value) return;
-
 
     isLoading.value = true;
     try {
@@ -168,37 +171,9 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.registration-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    padding: 20px;
-    color: #fff;
-}
-
-.registration-form {
-    padding: 20px;
-    width: 100%;
-    max-width: 40vw;
-}
-
-.registration-form h2 {
-    margin-bottom: 10px;
-    color: #3a3a3a;
-}
-
-.form-group {
-    display: flex;
-    flex-direction: column;
-}
-
 .form-input {
     background-color: var(--color-white);
-    padding: 10px;
-    font-size: 14px;
     border: 1px solid #ccc;
-    border-radius: 4px;
 }
 
 .form-input::placeholder {
@@ -208,9 +183,7 @@ onMounted(() => {
 .create-account-btn {
     background-color: #ff7f50;
     color: #fff;
-    padding: 10px;
     border: none;
-    border-radius: 4px;
     cursor: pointer;
     font-size: 14px;
     transition: background-color 0.2s;
@@ -225,36 +198,9 @@ onMounted(() => {
     cursor: not-allowed;
 }
 
-.divider-section {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 20px 0;
-}
-
-.divider-line {
-    flex: 1;
-    height: 1px;
-    background-color: #ccc;
-}
-
-.divider-text {
-    padding: 0 10px;
-    font-size: 14px;
-    color: #555;
-    font-weight: 500;
-}
-
-.social-login {
-    display: flex;
-}
-
 .google-login-btn {
-    padding: 10px;
     border-radius: 5px;
     font-size: 14px;
-    width: 100%;
-    text-align: center;
     border: 1px solid var(--color-white);
     background-color: #ffffff;
     color: #3a3a3a;

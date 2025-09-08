@@ -1,19 +1,22 @@
 <template>
-    <div class="hero">
-        <div ref="heroText" class="hero-tagline">
+    <div class="hero px-4 sm:px-6 md:px-8">
+        <div ref="heroText"
+            class="hero-tagline text-center mt-8 sm:mt-12 md:mt-16 lg:mt-20 mx-auto w-full sm:w-4/5 md:w-3/4 lg:w-2/3 xl:w-1/2 h-20 sm:h-24 md:h-28">
             Votre espace unique pour gérer vos
             <span class="accent-word">{{ displayedText }}</span>
         </div>
-        <p class="subtitle">
-            Activez uniquement les outils dont vous avez besoin. Profitez d’une
-            expérience sur mesure et d’une interface intuitive.
+        <p
+            class="subtitle text-center mt-4 sm:mt-6 md:mt-8 lg:mt-10 mx-auto w-full sm:w-4/5 md:w-3/4 lg:w-2/3 xl:w-1/2">
+            Activez uniquement les outils dont vous avez besoin. Profitez d'une
+            expérience sur mesure et d'une interface intuitive.
         </p>
-        <div class="button-part">
-            <button class="start-button">
-                <a href="login">Commencer maintenant</a>
+        <div
+            class="button-part flex flex-col sm:flex-row justify-center sm:justify-around items-center space-y-4 sm:space-y-0 sm:space-x-4 mt-8 sm:mt-12 md:mt-16 lg:mt-20 mx-auto w-full sm:w-4/5 md:w-3/4 lg:w-2/3 xl:w-1/2">
+            <button class="start-button w-full sm:w-auto">
+                <a href="login" class="block py-3 px-6">Commencer maintenant</a>
             </button>
-            <button class="discover-button">
-                <a href="about">Découvrir SyncSpace</a>
+            <button class="discover-button w-full sm:w-auto mt-4 sm:mt-0">
+                <a href="about" class="block py-3 px-6">Découvrir SyncSpace</a>
             </button>
         </div>
     </div>
@@ -105,38 +108,17 @@ onMounted(() => {
 .hero-tagline {
     color: var(--color-white);
     font: var(--text-style-omega);
-    margin-top: 10vh;
-    text-align: center;
-    width: 60vw;
-    margin-left: auto;
-    margin-right: auto;
     white-space: pre-wrap;
-    height: 20vh;
 }
 
 .subtitle {
     color: var(--color-white);
     font: var(--text-style-mega);
-    text-align: center;
-    margin-top: 10vh;
-    width: 70vw;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.button-part {
-    width: 65vw;
-    margin-left: auto;
-    margin-right: auto;
-    display: flex;
-    justify-content: space-around;
-    margin-top: 10vh;
 }
 
 .start-button,
 .discover-button {
     font: var(--text-style-mega);
-    padding: 15px 15px;
     border-radius: var(--global-radius);
     cursor: pointer;
     transition: background-color 0.3s ease;
